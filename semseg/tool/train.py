@@ -193,10 +193,10 @@ def main_worker(gpu, ngpus_per_node, argss):
 
     train_transform = transform.Compose([
         transform.RandScale([args.scale_min, args.scale_max]),
-        # transform.RandRotate([args.rotate_min, args.rotate_max], padding=mean, ignore_label=args.ignore_label),
+        transform.RandRotate([args.rotate_min, args.rotate_max], padding=mean, ignore_label=args.ignore_label),
         transform.RandomGaussianBlur(),
         transform.RandomHorizontalFlip(),
-        # transform.Crop([args.train_h, args.train_w], crop_type='rand', padding=mean, ignore_label=args.ignore_label),
+        transform.Crop([args.train_h, args.train_w], crop_type='rand', padding=mean, ignore_label=args.ignore_label),
         transform.ToTensor(),
         transform.Normalize(mean=mean, std=std)])
     train_data = dataset.SemData(split='train', data_root=args.data_root, data_list=args.train_list, transform=train_transform)
