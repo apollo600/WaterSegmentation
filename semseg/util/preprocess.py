@@ -13,13 +13,19 @@ def form_datalist(root, data_list, args):
             print("Found existing data-list, >>skip")
             return
     else:
-        f = open(data_list, "")
+        f = open(data_list, "w")
     
     from tqdm import tqdm
-    img_paths = os.listdir(root)
-    for i in tqdm(range(len(img_paths)), desc="Processed:"):
-        img_path = os.path.join(root, img_paths[i])
-        label_path = os.path
+    img_paths = os.listdir(root).sort()
+    for i in tqdm(range(len(img_paths) // 2), desc="Processed:"):
+        img_path = os.path.join(root, img_paths[2*i])
+        label_path = os.path.join(root, img_paths[2*i+1])
+        if img_path.split('.')[-1] != 'jpg' or label_path.split('.')[-1] != 'png':
+            raise RuntimeError(f"Wrong file with {img_path}, {label_path}")
+        f.write(f"{img_path} {label_path}\n")
+    
+    f.close()
+            
                                 
 if __name__ == "__main__":            
     root = "/home/data/1945"
