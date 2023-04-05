@@ -70,5 +70,8 @@ class SemData(Dataset):
         if image.shape[0] != label.shape[0] or image.shape[1] != label.shape[1]:
             raise (RuntimeError("Image & label shape mismatch: " + image_path + " " + label_path + "\n"))
         if self.transform is not None:
-            image, label = self.transform(image, label)
-        return image, label
+            try:
+                image, label = self.transform(image, label)
+            except:
+                raise RuntimeError("Wrong class label here")
+            return image, label
