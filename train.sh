@@ -1,7 +1,4 @@
 set -e
 
-echo "Start Train"
+echo "\nStart Train\n"
 
-ls /home/data/
-
-ls /home/data/1945 | wc -l
