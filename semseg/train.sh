@@ -14,7 +14,8 @@ now=$(date +"%Y%m%d_%H%M%S")
 mkdir -p ${model_dir} ${result_dir}
 cp tool/train.sh tool/train.py tool/test.sh tool/test.py ${config} ${exp_dir}
 
-echo "\nStart Train\n"
+echo '\nStart Train\n'
+export PYTHONPATH=./
 $PYTHON -u ${exp_dir}/train.py \
   --config=${config} \
   2>&1 | tee ${model_dir}/train-$now.log
