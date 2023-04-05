@@ -172,3 +172,4 @@ __pycache__/
 core.*#
 .ipynb_checkpoints/
 
+resnet101_v2.pth
