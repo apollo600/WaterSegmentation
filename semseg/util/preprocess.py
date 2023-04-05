@@ -6,7 +6,8 @@ def get_parser():
     parser.add_argument('--force_cover', action=store_true, default=False, help="force to re-generate data-list")
     return parser.parse_args()
 
-def form_datalist(root, data_list):         
+def form_datalist(root, data_list): 
+    print(f"{root} => {data_list}")        
     if not os.path.isdir(root):
         raise RuntimeError("dataset not exist")
     if os.path.isfile(data_list):
@@ -16,7 +17,9 @@ def form_datalist(root, data_list):
         f = open(data_list, "w")
     
     from tqdm import tqdm
-    img_paths = os.listdir(root).sort()
+    img_paths = os.listdir(root)
+    img_paths.sort()
+    print(len(img_paths))
     for i in tqdm(range(len(img_paths) // 2), desc="Processed:"):
         img_path = os.path.join(root, img_paths[2*i])
         label_path = os.path.join(root, img_paths[2*i+1])
