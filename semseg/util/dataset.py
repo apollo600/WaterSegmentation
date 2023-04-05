@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 
 from torch.utils.data import Dataset
+from util.preprocess import form_datalist
 
 
 IMG_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm']
@@ -15,6 +16,8 @@ def is_image_file(filename):
 
 
 def make_dataset(split='train', data_root=None, data_list=None):
+    form_datalist(data_root, data_list)
+    
     assert split in ['train', 'val', 'test']
     if not os.path.isfile(data_list):
         raise (RuntimeError("Image list file do not exist: " + data_list + "\n"))
