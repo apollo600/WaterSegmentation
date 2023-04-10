@@ -39,4 +39,9 @@ class UpSample(nn.Module):
 
     def forward(self, x: torch.Tensor):
         return self.up(x)
-                    
+
+
+class CropAndConcat(nn.Module):
+    def forward(self, x: torch.Tensor, contracting_x: torch.Tensor):
+        
+                            
