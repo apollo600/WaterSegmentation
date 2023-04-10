@@ -55,5 +55,10 @@ class UNET(nn.Module):
         self.down_conv = nn.ModuleList([DoubleConvolution(i, o) for i, o in 
             [(in_channels, 64), (64, 128), (128, 256), (256, 512)]])
         self.donw_sample = nn.ModuleList([DownSample() for _ in range(4)])
-        
+        self.middle_conv = DoubleConvolution(512, 1024)
+        self.up_sample = nn.ModuleList([UpSample(i, o) for i, o in 
+            [(1024, 512), (512, 256), (256, 128), (128, 64)]])
+        self.up_conv = nn.ModuleList([DoubleConvolution(i, o) for i, o in
+            [(1024, 512), (512, 256), (256, 128), (128, 64)]])
+        self.concat = 
                                     
