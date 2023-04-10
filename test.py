@@ -17,5 +17,23 @@ train_data = ImageFolder('/home/data/1945', transform, is_valid_file=lambda x: x
 train_loader = DataLoader(train_data)
 
 def get_parser():                        
-    
-    
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Train UNET')
+    parser.add_argument("--epoch", type=int, help="train epochs")
+    parser.add_argument("--lr", type=float, help="initial learning rate")
+
+    args = parser.parse_args()
+
+    return args
+
+
+def main():
+    args = get_parser()
+
+    init_epoch = args.epoch
+    init_lr = args.lr
+
+    for epoch in range(init_epoch):
+            
+        
