@@ -12,11 +12,14 @@ transform = transforms.Compose([
 ])
 
 # Load the data from the folders
-train_data = ImageFolder('/home/data/1945', transform, is_valid_file=lambda x: x.endswith('.jpg'))
+train_data = ImageFolder('/home/data/1945', transform, target_transform=load_label, is_valid_file=lambda x: x.endswith('.jpg'))
 
 # Create the loaders
 train_loader = DataLoader(train_data, batch_size=32, shuffle=True)
 
+def load_label(filepath):
+        label_path = os.path.splittext(os.path.bas)
+    
 def get_parser():                        
     import argparse
 
