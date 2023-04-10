@@ -43,5 +43,17 @@ class UpSample(nn.Module):
 
 class CropAndConcat(nn.Module):
     def forward(self, x: torch.Tensor, contracting_x: torch.Tensor):
-        contracting_x = torchvision.transforms.functional.center_crop(contracing_x, )
-                            
+        contracting_x = torchvision.transforms.functional.center_crop(contracting_x, [x.shape[2], x.shape[3]])
+        x = torch.cat([x, contracting_x], dim=1)
+        return x
+
+
+class UNET(nn.Module):
+    def __init__(self, in_channels: int, out_channels: int):
+        super().__init__()
+
+        self.down_conv = nn.ModuleList([DoubleConvolution(i, o) for i, o in 
+            [(in_channels, 64), (64, 128), (128, 256), (256, 512)]])
+        self.donw_sample = nn.ModuleList([DownSample() for _ in range(4)])
+        
+                                    
