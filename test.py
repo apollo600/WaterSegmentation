@@ -1,6 +1,7 @@
 import torchvision.transforms as transforms
 from torchvision.datasets import ImageFolder
 from torch.utils.data.dataloader import DataLoader
+import torch.nn as nn
 from tqdm import tqdm
 import os
 from PIL import Image
@@ -45,9 +46,12 @@ def main():
     init_lr = args.lr
     init_batch = args.batch
 
-    for epoch in tqdm(range(init_epoch), desc="Traning, Epoch:"):
+    criterion = nn.CrossEntropyLoss()
+    criterion = criterion.cuda()
+
+    for epoch in range(init_epoch):
         batches = train_data.length // init_batch
-        
-        
-                                                                                
-        
+
+        pbar = tqdm(total=batches, desc="Batch:", maxinterval=0.3)
+        for iteration, batch in enumerate(train_loader):
+            
