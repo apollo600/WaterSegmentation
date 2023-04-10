@@ -2,6 +2,8 @@ import torchvision.transforms as transforms
 from torchvision.datasets import ImageFolder
 from torch.utils.data.dataloader import DataLoader
 from tqdm import tqdm
+import os
+from PIL import Image
 
 from model import UNET
 
@@ -18,14 +20,18 @@ train_data = ImageFolder('/home/data/1945', transform, target_transform=load_lab
 train_loader = DataLoader(train_data, batch_size=32, shuffle=True)
 
 def load_label(filepath):
-        label_path = os.path.splittext(os.path.bas)
+    label_path = os.path.splittext(os.path.basename(filepath))[0] + '.png'
+    label = Image.open(label_path)
+    return label
     
+
 def get_parser():                        
     import argparse
 
     parser = argparse.ArgumentParser(description='Train UNET')
     parser.add_argument("--epoch", type=int, help="train epochs")
     parser.add_argument("--lr", type=float, help="initial learning rate")
+    parser.add_argument("--batch", type=int, help="size to train each batch")
 
     args = parser.parse_args()
 
@@ -37,8 +43,11 @@ def main():
 
     init_epoch = args.epoch
     init_lr = args.lr
+    init_batch = args.batch
 
     for epoch in tqdm(range(init_epoch), desc="Traning, Epoch:"):
+        batches = train_data.length // init_batch
+        
         
                                                                                 
         
