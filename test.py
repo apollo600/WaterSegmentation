@@ -43,5 +43,5 @@ class UpSample(nn.Module):
 
 class CropAndConcat(nn.Module):
     def forward(self, x: torch.Tensor, contracting_x: torch.Tensor):
-        
+        contracting_x = torchvision.transforms.functional.center_crop(contracing_x, )
                             
