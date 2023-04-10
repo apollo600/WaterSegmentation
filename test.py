@@ -1,6 +1,7 @@
 import torchvision.transforms as transforms
 from torchvision.datasets import ImageFolder
 from torch.utils.data.dataloader import DataLoader
+from tqdm import tqdm
 
 from model import UNET
 
@@ -14,7 +15,7 @@ transform = transforms.Compose([
 train_data = ImageFolder('/home/data/1945', transform, is_valid_file=lambda x: x.endswith('.jpg'))
 
 # Create the loaders
-train_loader = DataLoader(train_data)
+train_loader = DataLoader(train_data, batch_size=32, shuffle=True)
 
 def get_parser():                        
     import argparse
@@ -34,6 +35,7 @@ def main():
     init_epoch = args.epoch
     init_lr = args.lr
 
-    for epoch in range(init_epoch):
-            
+    for epoch in tqdm(range(init_epoch), desc="Traning, Epoch:"):
+        
+                                                                                
         
