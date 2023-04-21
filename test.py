@@ -39,6 +39,7 @@ def train(train_loader, train_model, args):
         pbar = tqdm(total=batches, desc=f"Epoch {epoch}/{init_epoch}: ", maxinterval=0.3, ascii=True)
         for iteration, (data, label) in enumerate(train_loader):
             pbar.set_description(f"Epoch {epoch}/{init_epoch}: processing")
+            data, label = data.cuda(), label.cuda()
             pred_label = train_model(data)
             loss = criterion(pred_label, label)
             optimizer.zero_grad()
