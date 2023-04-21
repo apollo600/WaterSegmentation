@@ -1,3 +1,5 @@
+
+
 import torchvision.transforms as transforms
 from torchvision.datasets import ImageFolder
 from torch.utils.data.dataloader import DataLoader
@@ -16,6 +18,8 @@ transform = transforms.Compose([
 
 # Load the data from the folders
 train_data = ImageFolder('/home/data/1945', transform, target_transform=load_label, is_valid_file=lambda x: x.endswith('.jpg'))
+
+print(train_data)
 
 # Create the loaders
 train_loader = DataLoader(train_data, batch_size=32, shuffle=True)
@@ -54,4 +58,5 @@ def main():
 
         pbar = tqdm(total=batches, desc="Batch:", maxinterval=0.3)
         for iteration, batch in enumerate(train_loader):
+            pass
             
