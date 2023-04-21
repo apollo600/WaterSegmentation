@@ -16,7 +16,7 @@ def get_parser():
 
     parser = argparse.ArgumentParser(description='Train UNET')
     parser.add_argument("--epoch", type=int, default="10", help="train epochs")
-    parser.add_argument("--lr", type=float, default="0.01", help="initial learning rate")
+    parser.add_argument("--lr", type=float, default="0.1", help="initial learning rate")
     parser.add_argument("--batch", type=int, default="4", help="size to train each batch")
 
     args = parser.parse_args()
@@ -36,7 +36,7 @@ def train(train_loader, train_model, args):
 
     for epoch in range(init_epoch):
         batches = len(train_loader)
-        pbar = tqdm(total=batches, desc=f"Epoch {epoch}/{init_epoch}: ", maxinterval=0.3, ascii=True)
+        pbar = tqdm(total=batches, desc=f"Epoch {epoch+1}/{init_epoch}: ", maxinterval=0.3, ascii=True)
         for iteration, (data, label) in enumerate(train_loader):
             data, label = data.cuda(), label.cuda()
             pred_label = train_model(data)
@@ -45,7 +45,7 @@ def train(train_loader, train_model, args):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            pbar.set_description(f"Epoch {epoch}/{init_epoch}: loss: {loss}")
+            pbar.set_description(f"Epoch {epoch+1}/{init_epoch}: loss: {loss}")
             pbar.update(1)
         pbar.close()
             
