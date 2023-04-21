@@ -16,8 +16,8 @@ class MyData(Dataset):
         print(f"Found {len(file_list) // 2} images")
 
     def __getitem__(self, index):
-        data = cv2.imread(os.path.join(self.path, self.file_list[2 * i + 1]))
-        label = cv2.imread(os.path.join(self.path, self.file_list[2 * i]))
+        data = cv2.imread(os.path.join(self.path, self.file_list[2 * index + 1]))
+        label = cv2.imread(os.path.join(self.path, self.file_list[2 * index]))
         return data, label
 
     def __len__(self):
