@@ -42,7 +42,7 @@ def train(train_loader, train_model, args):
             data, label = data.cuda(), label.cuda()
             pred_label = train_model(data)
             print(pred_label.size(), label.size())
-            loss = criterion(pred_label, label.view(label.shape[0], -1))
+            loss = criterion(pred_label.flatten(), label.flatten())
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()

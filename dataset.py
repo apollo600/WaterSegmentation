@@ -35,7 +35,6 @@ class MyData(Dataset):
 
         label = cv2.imread(os.path.join(self.path, self.file_list[index] + ".png"), -1)
         label = cv2.resize(label, (self.image_width, self.image_height))
-        label = np.transpose(label, [2, 0, 1])
         label = label.astype(np.longlong)
         label = torch.from_numpy(label)
         
