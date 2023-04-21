@@ -15,9 +15,9 @@ def get_parser():
     import argparse
 
     parser = argparse.ArgumentParser(description='Train UNET')
-    parser.add_argument("--epoch", type=int, help="train epochs")
-    parser.add_argument("--lr", type=float, help="initial learning rate")
-    parser.add_argument("--batch", type=int, help="size to train each batch")
+    parser.add_argument("--epoch", type=int, default="10", help="train epochs")
+    parser.add_argument("--lr", type=float, default="0.01", help="initial learning rate")
+    parser.add_argument("--batch", type=int, default="32", help="size to train each batch")
 
     args = parser.parse_args()
 
@@ -35,14 +35,15 @@ def train(train_loader, train_model, args):
     optimizer = optim.AdamW(train_model.parameters(), init_lr)
 
     for epoch in range(init_epoch):
-        pbar = tqdm(total=batches, desc=f"Epoch {epoch}/{init_epoch}:", maxinterval=0.3)
+        pbar = tqdm(total=batches, desc=f"Epoch {epoch}/{init_epoch}: ", maxinterval=0.3)
         for iteration, (data, label) in enumerate(train_loader):
             pred_label = train_model(data)
             loss = criterion(pred_label, label)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            pbar.update()
+            pbar.set_description(f"loss: {loss}")
+            pbar.update(1)
         pbar.close()
             
 
@@ -63,7 +64,7 @@ if __name__ == "__main__":
     train_loader = DataLoader(train_dataset, batch_size=args.batch, shuffle=True, num_workers=8)
 
     # Create the model
-    model = UNET(3, 1)
+    model = UNET(in_channels=3, out_channels=1)
     train_model = model.train()
 
     # Train
