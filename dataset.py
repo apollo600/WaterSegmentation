@@ -18,7 +18,7 @@ class MyData(Dataset):
         self.image_height = image_height
 
         file_list = os.listdir(self.path)
-        file_list = [ x.split('.')[0] for x in file_list if x.endswith('png') ]
+        file_list = [ x[:-4] for x in file_list if x.endswith('png') ]
         self.file_list = file_list
         print(f"Found {len(file_list)} images")
 
@@ -33,7 +33,7 @@ class MyData(Dataset):
         image = image.astype(np.float32)
         image = torch.from_numpy(image)
 
-        label = cv2.imread(os.path.join(self.path, self.file_list[index] + ".png"))
+        label = cv2.imread(os.path.join(self.path, self.file_list[index] + ".png"), -1)
         label = cv2.resize(label, (self.image_width, self.image_height))
         label = np.transpose(label, [2, 0, 1])
         label = label.astype(np.longlong)
