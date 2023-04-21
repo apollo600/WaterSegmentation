@@ -47,7 +47,8 @@ class CropAndConcat(nn.Module):
         print(x.shape, contracting_x.shape)
         transform = transforms.Compose([
             transforms.ToPILImage(),
-            transforms.CenterCrop(size)
+            transforms.CenterCrop([x.shape[2], x.shape[3]]),
+            transforms.ToTensor()
         ])
         contracting_x = transform(contracting_x)
         x = torch.cat([x, contracting_x], dim=1)
