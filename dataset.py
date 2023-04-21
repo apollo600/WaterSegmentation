@@ -37,7 +37,7 @@ class MyData(Dataset):
         label = cv2.imread(os.path.join(self.path, self.file_list[2 * index]))
         label = cv2.resize(label, (self.image_width, self.image_height))
         label = np.transpose(label, [2, 0, 1])
-        label = label.astype(np.uint8)
+        label = label.astype(np.longlong)
         label = torch.from_numpy(label)
         
         return image, label
