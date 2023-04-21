@@ -1,4 +1,5 @@
 from torch.utils.data.dataset import Dataset
+import torchvision.transforms as transforms
 import os
 import cv2
 from tqdm import tqdm
@@ -33,9 +34,14 @@ class MyData(Dataset):
         # label = np.transpose(label, [2, 0, 1])
         # label = label.astype(np.float32)
         # label = torch.from_numpy(label)
+        transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        ])
         image = Image.open(os.path.join(self.path, self.file_list[2 * index + 1]))
+        image = transform(image)
         label = Image.open(os.path.join(self.path, self.file_list[2 * index]))
-        
+        label = transform(label)
         return image, label
 
     def __len__(self):
