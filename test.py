@@ -41,7 +41,7 @@ def train(train_loader, train_model, args):
             pbar.set_description(f"Epoch {epoch}/{init_epoch}: processing")
             data, label = data.cuda(), label.cuda()
             pred_label = train_model(data)
-            print(pred_label.size(), label.view(label.size()[0], -1).size())
+            print(pred_label.size(), label.size())
             loss = criterion(pred_label, label.view(label.shape[0], -1))
             optimizer.zero_grad()
             loss.backward()
