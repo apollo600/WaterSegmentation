@@ -29,7 +29,7 @@ def train(train_loader, train_model, args):
     init_lr = args.lr
     init_batch = args.batch
 
-    criterion = nn.CrossEntropyLoss()
+    criterion = nn.MSELoss()
     criterion = criterion.cuda()
 
     optimizer = optim.AdamW(train_model.parameters(), init_lr)
@@ -38,11 +38,10 @@ def train(train_loader, train_model, args):
         batches = len(train_loader)
         pbar = tqdm(total=batches, desc=f"Epoch {epoch}/{init_epoch}: ", maxinterval=0.3, ascii=True)
         for iteration, (data, label) in enumerate(train_loader):
-            pbar.set_description(f"Epoch {epoch}/{init_epoch}: processing")
             data, label = data.cuda(), label.cuda()
             pred_label = train_model(data)
-            print(pred_label.size(), label.size())
-            loss = criterion(pred_label.flatten(), label.flatten())
+            # print(pred_label.size(), label.size())
+            loss = criterion(pred_label, label)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
