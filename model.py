@@ -71,6 +71,7 @@ class UNET(nn.Module):
         # collect the outputs of contracting path for later concatenation with the expansive path
         pass_through = []
 
+        print(x.shape)
         for i in range(len(self.down_conv)):
             x = self.down_conv[i](x)
             pass_through.append(x)
@@ -84,6 +85,7 @@ class UNET(nn.Module):
             x = self.up_conv[i](x)
 
         x = self.final_conv(x)
-        x = x.squeeze()
+        print(x.shape)
+        x = x.view(x.shape[0], -1)
 
         return x

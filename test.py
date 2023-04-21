@@ -41,7 +41,8 @@ def train(train_loader, train_model, args):
             pbar.set_description(f"Epoch {epoch}/{init_epoch}: processing")
             data, label = data.cuda(), label.cuda()
             pred_label = train_model(data)
-            loss = criterion(pred_label, label.squeeze())
+            print(pred_label.size(), label.view(label.size()[0], -1).size())
+            loss = criterion(pred_label, label.view(label.shape[0], -1))
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
@@ -60,10 +61,10 @@ if __name__ == "__main__":
     train_loader = DataLoader(train_dataset, batch_size=args.batch, shuffle=True, num_workers=0)
 
     # Create the model
+    print("load model")
     model = UNET(in_channels=3, out_channels=1)
     train_model = model.train()
     train_model.cuda()
-    print("model loaded")
 
     # Train
     print("Start Train")
