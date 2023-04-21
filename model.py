@@ -1,4 +1,5 @@
 import torch
+import torchvision.transforms as transforms
 import torchvision.transforms.functional
 from torch import nn
 
@@ -43,9 +44,12 @@ class UpSample(nn.Module):
 
 class CropAndConcat(nn.Module):
     def forward(self, x: torch.Tensor, contracting_x: torch.Tensor):
-        transform = 
-        contracting_x = 
-        contracting_x = torchvision.transforms.functional.center_crop(contracting_x, [x.shape[2], x.shape[3]])
+        print(x.shape, contracting_x.shape)
+        transform = transforms.Compose([
+            transforms.ToPILImage(),
+            transforms.CenterCrop(size)
+        ])
+        contracting_x = transform(contracting_x)
         x = torch.cat([x, contracting_x], dim=1)
         return x
 
