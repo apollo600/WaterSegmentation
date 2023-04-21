@@ -54,10 +54,12 @@ if __name__ == "__main__":
     ])
 
     # Load the data from the folders
-    # train_data = ImageFolder('/home/data/1945', transform, target_transform=load_label)
     train_dataset = MyData("/home/data/1945")
-
-    print(train_dataset)
+    print(len(train_dataset))
 
     # Create the loaders
-    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=8)
+
+    # Train
+    for epoch in range(5):        
+        
