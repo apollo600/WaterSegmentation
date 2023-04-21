@@ -9,11 +9,6 @@ from PIL import Image
 from model import UNET
 from dataset import MyData
 
-def load_label(filepath):
-    label_path = os.path.splittext(os.path.basename(filepath))[0] + '.png'
-    label = Image.open(label_path)
-    return label
-    
 
 def get_parser():                        
     import argparse
@@ -28,9 +23,7 @@ def get_parser():
     return args
 
 
-def main():
-    args = get_parser()
-
+def train(train_loader, args):    
     init_epoch = args.epoch
     init_lr = args.lr
     init_batch = args.batch
@@ -39,14 +32,14 @@ def main():
     criterion = criterion.cuda()
 
     for epoch in range(init_epoch):
-        batches = train_data.length // init_batch
-
         pbar = tqdm(total=batches, desc="Batch:", maxinterval=0.3)
-        for iteration, batch in enumerate(train_loader):
+        for iteration, data, label in enumerate(train_loader):
             pass
             
 
 if __name__ == "__main__":            
+    args = get_parser()
+    
     # Define the transforms to be applied to each image
     transform = transforms.Compose([
         transforms.ToTensor(),
@@ -58,8 +51,7 @@ if __name__ == "__main__":
     print(len(train_dataset))
 
     # Create the loaders
-    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=8)
+    train_loader = DataLoader(train_dataset, batch_size=args.batch, shuffle=True, num_workers=8)
 
     # Train
-    for epoch in range(5):        
-        
+    train(train_loader, args)
