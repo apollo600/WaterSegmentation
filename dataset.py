@@ -18,23 +18,22 @@ class MyData(Dataset):
         self.image_height = image_height
 
         file_list = os.listdir(self.path)
-        file_list = [ x.split('.')[:-1] if x.endswith('png')]
+        file_list = [ x.split('.')[0] for x in file_list if x.endswith('png') ]
         self.file_list = file_list
-        assert(len(file_list) % 2 == 0)
-        print(f"Found {len(file_list) // 2} images")
+        print(f"Found {len(file_list)} images")
 
     def __getitem__(self, index):
         transform = transforms.Compose([
             transforms.ToTensor()
         ])
 
-        image = cv2.imread(os.path.join(self.path, self.file_list[2 * index + 1]))
+        image = cv2.imread(os.path.join(self.path, self.file_list[index] + ".jpg"))
         image = cv2.resize(image, (self.image_width, self.image_height))
         image = np.transpose(image, [2, 0, 1])
         image = image.astype(np.float32)
         image = torch.from_numpy(image)
 
-        label = cv2.imread(os.path.join(self.path, self.file_list[2 * index]))
+        label = cv2.imread(os.path.join(self.path, self.file_list[index] + ".png"))
         label = cv2.resize(label, (self.image_width, self.image_height))
         label = np.transpose(label, [2, 0, 1])
         label = label.astype(np.longlong)
@@ -43,11 +42,10 @@ class MyData(Dataset):
         return image, label
 
     def __len__(self):
-        return len(self.file_list) // 2
+        return len(self.file_list)
 
 
 if __name__ == "__main__":
     train_dataset = MyData("/home/data/1945", image_width=720, image_height=540)
-    image, label = train_dataset[0]
-    print(image.shape, label.shape)
+    print(train_dataset.file_list)
     
