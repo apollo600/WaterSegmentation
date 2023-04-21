@@ -36,15 +36,15 @@ def train(train_loader, train_model, args):
 
     for epoch in range(init_epoch):
         batches = len(train_loader)
-        pbar = tqdm(total=batches, desc=f"Epoch {epoch}/{init_epoch}: ", maxinterval=0.3)
+        pbar = tqdm(total=batches, desc=f"Epoch {epoch}/{init_epoch}: ", maxinterval=0.3, ascii=True)
         for iteration, (data, label) in enumerate(train_loader):
-            pbar.set_description("processing")
+            pbar.set_description(f"Epoch {epoch}/{init_epoch}: processing")
             pred_label = train_model(data)
             loss = criterion(pred_label, label)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            pbar.set_description(f"loss: {loss}")
+            pbar.set_description(f"Epoch {epoch}/{init_epoch}: loss: {loss}")
             pbar.update(1)
         pbar.close()
             
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     print(len(train_dataset))
 
     # Create the loaders
-    train_loader = DataLoader(train_dataset, batch_size=args.batch, shuffle=True, num_workers=8)
+    train_loader = DataLoader(train_dataset, batch_size=args.batch, shuffle=True, num_workers=0)
 
     # Create the model
     model = UNET(in_channels=3, out_channels=1)
