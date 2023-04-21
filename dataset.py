@@ -21,9 +21,11 @@ class MyData(Dataset):
             image = cv2.imread(os.path.join(self.path, file_list[2 * i + 1]))
             image = cv2.resize(image, (image_width, image_height))
             image = np.transpose(image, [2, 0, 1])
+            image = image.astype(np.float32)
             label = cv2.imread(os.path.join(self.path, file_list[2 * i]))
             label = cv2.resize(label, (image_width, image_height))
             label = np.transpose(label, [2, 0, 1])
+            label = label.astype(np.float32)
             self.data.append(image)
             self.label.append(label)
 
