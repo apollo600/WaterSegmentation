@@ -29,4 +29,7 @@ class MyData(Dataset):
     def __len__(self):
         return len(self.data)
         
-        
+
+def myCollate(x):            
+    data, label = x
+    return data, label
