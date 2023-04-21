@@ -86,6 +86,5 @@ class UNET(nn.Module):
 
         x = self.final_conv(x)
         print(x.shape)
-        x = x.view(x.shape[0], -1)
 
         return x
