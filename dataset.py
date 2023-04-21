@@ -18,7 +18,7 @@ class MyData(Dataset):
         self.image_height = image_height
 
         file_list = os.listdir(self.path)
-        file_list.sort()
+        file_list = [ x.split('.')[:-1] if x.endswith('png')]
         self.file_list = file_list
         assert(len(file_list) % 2 == 0)
         print(f"Found {len(file_list) // 2} images")

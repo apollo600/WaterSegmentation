@@ -55,13 +55,13 @@ if __name__ == "__main__":
     args = get_parser()
 
     # Load the data from the folders
-    train_dataset = MyData("/home/data/1945", image_width=720, image_height=540)
+    train_dataset = MyData("/home/data/1945", image_width=640, image_height=640)
 
     # Create the loaders
     train_loader = DataLoader(train_dataset, batch_size=args.batch, shuffle=True, num_workers=0)
 
     # Create the model
-    print("load model")
+    print("Loading model")
     model = UNET(in_channels=3, out_channels=1)
     train_model = model.train()
     train_model.cuda()
