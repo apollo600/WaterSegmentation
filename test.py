@@ -23,7 +23,7 @@ def get_parser():
     return args
 
 
-def train(train_loader, args):    
+def train(train_loader, train_model, args):
     init_epoch = args.epoch
     init_lr = args.lr
     init_batch = args.batch
@@ -33,8 +33,9 @@ def train(train_loader, args):
 
     for epoch in range(init_epoch):
         pbar = tqdm(total=batches, desc="Batch:", maxinterval=0.3)
-        for iteration, data, label in enumerate(train_loader):
-            pass
+        for iteration, (data, label) in enumerate(train_loader):
+            pred_label = train_model(data)
+
             
 
 if __name__ == "__main__":            
@@ -53,5 +54,9 @@ if __name__ == "__main__":
     # Create the loaders
     train_loader = DataLoader(train_dataset, batch_size=args.batch, shuffle=True, num_workers=8)
 
+    # Create the model
+    model = UNET(3, 1)
+    train_model = model.train()
+
     # Train
-    train(train_loader, args)
+    train(train_loader, train_model, args)
