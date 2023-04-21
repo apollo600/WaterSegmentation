@@ -2,6 +2,7 @@ from torch.utils.data.dataset import Dataset
 import os
 import cv2
 from tqdm import tqdm
+import numpy as np
 
 # tmp not use
 class MyData(Dataset):        
@@ -30,6 +31,5 @@ class MyData(Dataset):
         return len(self.data)
         
 
-def myCollate(x):            
-    data, label = x
-    return data, label
+def myCollate(batch):            
+    return batch

@@ -8,7 +8,7 @@ import os
 from PIL import Image
 
 from model import UNET
-from dataset import MyData
+from dataset import MyData, myCollate
 
 
 def get_parser():                        
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     print(len(train_dataset))
 
     # Create the loaders
-    train_loader = DataLoader(train_dataset, batch_size=args.batch, shuffle=True, num_workers=0)
+    train_loader = DataLoader(train_dataset, batch_size=args.batch, collate_fn=myCollate, shuffle=True, num_workers=0)
 
     # Create the model
     model = UNET(in_channels=3, out_channels=1)
