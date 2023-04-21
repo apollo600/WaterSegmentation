@@ -35,6 +35,7 @@ def train(train_loader, train_model, args):
     optimizer = optim.AdamW(train_model.parameters(), init_lr)
 
     for epoch in range(init_epoch):
+        batches = len(train_loader)
         pbar = tqdm(total=batches, desc=f"Epoch {epoch}/{init_epoch}: ", maxinterval=0.3)
         for iteration, (data, label) in enumerate(train_loader):
             pred_label = train_model(data)

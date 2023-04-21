@@ -22,7 +22,7 @@ class DoubleConvolution(nn.Module):
 
 
 class DownSample(nn.Module):
-    def __init__(self, x):
+    def __init__(self):
         super().__init__()
 
         self.pool = nn.MaxPool2d(kernel_size=2)
