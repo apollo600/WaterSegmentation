@@ -7,6 +7,7 @@ import os
 from PIL import Image
 
 from model import UNET
+from dataset import MyData
 
 def load_label(filepath):
     label_path = os.path.splittext(os.path.basename(filepath))[0] + '.png'
@@ -53,9 +54,10 @@ if __name__ == "__main__":
     ])
 
     # Load the data from the folders
-    train_data = ImageFolder('/home/data/1945', transform, target_transform=load_label)
+    # train_data = ImageFolder('/home/data/1945', transform, target_transform=load_label)
+    train_dataset = MyData("/home/data/1945")
 
-    print(train_data)
+    print(train_dataset)
 
     # Create the loaders
-    train_loader = DataLoader(train_data, batch_size=32, shuffle=True)
+    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
