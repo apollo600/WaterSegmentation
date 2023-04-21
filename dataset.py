@@ -24,24 +24,26 @@ class MyData(Dataset):
         print(f"Found {len(file_list) // 2} images")
 
     def __getitem__(self, index):
+        transform = transforms.Compose([
+            transforms.ToTensor()
+        ])
+
         # image = cv2.imread(os.path.join(self.path, self.file_list[2 * index + 1]))
         # image = cv2.resize(image, (self.image_width, self.image_height))
         # image = np.transpose(image, [2, 0, 1])
         # image = image.astype(np.float32)
         # image = torch.from_numpy(image)
+        image = Image.open(os.path.join(self.path, self.file_list[2 * index]))
+        image = transform(image)
+
         # label = cv2.imread(os.path.join(self.path, self.file_list[2 * index]))
         # label = cv2.resize(label, (self.image_width, self.image_height))
         # label = np.transpose(label, [2, 0, 1])
         # label = label.astype(np.float32)
         # label = torch.from_numpy(label)
-        transform = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-        ])
-        image = Image.open(os.path.join(self.path, self.file_list[2 * index + 1]))
-        image = transform(image)
-        label = Image.open(os.path.join(self.path, self.file_list[2 * index]))
+        label = Image.open(os.path.join(self.path, self.file_list[2 * index + 1]))
         label = transform(label)
+        
         return image, label
 
     def __len__(self):
@@ -51,5 +53,5 @@ class MyData(Dataset):
 if __name__ == "__main__":
     train_dataset = MyData("/home/data/1945", image_width=720, image_height=540)
     image, label = train_dataset[0]
-    print(image.size)
+    print(image.shape, label.shape)
     
