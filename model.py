@@ -45,8 +45,10 @@ class UpSample(nn.Module):
 class CropAndConcat(nn.Module):
     def forward(self, x: torch.Tensor, contracting_x: torch.Tensor):
         # center crop
-        start_x = (contracting_x.size(2) - x.size(2)) // 2
-        start_y = (contracting_x.size(3) - x.size(3)) // 2
+        start_x = (contracting_x.size()[2] - x.size()[2]) // 2
+        start_y = (contracting_x.size()[3] - x.size()[3]) // 2
+        contracting_x = contracting_x[:, :, start_x:start_x+x.size()[2], start_y:start_y+x.size()[3]]
+        print(contracting_x.size(), x.size())
         x = torch.cat([x, contracting_x], dim=1)
         return x
 

@@ -28,23 +28,17 @@ class MyData(Dataset):
             transforms.ToTensor()
         ])
 
-        # image = cv2.imread(os.path.join(self.path, self.file_list[2 * index + 1]))
-        # image = cv2.resize(image, (self.image_width, self.image_height))
-        # image = np.transpose(image, [2, 0, 1])
-        # image = image.astype(np.float32)
-        # image = torch.from_numpy(image)
-        image = Image.open(os.path.join(self.path, self.file_list[2 * index]))
-        image = image.resize((self.image_width, self.image_height))
-        image = transform(image)
+        image = cv2.imread(os.path.join(self.path, self.file_list[2 * index + 1]))
+        image = cv2.resize(image, (self.image_width, self.image_height))
+        image = np.transpose(image, [2, 0, 1])
+        image = image.astype(np.float32)
+        image = torch.from_numpy(image)
 
-        # label = cv2.imread(os.path.join(self.path, self.file_list[2 * index]))
-        # label = cv2.resize(label, (self.image_width, self.image_height))
-        # label = np.transpose(label, [2, 0, 1])
-        # label = label.astype(np.float32)
-        # label = torch.from_numpy(label)
-        label = Image.open(os.path.join(self.path, self.file_list[2 * index + 1]))
-        label = label.resize((self.image_width, self.image_height))
-        label = transform(label)
+        label = cv2.imread(os.path.join(self.path, self.file_list[2 * index]))
+        label = cv2.resize(label, (self.image_width, self.image_height))
+        label = np.transpose(label, [2, 0, 1])
+        label = label.astype(np.uint8)
+        label = torch.from_numpy(label)
         
         return image, label
 
