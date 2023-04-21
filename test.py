@@ -2,6 +2,7 @@ import torchvision.transforms as transforms
 from torchvision.datasets import ImageFolder
 from torch.utils.data.dataloader import DataLoader
 import torch.nn as nn
+import torch.optim as optim
 from tqdm import tqdm
 import os
 from PIL import Image
@@ -31,11 +32,18 @@ def train(train_loader, train_model, args):
     criterion = nn.CrossEntropyLoss()
     criterion = criterion.cuda()
 
+    optimizer = optim.AdamW(train_model.parameters(), init_lr)
+
     for epoch in range(init_epoch):
-        pbar = tqdm(total=batches, desc="Batch:", maxinterval=0.3)
+        pbar = tqdm(total=batches, desc=f"Epoch {epoch}/{init_epoch}:", maxinterval=0.3)
         for iteration, (data, label) in enumerate(train_loader):
             pred_label = train_model(data)
-
+            loss = criterion(pred_label, label)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            pbar.update()
+        pbar.close()
             
 
 if __name__ == "__main__":            
