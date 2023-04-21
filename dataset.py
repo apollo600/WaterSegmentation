@@ -34,6 +34,7 @@ class MyData(Dataset):
         # image = image.astype(np.float32)
         # image = torch.from_numpy(image)
         image = Image.open(os.path.join(self.path, self.file_list[2 * index]))
+        image = image.resize((self.image_width, self.image_height))
         image = transform(image)
 
         # label = cv2.imread(os.path.join(self.path, self.file_list[2 * index]))
@@ -42,6 +43,7 @@ class MyData(Dataset):
         # label = label.astype(np.float32)
         # label = torch.from_numpy(label)
         label = Image.open(os.path.join(self.path, self.file_list[2 * index + 1]))
+        label = label.resize((self.image_width, self.image_height))
         label = transform(label)
         
         return image, label
