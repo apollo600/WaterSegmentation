@@ -1,4 +1,3 @@
-import torchvision.transforms as transforms
 from torchvision.datasets import ImageFolder
 from torch.utils.data.dataloader import DataLoader
 import torch.nn as nn
@@ -40,7 +39,7 @@ def train(train_loader, train_model, args):
         pbar = tqdm(total=batches, desc=f"Epoch {epoch}/{init_epoch}: ", maxinterval=0.3, ascii=True)
         for iteration, (data, label) in enumerate(train_loader):
             pbar.set_description(f"Epoch {epoch}/{init_epoch}: processing")
-            data, label = data.cuda(), label.cuda()
+            # data, label = data.cuda(), label.cuda()
             pred_label = train_model(data)
             loss = criterion(pred_label, label)
             optimizer.zero_grad()
@@ -53,12 +52,6 @@ def train(train_loader, train_model, args):
 
 if __name__ == "__main__":            
     args = get_parser()
-    
-    # Define the transforms to be applied to each image
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-    ])
 
     # Load the data from the folders
     train_dataset = MyData("/home/data/1945", image_width=720, image_height=540)
