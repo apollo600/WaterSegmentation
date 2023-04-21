@@ -9,6 +9,7 @@ from PIL import Image
 
 from model import UNET
 from dataset import MyData
+import time
 
 
 def get_parser():                        
@@ -60,8 +61,7 @@ if __name__ == "__main__":
     ])
 
     # Load the data from the folders
-    train_dataset = MyData("/home/data/1945", image_width=1440, image_height=1080)
-    print(len(train_dataset))
+    train_dataset = MyData("/home/data/1945", image_width=720, image_height=540)
 
     # Create the loaders
     train_loader = DataLoader(train_dataset, batch_size=args.batch, shuffle=True, num_workers=0)
@@ -70,6 +70,9 @@ if __name__ == "__main__":
     model = UNET(in_channels=3, out_channels=1)
     train_model = model.train()
     train_model.cuda()
+    print("model loaded")
+
+    time.sleep(3)
 
     # Train
     print("Start Train")
