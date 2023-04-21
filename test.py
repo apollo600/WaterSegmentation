@@ -62,7 +62,7 @@ if __name__ == "__main__":
     print(len(train_dataset))
 
     # Create the loaders
-    train_loader = DataLoader(train_dataset, batch_size=args.batch, shuffle=True, num_workers=8)
+    train_loader = DataLoader(train_dataset, batch_size=args.batch, shuffle=True, num_workers=0)
 
     # Create the model
     model = UNET(in_channels=3, out_channels=1)
