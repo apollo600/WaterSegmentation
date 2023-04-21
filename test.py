@@ -53,7 +53,7 @@ if __name__ == "__main__":
     ])
 
     # Load the data from the folders
-    train_data = ImageFolder('/home/data/1945', transform, target_transform=load_label, is_valid_file=lambda x: x.endswith('.jpg'))
+    train_data = ImageFolder('/home/data/1945', transform, target_transform=load_label)
 
     print(train_data)
 
