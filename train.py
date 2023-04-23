@@ -30,8 +30,8 @@ def train(train_loader, train_model, args):
     init_lr = args.lr
     init_batch = args.batch
 
-    # criterion = FocalLoss()
-    criterion = nn.CrossEntropyLoss()
+    criterion = FocalLoss()
+    # criterion = nn.CrossEntropyLoss()
     criterion = criterion.cuda()
 
     optimizer = optim.AdamW(train_model.parameters(), init_lr)
@@ -41,8 +41,9 @@ def train(train_loader, train_model, args):
         pbar = tqdm(total=batches, desc=f"Epoch {epoch+1}/{init_epoch}: ", maxinterval=0.3, ascii=True)
         for iteration, (data, label) in enumerate(train_loader):
             data, label = data.cuda(), label.cuda()
-            label = label.view(-1, label.size(-1))
+            # label = label.view(label.size(0), label.size(-1), -1)
             pred_label = train_model(data)
+            # pred_label = pred_label.view(pred_label.size(0), -1)
             print(pred_label.shape)
             print(label.shape)
             loss = criterion(pred_label, label)
@@ -65,7 +66,7 @@ if __name__ == "__main__":
 
     # Create the model
     print("Loading model")
-    model = UNET(in_channels=3, out_channels=args.num_classes)
+    model = UNET(in_channels=3, out_channels=1)
     train_model = model.train()
     train_model.cuda()
 
