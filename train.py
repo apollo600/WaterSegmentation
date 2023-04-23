@@ -16,7 +16,7 @@ def get_parser():
 
     parser = argparse.ArgumentParser(description='Train UNET')
     parser.add_argument("--epoch", type=int, default="10", help="train epochs")
-    parser.add_argument("--lr", type=float, default="0.0001", help="initial learning rate")
+    parser.add_argument("--lr", type=float, default="0.0005", help="initial learning rate")
     parser.add_argument("--batch", type=int, default="4", help="size to train each batch")
     parser.add_argument("--num_classes", type=int, default="5", help="number of classes")
 
@@ -42,13 +42,16 @@ def train(train_loader, train_model, args):
         pbar = tqdm(total=batches, desc=f"Epoch {epoch+1}/{init_epoch}: ", maxinterval=0.3, ascii=True)
         for iteration, (data, label) in enumerate(train_loader):
             data, label = data.cuda(), label.cuda()
-            # label = label.view(label.size(0), label.size(-1), -1)
+            # label: N, H, W, C     pred_label: N, C, H, W
             pred_label = train_model(data)
-            # pred_label = pred_label.view(pred_label.size(0), -1)
             loss = criterion(pred_label, label)
+
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+
+            acc = 
+
             pbar.set_description(f"Epoch {epoch+1}/{init_epoch}: loss: {loss}")
             pbar.update(1)
         pbar.close()
@@ -57,6 +60,10 @@ def train(train_loader, train_model, args):
 if __name__ == "__main__":            
     args = get_parser()
 
+    # Get device
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    print("Using device", device)
+
     # Load the data from the folders
     train_dataset = MyData("/home/data/1945", num_classes=args.num_classes, image_width=640, image_height=640)
 
@@ -64,7 +71,7 @@ if __name__ == "__main__":
     train_loader = DataLoader(train_dataset, batch_size=args.batch, shuffle=True, num_workers=0)
 
     # Create the model
-    print("Loading model")
+    print("Loading model to device")
     model = UNET(in_channels=3, out_channels=args.num_classes)
     train_model = model.train()
     train_model.cuda()
