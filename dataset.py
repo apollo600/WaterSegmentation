@@ -35,7 +35,7 @@ class MyData(Dataset):
 
         label = cv2.imread(os.path.join(self.path, self.file_list[index] + ".png"), -1)
         label = cv2.resize(label, (self.image_width, self.image_height))
-        label = label.astype(np.float32)
+        
         label = torch.from_numpy(label)
         
         return image, label
