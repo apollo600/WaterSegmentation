@@ -61,6 +61,7 @@ if __name__ == "__main__":
     args = get_parser()
 
     # Get device
+    os.environ['CUDA_VISIBLE_DEVICES'] = 1
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print("Using device", device)
 
