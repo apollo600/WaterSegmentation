@@ -68,8 +68,13 @@ def train(train_loader, train_model, args):
             loss.backward()
             optimizer.step()
 
-            t_pred_label = np.argmax(pred_label, axis=1)
-            t_label = np.transpose(label, [0, 3, 1, 2]).argmax(axis=1)
+            # copy the tensor to host memory first
+            t_pred_label = pred_label.cpu().detach()
+            t_label = label.cpu().detach()
+            # get max arg as output label
+            t_pred_label = np.argmax(t_pred_label, axis=1)
+            t_label = np.transpose(t_label, [0, 3, 1, 2]).argmax(axis=1)
+            # update accuracy
             acc = np.sum(t_label == t_pred_label) / np.prod(labels.shape)
             if acc > best_acc: 
                 print(f"Update acc {best_acc} => {acc}")
@@ -86,7 +91,7 @@ if __name__ == "__main__":
     args = get_parser()
 
     # Get device
-    os.environ['CUDA_VISIBLE_DEVICES'] = 1
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print("Using device", device)
 
