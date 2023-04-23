@@ -8,7 +8,7 @@ from PIL import Image
 
 from model import UNET
 from dataset import MyData
-import time
+from loss import FocalLoss
 
 
 def get_parser():                        
@@ -18,6 +18,7 @@ def get_parser():
     parser.add_argument("--epoch", type=int, default="10", help="train epochs")
     parser.add_argument("--lr", type=float, default="0.1", help="initial learning rate")
     parser.add_argument("--batch", type=int, default="4", help="size to train each batch")
+    parser.add_argument("--num_classes", type=int, default="5", help="number of classes")
 
     args = parser.parse_args()
 
@@ -29,7 +30,7 @@ def train(train_loader, train_model, args):
     init_lr = args.lr
     init_batch = args.batch
 
-    criterion = nn.CrossEntropyLoss()
+    criterion = FocalLoss()
     criterion = criterion.cuda()
 
     optimizer = optim.AdamW(train_model.parameters(), init_lr)
@@ -40,7 +41,7 @@ def train(train_loader, train_model, args):
         for iteration, (data, label) in enumerate(train_loader):
             data, label = data.cuda(), label.cuda()
             pred_label = train_model(data)
-            # print(pred_label.size(), label.size())
+            print(pred_label.shape(), label.shape())
             loss = criterion(pred_label, label)
             optimizer.zero_grad()
             loss.backward()
@@ -54,14 +55,14 @@ if __name__ == "__main__":
     args = get_parser()
 
     # Load the data from the folders
-    train_dataset = MyData("/home/data/1945", image_width=640, image_height=640)
+    train_dataset = MyData("/home/data/1945", num_classes=args.num_classes, image_width=640, image_height=640)
 
     # Create the loaders
     train_loader = DataLoader(train_dataset, batch_size=args.batch, shuffle=True, num_workers=0)
 
     # Create the model
     print("Loading model")
-    model = UNET(in_channels=3, out_channels=1)
+    model = UNET(in_channels=3, out_channels=args.num_classes)
     train_model = model.train()
     train_model.cuda()
 
