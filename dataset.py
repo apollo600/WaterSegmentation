@@ -37,6 +37,7 @@ class MyData(Dataset):
         label = Image.open(os.path.join(self.path, self.label_paths[index]))
         label = np.array(label)
         label = cv2.resize(label, (self.image_width, self.image_height))
+        label_one_hot = np.zeros(label.shape[0])
 
         label = torch.from_numpy(label)
         
