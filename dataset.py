@@ -9,14 +9,14 @@ from PIL import Image
 
 # tmp not use
 class MyData(Dataset):        
-    def __init__(self, path, image_width, image_height, augmentation=False):                
+    def __init__(self, path, class_num, image_width, image_height, augmentation=False):                
         super().__init__()
-        self.image_paths = []
-        self.label_paths = []
+        self.path = path
+        self.class_num = class_num
         self.image_width = image_width
         self.image_height = image_height
 
-        file_list = os.listdir(self.path)
+        file_list = os.listdir(path)
         file_list = [ x[:-4] for x in file_list if x.endswith('png') ]
         self.image_paths = [ x + ".jpg" for x in file_list ]
         self.label_paths = [ x + ".png" for x in file_list ]
@@ -37,7 +37,8 @@ class MyData(Dataset):
         label = Image.open(os.path.join(self.path, self.label_paths[index]))
         label = np.array(label)
         label = cv2.resize(label, (self.image_width, self.image_height))
-        label_one_hot = np.zeros(label.shape[0])
+        label_one_hot = np.zeros(label.shape(0), label.shape(1), self.class_num)
+        for 
 
         label = torch.from_numpy(label)
         
