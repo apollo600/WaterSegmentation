@@ -38,8 +38,9 @@ class MyData(Dataset):
         label = np.array(label)
         label = cv2.resize(label, (self.image_width, self.image_height))
         label_one_hot = np.zeros(label.shape(0), label.shape(1), self.class_num)
-        for 
-
+        for i in range(self.class_num):
+            label_one_hot[:,:,i] = 
+    
         label = torch.from_numpy(label)
         
         return image, label
