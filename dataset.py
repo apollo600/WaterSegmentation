@@ -38,10 +38,10 @@ class MyData(Dataset):
 
         label_one_hot = np.zeros((label.shape[0], label.shape[1], self.class_num))
         for i in range(self.class_num):
-            label_one_hot[:,:,i] = (label == i).astype(np.longlong)
+            label_one_hot[:,:,i] = (label == i)
 
         image = torch.from_numpy(image).float()
-        label_one_hot = torch.from_numpy(label_one_hot).int()
+        label_one_hot = torch.from_numpy(label_one_hot).long()
         
         return image, label_one_hot
 
