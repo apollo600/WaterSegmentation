@@ -7,12 +7,12 @@ import numpy as np
 import torch
 from PIL import Image
 
-# tmp not use
+
 class MyData(Dataset):        
-    def __init__(self, path, class_num, image_width, image_height, augmentation=False):                
+    def __init__(self, path, num_classes, image_width, image_height, augmentation=False):                
         super().__init__()
         self.path = path
-        self.class_num = class_num
+        self.class_num = num_classes
         self.image_width = image_width
         self.image_height = image_height
 
@@ -45,12 +45,11 @@ class MyData(Dataset):
         return image, label_one_hot
 
     def __len__(self):
-        return len(self.file_list)
+        return len(self.image_paths)
 
 
 if __name__ == "__main__":
-    train_dataset = MyData("/home/data/1945", class_num=5, image_width=720, image_height=540)
+    train_dataset = MyData("/home/data/1945", num_classes=5, image_width=720, image_height=540)
     image, label = train_dataset[0]
     print(image.shape, label.shape)
-    print(label[420, 110:115, :])
             
