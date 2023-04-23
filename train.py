@@ -31,6 +31,7 @@ def train(train_loader, train_model, args):
     init_batch = args.batch
 
     criterion = FocalLoss()
+    # criterion = nn.CrossEntropyLoss()
     criterion = criterion.cuda()
 
     optimizer = optim.AdamW(train_model.parameters(), init_lr)
@@ -41,7 +42,8 @@ def train(train_loader, train_model, args):
         for iteration, (data, label) in enumerate(train_loader):
             data, label = data.cuda(), label.cuda()
             pred_label = train_model(data)
-            print(pred_label.shape(), label.shape())
+            print(pred_label.shape)
+            print(label.shape)
             loss = criterion(pred_label, label)
             optimizer.zero_grad()
             loss.backward()
