@@ -20,7 +20,8 @@ def get_parser():
     parser.add_argument("--lr", type=float, default="0.0005", help="initial learning rate")
     parser.add_argument("--batch", type=int, default="4", help="size to train each batch")
     parser.add_argument("--num_classes", type=int, default="5", help="number of classes")
-    parser.add_argument("--criterion", type=str)
+    parser.add_argument("--criterion", type=str, default="Focal", help="loss function to use")
+    parser.add_argument("--optimizer", type=str, default="AdamW", help="optimizer to use")
 
     args = parser.parse_args()
 
@@ -32,12 +33,20 @@ def train(train_loader, train_model, args):
     init_lr = args.lr
     init_batch = args.batch
 
-    criterion = FocalLoss()
-    # criterion = nn.CrossEntropyLoss()
+    if args.criterion == "Focal":
+        criterion = FocalLoss()
+    elif args.criterion == "CrossEntropy":
+        criterion = nn.CrossEntropyLoss()
+    else:
+        raise RuntimeError("wrong type of criterion given:", args.criterion)
     criterion = criterion.cuda()
 
-    optimizer = optim.AdamW(train_model.parameters(), init_lr)
-    # optimizer = optim.SGD(train_model.parameters(), lr=init_lr)
+    if args.optimizer == "AdamW":
+        optimizer = optim.AdamW(train_model.parameters(), init_lr)
+    elif args.optimizer == "SGD":
+        optimizer = optim.SGD(train_model.parameters(), lr=init_lr)
+    else:
+        raise RuntimeError("wrong type of optimizer given:", args.optimizer)
 
     best_acc = 0
 
@@ -58,7 +67,7 @@ def train(train_loader, train_model, args):
             t_label = np.transpose(label, [0, 3, 1, 2]).argmax(axis=1)
             acc = np.sum(t_label == t_pred_label) / np.prod(labels.shape)
             if acc > best_acc:
-                
+                time_stamp = 
                 model_name = 
                 torch.save()
 
