@@ -1,4 +1,3 @@
-from torchvision.datasets import ImageFolder
 from torch.utils.data.dataloader import DataLoader
 import torch.nn as nn
 import torch.optim as optim
@@ -6,6 +5,7 @@ from tqdm import tqdm
 import os
 from PIL import Image
 import numpy as np
+import time
 
 from model import UNET
 from dataset import MyData
@@ -67,8 +67,8 @@ def train(train_loader, train_model, args):
             t_label = np.transpose(label, [0, 3, 1, 2]).argmax(axis=1)
             acc = np.sum(t_label == t_pred_label) / np.prod(labels.shape)
             if acc > best_acc:
-                time_stamp = 
-                model_name = 
+                time_stamp = time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime(time.time()))
+                model_name = f"{time_stamp}_epoch-{args.epoch}_lr-{args.lr}_loss-{args.criterion}_"
                 torch.save()
 
             pbar.set_description(f"Epoch {epoch+1}/{init_epoch}: loss: {loss} acc: {acc}")
