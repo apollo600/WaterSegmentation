@@ -73,21 +73,25 @@ def train(train_loader, train_model, args):
             pbar.update(1)
         pbar.close()
 
-
-        # copy the tensor to host memory first
-        t_pred_label = pred_label.cpu().detach().numpy()
-        t_label = label.cpu().detach().numpy()
-        # get max arg as output label
-        t_pred_label = np.argmax(t_pred_label, axis=1)
-        t_label = np.transpose(t_label, [0, 3, 1, 2]).argmax(axis=1)
-        print(t_pred_label.shape, t_label.shape)
-        # update accuracy
-        acc = np.sum(t_label == t_pred_label) / np.prod(t_label.shape)
-        if acc > best_acc: 
-            print(f"Update acc {best_acc:.4f} => {acc:.4f}")
-            best_acc = acc
-            model_name = os.path.join(log_dir, f"best_acc-{acc:.4f}.pt")
-            torch.save(train_model.state_dict(), model_name)
+        with torch.no_grad():
+            for iteration, (data, label) in enumerate(val_loader):
+                data, label = data.cuda(), label.cuda()
+                pred_label = train_model(data)
+            
+            # copy the tensor to host memory first
+            t_pred_label = pred_label.cpu().detach().numpy()
+            t_label = label.cpu().detach().numpy()
+            # get max arg as output label
+            t_pred_label = np.argmax(t_pred_label, axis=1)
+            t_label = np.transpose(t_label, [0, 3, 1, 2]).argmax(axis=1)
+            print(t_pred_label.shape, t_label.shape)
+            # update accuracy
+            acc = np.sum(t_label == t_pred_label) / np.prod(t_label.shape)
+            if acc > best_acc: 
+                print(f"Update acc {best_acc:.4f} => {acc:.4f}")
+                best_acc = acc
+                model_name = os.path.join(log_dir, f"best_acc-{acc:.4f}.pt")
+                torch.save(train_model.state_dict(), model_name)
         
 
 if __name__ == "__main__":            
@@ -101,11 +105,12 @@ if __name__ == "__main__":
     # Load the data from the folders
     dataset = MyData("/home/data/1945", num_classes=args.num_classes, image_width=640, image_height=640)
     train_size = int(0.9 * len(dataset))
-    
-    train_dataset, val_dataset = data.random_split(dataset, )
+    val_size = int(0.1 * len(dataset))
+    train_dataset, val_dataset = data.random_split(dataset, (train_size, val_size))
 
     # Create the loaders
     train_loader = DataLoader(train_dataset, batch_size=args.batch, shuffle=True, num_workers=0)
+    val_loader = DataLoader(val_dataset, batch_size=val_size, shuffle=False)
 
     # Create the model
     print("Loading model to device")
