@@ -16,7 +16,7 @@ def get_parser():
 
     parser = argparse.ArgumentParser(description='Train UNET')
     parser.add_argument("--epoch", type=int, default="10", help="train epochs")
-    parser.add_argument("--lr", type=float, default="0.1", help="initial learning rate")
+    parser.add_argument("--lr", type=float, default="0.0001", help="initial learning rate")
     parser.add_argument("--batch", type=int, default="4", help="size to train each batch")
     parser.add_argument("--num_classes", type=int, default="5", help="number of classes")
 
@@ -35,6 +35,7 @@ def train(train_loader, train_model, args):
     criterion = criterion.cuda()
 
     optimizer = optim.AdamW(train_model.parameters(), init_lr)
+    # optimizer = optim.SGD(train_model.parameters(), lr=init_lr)
 
     for epoch in range(init_epoch):
         batches = len(train_loader)
@@ -44,8 +45,6 @@ def train(train_loader, train_model, args):
             # label = label.view(label.size(0), label.size(-1), -1)
             pred_label = train_model(data)
             # pred_label = pred_label.view(pred_label.size(0), -1)
-            print(pred_label.shape)
-            print(label.shape)
             loss = criterion(pred_label, label)
             optimizer.zero_grad()
             loss.backward()
@@ -66,7 +65,7 @@ if __name__ == "__main__":
 
     # Create the model
     print("Loading model")
-    model = UNET(in_channels=3, out_channels=1)
+    model = UNET(in_channels=3, out_channels=args.num_classes)
     train_model = model.train()
     train_model.cuda()
 
