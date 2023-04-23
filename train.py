@@ -29,7 +29,7 @@ def train(train_loader, train_model, args):
     init_lr = args.lr
     init_batch = args.batch
 
-    criterion = nn.MSELoss()
+    criterion = nn.CrossEntropyLoss()
     criterion = criterion.cuda()
 
     optimizer = optim.AdamW(train_model.parameters(), init_lr)
