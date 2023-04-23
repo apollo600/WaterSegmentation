@@ -73,6 +73,7 @@ def train(train_loader, train_model, args):
             pbar.update(1)
         pbar.close()
 
+        print("Start Test")
         with torch.no_grad():
             for iteration, (data, label) in enumerate(val_loader):
                 data, label = data.cuda(), label.cuda()
