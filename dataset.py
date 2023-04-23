@@ -30,17 +30,16 @@ class MyData(Dataset):
         image = Image.open(os.path.join(self.path, self.image_paths[index]))
         image = np.array(image)
         image = cv2.resize(image, (self.image_width, self.image_height))
-        image = np.transpose(image, [2, 0, 1])
-        image = image.astype(np.float32)
-        image = torch.from_numpy(image)
 
         label = Image.open(os.path.join(self.path, self.label_paths[index]))
         label = np.array(label)
         label = cv2.resize(label, (self.image_width, self.image_height))
+
         label_one_hot = np.zeros(label.shape(0), label.shape(1), self.class_num)
         for i in range(self.class_num):
-            label_one_hot[:,:,i] = 
-    
+            label_one_hot[:,:,i] = (label == i).astype(np.float32)
+
+        image = torch.from_numpy(image).float()
         label = torch.from_numpy(label)
         
         return image, label
@@ -50,6 +49,7 @@ class MyData(Dataset):
 
 
 if __name__ == "__main__":
-    train_dataset = MyData("/home/data/1945", image_width=720, image_height=540)
-    print(train_dataset.file_list)
+    train_dataset = MyData("/home/data/1945", class_num=6, image_width=720, image_height=540)
+    image, label = train_dataset[0]
+    print(image.shape, label.shape)
     
