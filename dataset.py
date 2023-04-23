@@ -49,7 +49,8 @@ class MyData(Dataset):
 
 
 if __name__ == "__main__":
-    train_dataset = MyData("/home/data/1945", class_num=6, image_width=720, image_height=540)
+    train_dataset = MyData("/home/data/1945", class_num=5, image_width=720, image_height=540)
     image, label = train_dataset[0]
     print(image.shape, label.shape)
-    
+    print(label[420, 110:115, :])
+            
