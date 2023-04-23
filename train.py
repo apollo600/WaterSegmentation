@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import torch.utils.data as data
 from torch.utils.data.dataloader import DataLoader
 
 import os
@@ -68,25 +69,26 @@ def train(train_loader, train_model, args):
             loss.backward()
             optimizer.step()
 
-            # copy the tensor to host memory first
-            t_pred_label = pred_label.cpu().detach().numpy()
-            t_label = label.cpu().detach().numpy()
-            # get max arg as output label
-            t_pred_label = np.argmax(t_pred_label, axis=1)
-            t_label = np.transpose(t_label, [0, 3, 1, 2]).argmax(axis=1)
-            print(t_pred_label.shape, t_label.shape)
-            # update accuracy
-            acc = np.sum(t_label == t_pred_label) / np.prod(labels.shape)
-            if acc > best_acc: 
-                print(f"Update acc {best_acc} => {acc}")
-                best_acc = acc
-                model_name = os.path.join(log_dir, f"best_acc-{acc}.pt")
-                torch.save(train_model.state_dict(), model_name)
-
-            pbar.set_description(f"Epoch {epoch+1}/{init_epoch}: loss: {loss} acc: {acc}")
+            pbar.set_description(f"Epoch {epoch+1}/{init_epoch}: loss: {loss:.4f} acc: {acc:.4f}")
             pbar.update(1)
         pbar.close()
-            
+
+
+        # copy the tensor to host memory first
+        t_pred_label = pred_label.cpu().detach().numpy()
+        t_label = label.cpu().detach().numpy()
+        # get max arg as output label
+        t_pred_label = np.argmax(t_pred_label, axis=1)
+        t_label = np.transpose(t_label, [0, 3, 1, 2]).argmax(axis=1)
+        print(t_pred_label.shape, t_label.shape)
+        # update accuracy
+        acc = np.sum(t_label == t_pred_label) / np.prod(t_label.shape)
+        if acc > best_acc: 
+            print(f"Update acc {best_acc:.4f} => {acc:.4f}")
+            best_acc = acc
+            model_name = os.path.join(log_dir, f"best_acc-{acc:.4f}.pt")
+            torch.save(train_model.state_dict(), model_name)
+        
 
 if __name__ == "__main__":            
     args = get_parser()
@@ -97,7 +99,10 @@ if __name__ == "__main__":
     print("Using device", device)
 
     # Load the data from the folders
-    train_dataset = MyData("/home/data/1945", num_classes=args.num_classes, image_width=640, image_height=640)
+    dataset = MyData("/home/data/1945", num_classes=args.num_classes, image_width=640, image_height=640)
+    train_size = int(0.9 * len(dataset))
+    
+    train_dataset, val_dataset = data.random_split(dataset, )
 
     # Create the loaders
     train_loader = DataLoader(train_dataset, batch_size=args.batch, shuffle=True, num_workers=0)
