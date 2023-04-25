@@ -79,8 +79,8 @@ if __name__ == "__main__":
     pbar = tqdm(total=len(train_dataset), ascii=True)
     for i in range(len(train_dataset)):
         image, label = train_dataset[i]
-        this_min_label = np.min(label)
-        this_max_label = np.max(label)
+        this_min_label = torch.min(label)
+        this_max_label = torch.max(label)
         pbar.set_description(f"Llabel = {this_min_label} -- {this_max_label}")
         if max_label < this_max_label:
             max_label = this_max_label

@@ -21,9 +21,9 @@ def get_parser():
     parser = argparse.ArgumentParser(description='Train UNET')
     parser.add_argument("--epoch", type=int, default="10", help="train epochs")
     parser.add_argument("--lr", type=float, default="0.001", help="initial learning rate")
-    parser.add_argument("--batch", type=int, default="2", help="size to train each batch")
+    parser.add_argument("--batch_size", type=int, default="2", help="size to train each batch")
     parser.add_argument("--num_classes", type=int, default="34", help="number of classes")
-    parser.add_argument("--criterion", type=str, default="CrossEntropy", help="loss function to use")
+    parser.add_argument("--loss", type=str, default="CrossEntropy", help="loss function to use")
     parser.add_argument("--optimizer", type=str, default="AdamW", help="optimizer to use")
 
     args = parser.parse_args()
@@ -34,14 +34,14 @@ def get_parser():
 def train(train_loader, train_model, args):
     init_epoch = args.epoch
     init_lr = args.lr
-    init_batch = args.batch
+    init_batch = args.batch_size
 
-    if args.criterion == "Focal":
+    if args.loss == "Focal":
         criterion = FocalLoss()
-    elif args.criterion == "CrossEntropy":
+    elif args.loss == "CrossEntropy":
         criterion = nn.CrossEntropyLoss()
     else:
-        raise RuntimeError("wrong type of criterion given:", args.criterion)
+        raise RuntimeError("wrong type of criterion given:", args.loss)
     criterion = criterion.cuda()
 
     if args.optimizer == "AdamW":
@@ -52,7 +52,7 @@ def train(train_loader, train_model, args):
         raise RuntimeError("wrong type of optimizer given:", args.optimizer)
 
     time_stamp = time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime(time.time()))
-    log_dir = f"{time_stamp}_epoch-{args.epoch}_lr-{args.lr}_loss-{args.criterion}_optim-{args.optimizer}"
+    log_dir = f"{time_stamp}_epoch-{args.epoch}_lr-{args.lr}_loss-{args.loss}_optim-{args.optimizer}"
     os.makedirs(log_dir, exist_ok=True)
 
     best_acc = 0
@@ -65,11 +65,14 @@ def train(train_loader, train_model, args):
             # label: N, H, W, C     pred_label: N, C, H, W
             pred_label = train_model(data)
             
-            if args.criterion == "CrossEntropy":
+            if args.loss == "CrossEntropy":
+                print(pred_label.shape, label.shape)
                 # N, C, H, W => C, N*H*W
-                pred_label = pred_label.contiguous().view(-1, pred_label.size(1)).argmax()
-                # N, H, W, C => C, N*H*W
+                pred_label = pred_label.contiguous().permute(0, 2, 3, 1).vi
+                # N, H, W => N*H*W
                 label = label.view(-1)
+            else:
+                pass
             loss = criterion(pred_label, label)       
     
             optimizer.zero_grad()
@@ -121,12 +124,14 @@ if __name__ == "__main__":
     # dataset = MyData("/home/data/1945", num_classes=args.num_classes, image_width=640, image_height=640)
     if args.loss == "CrossEntropy":
         dataset = KittiData("/project/train/src_repo/data_semantics", args.num_classes, image_width=640, image_height=640, one_hot=False)
+    else:
+        dataset = KittiData("/project/train/src_repo/data_semantics", args.num_classes, image_width=640, image_height=640, one_hot=True)
     train_size = int(0.9 * len(dataset))
     val_size = int(0.1 * len(dataset))
     train_dataset, val_dataset = data.random_split(dataset, (train_size, val_size))
 
     # Create the loaders
-    train_loader = DataLoader(train_dataset, batch_size=args.batch, shuffle=True, num_workers=0)
+    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=0)
     val_loader = DataLoader(val_dataset, batch_size=1, shuffle=False)
 
     # Create the model
