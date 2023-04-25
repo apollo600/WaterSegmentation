@@ -9,18 +9,22 @@ from PIL import Image
 
 
 class KittiData(Dataset):        
-    def __init__(self, path, num_classes, image_width, image_height, augmentation=False):                
+    def __init__(self, path, num_classes, image_width, image_height, augmentation=False, isTrain=True):                
         super().__init__()
         self.path = path
         self.class_num = num_classes
         self.image_width = image_width
         self.image_height = image_height
+        self.augmentation = augmentation
+        self.isTrain = isTrain
 
-        file_list = os.listdir(path)
-        file_list = [ x[:-4] for x in file_list if x.endswith('png') ]
-        self.image_paths = [ x + ".jpg" for x in file_list ]
-        self.label_paths = [ x + ".png" for x in file_list ]
-        print(f"Found {len(file_list)} images")
+        if isTrain:
+            self.image_paths = os.listdir(os.path.join(path, "training", "image_2")).sort()
+            self.label_paths = os.listdir(os.path.join(path, "training", "semantic")).sort()
+        else:
+            self.image_paths = os.listdir(os.path.join(path, "testing", "image_2")).sort()
+            self.label_paths = os.listdir(os.path.join(path, "testing", "semantic")).sort()    
+        print(f"Found {len(self.image_paths)} images")
 
     def __getitem__(self, index):
         transform = transforms.Compose([
@@ -50,7 +54,6 @@ class KittiData(Dataset):
 
 
 if __name__ == "__main__":
-    train_dataset = MyData("/home/data/1945", num_classes=5, image_width=720, image_height=540)
-    image, label = train_dataset[0]
-    print(image.shape, label.shape)
+    train_dataset = KittiData("/project/train/src_repo/data_semantics", 8, 640, 640)
+    image, data = 
             
