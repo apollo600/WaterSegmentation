@@ -1,4 +1,4 @@
-python train.py \
+python /project/train/src_repo/train.py \
     --dataset My \
     --loss CrossEntropy \
     --lr 0.0005 \
