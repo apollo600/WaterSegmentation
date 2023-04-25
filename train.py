@@ -25,6 +25,8 @@ def get_parser():
     parser.add_argument("--num_classes", type=int, default="34", help="number of classes")
     parser.add_argument("--loss", type=str, default="CrossEntropy", help="loss function to use")
     parser.add_argument("--optimizer", type=str, default="AdamW", help="optimizer to use")
+    parser.add_argument("--dataset", type=str, default="Kitti", help="dataset to use")
+    parser.add_argument("--save_dir", type=str, default="logs", help="root dir of logs saved")
 
     args = parser.parse_args()
 
@@ -124,11 +126,16 @@ if __name__ == "__main__":
     print("Using device", device, os.environ['CUDA_VISIBLE_DEVICES'])
 
     # Load the data from the folders
-    # dataset = MyData("/home/data/1945", num_classes=args.num_classes, image_width=640, image_height=640)
     if args.loss == "CrossEntropy":
-        dataset = KittiData("/project/train/src_repo/data_semantics", args.num_classes, image_width=640, image_height=640, one_hot=False)
+        if args.dataset == "Kitti":
+            dataset = KittiData("/project/train/src_repo/data_semantics", args.num_classes, image_width=640, image_height=640, one_hot=False)
+        elif args.dataset == "My":
+            dataset = MyData("/home/data/1945", num_classes=args.num_classes, image_width=640, image_height=640, one_hot=False)
     else:
-        dataset = KittiData("/project/train/src_repo/data_semantics", args.num_classes, image_width=640, image_height=640, one_hot=True)
+        if args.dataset == "Kitti":
+            dataset = KittiData("/project/train/src_repo/data_semantics", args.num_classes, image_width=640, image_height=640, one_hot=True)
+        elif args.dataset == "My":
+            dataset = MyData("/home/data/1945", num_classes=args.num_classes, image_width=640, image_height=640, one_hot=True)
     train_size = int(0.9 * len(dataset))
     val_size = int(0.1 * len(dataset))
     train_dataset, val_dataset = data.random_split(dataset, (train_size, val_size))
