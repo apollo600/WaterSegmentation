@@ -35,7 +35,7 @@ class KittiData(Dataset):
         print(f"Found {len(self.image_paths)} images")
 
     def __getitem__(self, index):
-        print(f"Read from {self.image_paths[index]} & {self.label_paths[index]}")
+        # print(f"Read from {self.image_paths[index]} & {self.label_paths[index]}")
 
         assert(self.image_paths[index].split('/')[-1] == self.label_paths[index].split('/')[-1])
         
@@ -46,7 +46,6 @@ class KittiData(Dataset):
         image = Image.open(os.path.join(self.path, self.image_paths[index]))
         image = image.resize((self.image_width, self.image_height), Image.BILINEAR)
         image = np.array(image)
-        cv2.imwrite("data.png", image)
         image = np.transpose(image, [2, 0, 1])
 
         label = Image.open(os.path.join(self.path, self.label_paths[index]))
@@ -60,21 +59,22 @@ class KittiData(Dataset):
         image = torch.from_numpy(image).float()
         label_one_hot = torch.from_numpy(label_one_hot).long()
         
-        # return image, label_one_hot
-        return image, label
+        return image, label_one_hot
+        # return image, label
 
     def __len__(self):
         return len(self.image_paths)
 
 
 if __name__ == "__main__":
-    train_dataset = KittiData("/project/train/src_repo/data_semantics", 8, 640, 640)
+    train_dataset = KittiData("/project/train/src_repo/data_semantics", 34, 640, 640)
     max_label = 0
     pbar = tqdm(total=len(train_dataset), ascii=True)
-    for i in tqdm(range(len(train_dataset))):
+    for i in range(len(train_dataset)):
         image, label = train_dataset[i]
+        this_min_label = np.min(label)
         this_max_label = np.max(label)
-        pbar.set_description(f"Max label = {this_max_label}")
+        pbar.set_description(f"Llabel = {this_min_label} -- {this_max_label}")
         if max_label < this_max_label:
             max_label = this_max_label
         pbar.update(1)

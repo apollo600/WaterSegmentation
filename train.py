@@ -11,6 +11,7 @@ import time
 
 from model import UNET
 from dataset import MyData
+from kitti_dataset import KittiData
 from loss import FocalLoss
 
 
@@ -20,8 +21,8 @@ def get_parser():
     parser = argparse.ArgumentParser(description='Train UNET')
     parser.add_argument("--epoch", type=int, default="10", help="train epochs")
     parser.add_argument("--lr", type=float, default="0.0005", help="initial learning rate")
-    parser.add_argument("--batch", type=int, default="4", help="size to train each batch")
-    parser.add_argument("--num_classes", type=int, default="5", help="number of classes")
+    parser.add_argument("--batch", type=int, default="2", help="size to train each batch")
+    parser.add_argument("--num_classes", type=int, default="34", help="number of classes")
     parser.add_argument("--criterion", type=str, default="Focal", help="loss function to use")
     parser.add_argument("--optimizer", type=str, default="AdamW", help="optimizer to use")
 
@@ -76,8 +77,8 @@ def train(train_loader, train_model, args):
         print("Start Test")
         with torch.no_grad():
             for iteration, (data, label) in enumerate(val_loader):
-                data, label = data.cuda(), label.cuda()
-                pred_label = train_model(data)
+                data, label = data, label
+                pred_label = model(data)
             
             # copy the tensor to host memory first
             t_pred_label = pred_label.cpu().detach().numpy()
@@ -101,11 +102,11 @@ if __name__ == "__main__":
     # Get device
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print("Using device", device)
+    print("Using device", device, os.environ['CUDA_VISIBLE_DEVICES'])
 
     # Load the data from the folders
     # dataset = MyData("/home/data/1945", num_classes=args.num_classes, image_width=640, image_height=640)
-    
+    dataset = KittiData("/project/train/src_repo/data_semantics", 34, 640, 640)
     train_size = int(0.9 * len(dataset))
     val_size = int(0.1 * len(dataset))
     train_dataset, val_dataset = data.random_split(dataset, (train_size, val_size))
