@@ -182,3 +182,4 @@ best_acc-0.6942083740234375.pt
 PSPNet/
 __pycache__/
 semseg/
+data_semantics.zip
