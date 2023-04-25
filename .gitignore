@@ -185,3 +185,4 @@ semseg/
 data_semantics.zip
 data_semantics/
 best_acc-0.0048.pt
+best_acc-0.0071.pt
