@@ -69,7 +69,7 @@ def train(train_loader, train_model, args):
             loss.backward()
             optimizer.step()
 
-            pbar.set_description(f"Epoch {epoch+1}/{init_epoch}: loss: {loss:.4f} acc: {acc:.4f}")
+            pbar.set_description(f"Epoch {epoch+1}/{init_epoch}: loss: {loss:.4f}")
             pbar.update(1)
         pbar.close()
 
