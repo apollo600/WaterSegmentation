@@ -66,9 +66,9 @@ def train(train_loader, train_model, args):
             pred_label = train_model(data)
             
             if args.loss == "CrossEntropy":
-                print(pred_label.shape, label.shape)
                 # N, C, H, W => C, N*H*W
-                pred_label = pred_label.contiguous().permute(0, 2, 3, 1).vi
+                pred_label = pred_label.contiguous().permute(0, 2, 3, 1)
+                pred_label = pred_label.reshape(-1, pred_label.size(3))
                 # N, H, W => N*H*W
                 label = label.view(-1)
             else:
@@ -96,7 +96,10 @@ def train(train_loader, train_model, args):
                 t_label = label.cpu().detach().numpy()
                 # get max arg as output label
                 t_pred_label = np.argmax(t_pred_label, axis=1)
-                t_label = np.transpose(t_label, [0, 3, 1, 2]).argmax(axis=1)
+                if args.loss == "CrossEntropy":
+                    pass
+                elif args.loss == "Focal":    
+                    t_label = np.transpose(t_label, [0, 3, 1, 2]).argmax(axis=1)
                 # update accuracy
                 acc = np.sum(t_label == t_pred_label) / np.prod(t_label.shape[1:])
                 total_acc += acc
