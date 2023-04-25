@@ -20,7 +20,7 @@ def get_parser():
 
     parser = argparse.ArgumentParser(description='Train UNET')
     parser.add_argument("--epoch", type=int, default="10", help="train epochs")
-    parser.add_argument("--lr", type=float, default="0.0005", help="initial learning rate")
+    parser.add_argument("--lr", type=float, default="0.001", help="initial learning rate")
     parser.add_argument("--batch", type=int, default="2", help="size to train each batch")
     parser.add_argument("--num_classes", type=int, default="34", help="number of classes")
     parser.add_argument("--criterion", type=str, default="Focal", help="loss function to use")
@@ -76,12 +76,12 @@ def train(train_loader, train_model, args):
 
         print("Start Test")
         with torch.no_grad():
-            batches = len(train_loader)
+            batches = len(val_loader)
             total_acc = 0
             pbar = tqdm(total=batches, maxinterval=0.3, ascii=True)
             for iteration, (data, label) in enumerate(val_loader):
-                data, label = data, label
-                pred_label = model(data)
+                data, label = data.cuda(), label.cuda()
+                pred_label = train_model(data)
             
                 # copy the tensor to host memory first
                 t_pred_label = pred_label.cpu().detach().numpy()
@@ -100,7 +100,7 @@ def train(train_loader, train_model, args):
                 model_name = os.path.join(log_dir, f"best_acc-{total_acc:.4f}.pt")
                 torch.save(train_model.state_dict(), model_name)
             else:
-                
+                print(f"acc: {total_acc:.4f}")
             
 
 if __name__ == "__main__":            
