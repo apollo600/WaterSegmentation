@@ -55,6 +55,7 @@ def train(train_loader, train_model, args):
 
     time_stamp = time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime(time.time()))
     log_dir = f"{time_stamp}_epoch-{args.epoch}_lr-{args.lr}_loss-{args.loss}_optim-{args.optimizer}"
+    log_dir = os.path.join(args.save_dir, log_dir)
     os.makedirs(log_dir, exist_ok=True)
 
     best_acc = 0
