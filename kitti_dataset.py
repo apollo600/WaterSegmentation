@@ -60,7 +60,8 @@ class KittiData(Dataset):
         image = torch.from_numpy(image).float()
         label_one_hot = torch.from_numpy(label_one_hot).long()
         
-        return image, label_one_hot
+        # return image, label_one_hot
+        return image, label
 
     def __len__(self):
         return len(self.image_paths)
@@ -69,8 +70,14 @@ class KittiData(Dataset):
 if __name__ == "__main__":
     train_dataset = KittiData("/project/train/src_repo/data_semantics", 8, 640, 640)
     max_label = 0
+    pbar = tqdm(total=len(train_dataset), ascii=True)
     for i in tqdm(range(len(train_dataset))):
         image, label = train_dataset[i]
         this_max_label = np.max(label)
-        if 
-                
+        pbar.set_description(f"Max label = {this_max_label}")
+        if max_label < this_max_label:
+            max_label = this_max_label
+        pbar.update(1)
+    pbar.close()
+    print("max label:", max_label)
+                    
