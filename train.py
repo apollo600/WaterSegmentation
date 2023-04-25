@@ -24,7 +24,7 @@ def get_parser():
     parser.add_argument("--batch", type=int, default="2", help="size to train each batch")
     parser.add_argument("--num_classes", type=int, default="34", help="number of classes")
     parser.add_argument("--criterion", type=str, default="Focal", help="loss function to use")
-    parser.add_argument("--optimizer", type=str, default="SGD", help="optimizer to use")
+    parser.add_argument("--optimizer", type=str, default="AdamW", help="optimizer to use")
 
     args = parser.parse_args()
 
@@ -45,7 +45,7 @@ def train(train_loader, train_model, args):
     criterion = criterion.cuda()
 
     if args.optimizer == "AdamW":
-        optimizer = optim.AdamW(train_model.parameters(), init_lr, weight_decay=5e-2)
+        optimizer = optim.AdamW(train_model.parameters(), init_lr, weight_decay=1e-3)
     elif args.optimizer == "SGD":
         optimizer = optim.SGD(train_model.parameters(), lr=init_lr)
     else:
