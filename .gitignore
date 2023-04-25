@@ -177,3 +177,8 @@ best_acc-0.0015924072265625.pt
 best_acc-0.3374853515625.pt
 best_acc-0.5225146484375.pt
 best_acc-0.6942083740234375.pt
+
+2023-*/
+PSPNet/
+__pycache__/
+semseg/
