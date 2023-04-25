@@ -19,14 +19,18 @@ class KittiData(Dataset):
         self.isTrain = isTrain
 
         if isTrain:
-            self.image_paths = os.listdir(os.path.join(path, "training", "image_2")).sort()
-            self.label_paths = os.listdir(os.path.join(path, "training", "semantic")).sort()
+            self.image_paths = os.listdir(os.path.join(path, "training", "image_2"))
+            self.label_paths = os.listdir(os.path.join(path, "training", "semantic"))
         else:
-            self.image_paths = os.listdir(os.path.join(path, "testing", "image_2")).sort()
-            self.label_paths = os.listdir(os.path.join(path, "testing", "semantic")).sort()    
+            self.image_paths = os.listdir(os.path.join(path, "testing", "image_2"))
+            self.label_paths = os.listdir(os.path.join(path, "testing", "semantic"))
         print(f"Found {len(self.image_paths)} images")
 
     def __getitem__(self, index):
+        print(f"Read from {self.image_paths[index]} & {self.label_paths[index]}")
+
+        assert(self.image_paths[index] == self.label_paths[index])
+        
         transform = transforms.Compose([
             transforms.ToTensor()
         ])
@@ -55,5 +59,8 @@ class KittiData(Dataset):
 
 if __name__ == "__main__":
     train_dataset = KittiData("/project/train/src_repo/data_semantics", 8, 640, 640)
-    image, data = 
+    image, data = train_dataset[0]
+    print(image.shape, data.shape)
+    cv2.imwrite("data.png", image)
+    cv2.imwrite("label.png", label)
             
