@@ -26,7 +26,7 @@ def get_parser():
     parser.add_argument("--loss", type=str, default="CrossEntropy", help="loss function to use")
     parser.add_argument("--optimizer", type=str, default="AdamW", help="optimizer to use")
     parser.add_argument("--dataset", type=str, default="Kitti", help="dataset to use")
-    parser.add_argument("--save_dir", type=str, default="logs", help="root dir of logs saved")
+    parser.add_argument("--save_dir", type=str, default="", help="root dir of logs saved")
 
     args = parser.parse_args()
 
@@ -54,8 +54,10 @@ def train(train_loader, train_model, args):
         raise RuntimeError("wrong type of optimizer given:", args.optimizer)
 
     time_stamp = time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime(time.time()))
-    log_dir = f"{time_stamp}_epoch-{args.epoch}_lr-{args.lr}_loss-{args.loss}_optim-{args.optimizer}"
-    log_dir = os.path.join(args.save_dir, log_dir)
+    if args.save_dir == "":
+        log_dir = f"{time_stamp}_epoch-{args.epoch}_lr-{args.lr}_loss-{args.loss}_optim-{args.optimizer}"
+    else:
+        log_dir = args.save_dir
     os.makedirs(log_dir, exist_ok=True)
 
     best_acc = 0
@@ -112,8 +114,11 @@ def train(train_loader, train_model, args):
             if total_acc > best_acc: 
                 print(f"Update acc {best_acc:.4f} => {total_acc:.4f}")
                 best_acc = total_acc
-                model_name = os.path.join(log_dir, f"best_acc-{total_acc:.4f}.pt")
-                torch.save(train_model.state_dict(), model_name)
+                if args.save_dir == "":
+                    model_path = os.path.join(log_dir, f"best_acc-{total_acc:.4f}.pt")
+                else:
+                    model_path = os.path.join(log_dir, f"{time_stamp}_epoch-{args.epoch}_lr-{args.lr}_loss-{args.loss}_optim-{args.optimizer}_best_acc-{total_acc:.4f}.pt")
+                torch.save(train_model.state_dict(), model_path)
             else:
                 print(f"acc: {total_acc:.4f}")
             
