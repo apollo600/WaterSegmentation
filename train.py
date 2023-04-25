@@ -23,7 +23,7 @@ def get_parser():
     parser.add_argument("--lr", type=float, default="0.001", help="initial learning rate")
     parser.add_argument("--batch", type=int, default="2", help="size to train each batch")
     parser.add_argument("--num_classes", type=int, default="34", help="number of classes")
-    parser.add_argument("--criterion", type=str, default="Focal", help="loss function to use")
+    parser.add_argument("--criterion", type=str, default="CrossEntropy", help="loss function to use")
     parser.add_argument("--optimizer", type=str, default="AdamW", help="optimizer to use")
 
     args = parser.parse_args()
@@ -45,7 +45,7 @@ def train(train_loader, train_model, args):
     criterion = criterion.cuda()
 
     if args.optimizer == "AdamW":
-        optimizer = optim.AdamW(train_model.parameters(), init_lr, weight_decay=1e-3)
+        optimizer = optim.AdamW(train_model.parameters(), init_lr)
     elif args.optimizer == "SGD":
         optimizer = optim.SGD(train_model.parameters(), lr=init_lr)
     else:
@@ -64,8 +64,14 @@ def train(train_loader, train_model, args):
             data, label = data.cuda(), label.cuda()
             # label: N, H, W, C     pred_label: N, C, H, W
             pred_label = train_model(data)
-            loss = criterion(pred_label, label)
-
+            
+            if args.criterion != "Focal":
+                # N, C, H, W => C, N*H*W
+                pred_label = pred_label.contiguous().view(-1, pred_label.size(1)).transpose(1, 0)   
+                # N, H, W, C => C, N*H*W
+                label = label.view(-1, label.size(-1)).transpose(1, 0)   
+            loss = criterion(pred_label, label)       
+    
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
