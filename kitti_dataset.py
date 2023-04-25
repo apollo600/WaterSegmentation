@@ -26,12 +26,12 @@ class KittiData(Dataset):
             label_paths.sort()
             self.label_paths = [os.path.join(path, "training", "semantic", x) for x in label_paths]
         else:
-            image_paths = os.listdir(os.path.join(path, "training", "image_2"))
+            image_paths = os.listdir(os.path.join(path, "testing", "image_2"))
             image_paths.sort()
-            self.image_paths = [os.path.join(path, "training", "image_2", x) for x in image_paths]
-            label_paths = os.listdir(os.path.join(path, "training", "semantic"))
+            self.image_paths = [os.path.join(path, "testing", "image_2", x) for x in image_paths]
+            label_paths = os.listdir(os.path.join(path, "testing", "semantic"))
             label_paths.sort()
-            self.label_paths = [os.path.join(path, "training", "semantic", x) for x in label_paths]
+            self.label_paths = [os.path.join(path, "testing", "semantic", x) for x in label_paths]
         print(f"Found {len(self.image_paths)} images")
 
     def __getitem__(self, index):
@@ -46,6 +46,7 @@ class KittiData(Dataset):
         image = Image.open(os.path.join(self.path, self.image_paths[index]))
         image = image.resize((self.image_width, self.image_height), Image.BILINEAR)
         image = np.array(image)
+        cv2.imwrite("data.png", image)
         image = np.transpose(image, [2, 0, 1])
 
         label = Image.open(os.path.join(self.path, self.label_paths[index]))
@@ -67,8 +68,9 @@ class KittiData(Dataset):
 
 if __name__ == "__main__":
     train_dataset = KittiData("/project/train/src_repo/data_semantics", 8, 640, 640)
-    image, data = train_dataset[0]
-    print(image.shape, data.shape)
-    cv2.imwrite("data.png", image)
-    cv2.imwrite("label.png", label)
-            
+    max_label = 0
+    for i in tqdm(range(len(train_dataset))):
+        image, label = train_dataset[i]
+        this_max_label = np.max(label)
+        if 
+                
