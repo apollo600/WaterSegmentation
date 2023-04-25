@@ -183,3 +183,4 @@ PSPNet/
 __pycache__/
 semseg/
 data_semantics.zip
+data_semantics/
