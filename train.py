@@ -65,11 +65,11 @@ def train(train_loader, train_model, args):
             # label: N, H, W, C     pred_label: N, C, H, W
             pred_label = train_model(data)
             
-            if args.criterion != "Focal":
+            if args.criterion == "CrossEntropy":
                 # N, C, H, W => C, N*H*W
-                pred_label = pred_label.contiguous().view(-1, pred_label.size(1)).transpose(1, 0)   
+                pred_label = pred_label.contiguous().view(-1, pred_label.size(1)).argmax()
                 # N, H, W, C => C, N*H*W
-                label = label.view(-1, label.size(-1)).transpose(1, 0)   
+                label = label.view(-1)
             loss = criterion(pred_label, label)       
     
             optimizer.zero_grad()
