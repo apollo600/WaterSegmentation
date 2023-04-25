@@ -19,17 +19,25 @@ class KittiData(Dataset):
         self.isTrain = isTrain
 
         if isTrain:
-            self.image_paths = os.listdir(os.path.join(path, "training", "image_2"))
-            self.label_paths = os.listdir(os.path.join(path, "training", "semantic"))
+            image_paths = os.listdir(os.path.join(path, "training", "image_2"))
+            image_paths.sort()
+            self.image_paths = [os.path.join(path, "training", "image_2", x) for x in image_paths]
+            label_paths = os.listdir(os.path.join(path, "training", "semantic"))
+            label_paths.sort()
+            self.label_paths = [os.path.join(path, "training", "semantic", x) for x in label_paths]
         else:
-            self.image_paths = os.listdir(os.path.join(path, "testing", "image_2"))
-            self.label_paths = os.listdir(os.path.join(path, "testing", "semantic"))
+            image_paths = os.listdir(os.path.join(path, "training", "image_2"))
+            image_paths.sort()
+            self.image_paths = [os.path.join(path, "training", "image_2", x) for x in image_paths]
+            label_paths = os.listdir(os.path.join(path, "training", "semantic"))
+            label_paths.sort()
+            self.label_paths = [os.path.join(path, "training", "semantic", x) for x in label_paths]
         print(f"Found {len(self.image_paths)} images")
 
     def __getitem__(self, index):
         print(f"Read from {self.image_paths[index]} & {self.label_paths[index]}")
 
-        assert(self.image_paths[index] == self.label_paths[index])
+        assert(self.image_paths[index].split('/')[-1] == self.label_paths[index].split('/')[-1])
         
         transform = transforms.Compose([
             transforms.ToTensor()
