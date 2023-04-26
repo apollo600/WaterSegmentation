@@ -143,7 +143,7 @@ if __name__ == "__main__":
         elif args.dataset == "My":
             dataset = MyData("/home/data/1945", num_classes=args.num_classes, image_width=640, image_height=640, one_hot=True)
     train_size = int(0.9 * len(dataset))
-    val_size = int(0.1 * len(dataset))
+    val_size = len(dataset) - train_size
     train_dataset, val_dataset = data.random_split(dataset, (train_size, val_size))
 
     # Create the loaders
