@@ -43,12 +43,14 @@ class MyData(Dataset):
             label_one_hot = np.zeros((label.shape[0], label.shape[1], self.class_num))
             for i in range(self.class_num):
                 label_one_hot[:,:,i] = (label == i)
-            image = torch.from_numpy(image).float()
-            label_one_hot = torch.from_numpy(label_one_hot).long()
+            if self.is_train:
+                image = torch.from_numpy(image).float()
+                label_one_hot = torch.from_numpy(label_one_hot).long()
             return image, label_one_hot
         else:
-            image = torch.from_numpy(image).float()
-            label = torch.from_numpy(label).long()
+            if self.is_train:
+                image = torch.from_numpy(image).float()
+                label = torch.from_numpy(label).long()
             return image, label
 
     def __len__(self):
