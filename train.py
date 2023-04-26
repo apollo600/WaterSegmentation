@@ -27,6 +27,8 @@ def get_parser():
     parser.add_argument("--optimizer", type=str, default="AdamW", help="optimizer to use")
     parser.add_argument("--dataset", type=str, default="Kitti", help="dataset to use")
     parser.add_argument("--save_dir", type=str, default="", help="root dir of logs saved")
+    parser.add_argument("--image_width", type=int, default=640)
+    parser.add_argument("--image_height", type=int, default=640)
 
     args = parser.parse_args()
 
@@ -134,14 +136,14 @@ if __name__ == "__main__":
     # Load the data from the folders
     if args.loss == "CrossEntropy":
         if args.dataset == "Kitti":
-            dataset = KittiData("/project/train/src_repo/data_semantics", args.num_classes, image_width=640, image_height=640, one_hot=False)
+            dataset = KittiData("/project/train/src_repo/data_semantics", args.num_classes, image_width=args.image_width, image_height=args.image_height, one_hot=False)
         elif args.dataset == "My":
-            dataset = MyData("/home/data/1945", num_classes=args.num_classes, image_width=640, image_height=640, one_hot=False)
+            dataset = MyData("/home/data/1945", num_classes=args.num_classes, image_width=args.image_width, image_height=args.image_height, one_hot=False)
     else:
         if args.dataset == "Kitti":
-            dataset = KittiData("/project/train/src_repo/data_semantics", args.num_classes, image_width=640, image_height=640, one_hot=True)
+            dataset = KittiData("/project/train/src_repo/data_semantics", args.num_classes, image_width=args.image_width, image_height=args.image_height, one_hot=True)
         elif args.dataset == "My":
-            dataset = MyData("/home/data/1945", num_classes=args.num_classes, image_width=640, image_height=640, one_hot=True)
+            dataset = MyData("/home/data/1945", num_classes=args.num_classes, image_width=args.image_width, image_height=args.image_height, one_hot=True)
     train_size = int(0.9 * len(dataset))
     val_size = len(dataset) - train_size
     train_dataset, val_dataset = data.random_split(dataset, (train_size, val_size))
