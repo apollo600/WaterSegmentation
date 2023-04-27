@@ -149,7 +149,7 @@ if __name__ == "__main__":
         visualize(pred_label, os.path.join(save_dir, f"{i:05d}_pred.png"))
 
         # save src and label
-        image.astype(np.uint8)
+        image = np.astype(image, np.uint8)
         Image.fromarray(image).save(os.path.join(save_dir, f"{i:05d}_src.png"))
         visualize(label, os.path.join(save_dir, f"{i:05d}_gt.png"))
 
