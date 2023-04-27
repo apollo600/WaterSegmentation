@@ -2,7 +2,10 @@ python /project/train/src_repo/train.py \
     --dataset My \
     --loss CrossEntropy \
     --lr 0.0005 \
-    --batch_size 2 \
+    --batch_size 8 \
     --epoch 100 \
     --save_dir /project/train/models \
-    --num_classes 5
+    --num_classes 5 \
+    --image_width 384 \
+    --image_height 384 \
+    --optimizer 
