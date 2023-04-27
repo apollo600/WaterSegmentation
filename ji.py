@@ -76,7 +76,7 @@ def process_image(handle=None, input_image=None, args=None, **kwargs):
     image = np.transpose(image, [2, 0, 1])
     # C, H, W -> 1, Channels, H, W
     image = np.expand_dims(image, axis=0)
-    # image = torch.from_numpy(image).float()
+    image = torch.from_numpy(image).float()
     image = image.cuda()
     # 1, Classes, H, W
     pred_label = model(image)
@@ -134,7 +134,7 @@ if __name__ == "__main__":
     for i in tqdm(range(len(dataset)), desc="Inferencing", ascii=True):
         # image: C, H, W    label: H, W
         image, label = dataset[i]
-
+        
         image = np.transpose(image, [1, 2, 0])
 
         output_json = process_image(model, image, 
