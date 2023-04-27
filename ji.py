@@ -132,8 +132,8 @@ if __name__ == "__main__":
     os.makedirs(save_dir, exist_ok=True)
 
     for i in tqdm(range(len(dataset)), desc="Inferencing", ascii=True):
-        # image: 
-                image, label = dataset[i]
+        # image: C, H, W    label: H, W
+        image, label = dataset[i]
 
         image = np.transpose(image, [1, 2, 0])
 
