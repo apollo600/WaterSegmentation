@@ -103,7 +103,7 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
             t_pred_label = np.argmax(t_pred_label, axis=1)
             if args.loss == "CrossEntropy":
                 pass
-            elif args.loss == "Focal":    
+            elif args.loss == "Focal":
                 t_label = np.transpose(t_label, [0, 3, 1, 2]).argmax(axis=1)
             # update accuracy
             acc = np.sum(t_label == t_pred_label) / np.prod(t_label.shape)
@@ -129,7 +129,7 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
                 t_pred_label = np.argmax(t_pred_label, axis=1)
                 if args.loss == "CrossEntropy":
                     pass
-                elif args.loss == "Focal":    
+                elif args.loss == "Focal":
                     t_label = np.transpose(t_label, [0, 3, 1, 2]).argmax(axis=1)
                 # update accuracy
                 acc = np.sum(t_label == t_pred_label) / np.prod(t_label.shape[1:])
@@ -173,12 +173,12 @@ if __name__ == "__main__":
     if args.dataset == "Kitti":
         dataset = KittiData(
             os.path.join(args.data_root, args.data_dir), num_classes=args.num_classes,
-            image_width=args.image_width, image_height=args.image_height, one_hot=one_hot, is_train=True
+            image_width=args.image_width, image_height=args.image_height, one_hot=one_hot, to_torch=True
         )
     elif args.dataset == "My":
         dataset = MyData(
             os.path.join(args.data_root, args.data_dir), num_classes=args.num_classes,
-            image_width=args.image_width, image_height=args.image_height, one_hot=one_hot, is_train=True
+            image_width=args.image_width, image_height=args.image_height, one_hot=one_hot, to_torch=True
         )
     train_size = int(0.9 * len(dataset))
     val_size = len(dataset) - train_size

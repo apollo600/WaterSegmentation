@@ -5,7 +5,7 @@ import numpy as np
 from PIL import Image
 from tqdm import tqdm
 from utils import visual
-from utils.dataset import MyData
+from utils.raw_dataset import RawData
 
 
 parser = argparse.ArgumentParser(description='Test UNET')
@@ -17,14 +17,12 @@ parser.add_argument("--log_root", type=str, default="./", help="log directory ro
 parser.add_argument("--log_dir", type=str, default="log/infer/", help="directory where logs are saved")
 parser.add_argument("--mask_root", type=str, default="./")
 parser.add_argument("--mask_dir", type=str, default="./")
-parser.add_argument("--image_width", type=int, default=640)
-parser.add_argument("--image_height", type=int, default=640)
 
 args = parser.parse_args()
 
 model = ji.init(args.model_path)
 
-dataset = MyData(os.path.join(args.data_root, args.data_dir), 5, args.image_width, args.image_height, is_train=False, one_hot=False)
+dataset = RawData(os.path.join(args.data_root, args.data_dir))
 total_acc = 0
 
 log_path = os.path.join(args.log_root, args.log_dir)
@@ -38,7 +36,7 @@ for i in tqdm(range(len(dataset)), desc="Inferencing", ascii=True):
 
     # image: C, H, W    label: H, W
     image, label = dataset[i]
-    image = np.transpose(image, [1, 2, 0])
+    h, w, _ = image.shape
     
     output_json = ji.process_image(
         model, image, '{"mask_output_path": "' + str(mask_png_path).replace('\\', '/') + '"}'
@@ -47,13 +45,11 @@ for i in tqdm(range(len(dataset)), desc="Inferencing", ascii=True):
     pred_label = Image.open(mask_png_path)
     pred_label = np.array(pred_label)
 
-    # save pred label
+    # save
     visual.visualize(pred_label, os.path.join(log_path, f"{i:05d}_pred.png"))
-
-    # save src and label
-    image = np.uint8(image)
-    Image.fromarray(image).save(os.path.join(log_path, f"{i:05d}_src.png"))
     visual.visualize(label, os.path.join(log_path, f"{i:05d}_label.png"))
+    Image.fromarray(np.uint8(image)).save(os.path.join(log_path, f"{i:05d}_src.png"))
+
     total_acc += (pred_label == label).sum() / np.prod(pred_label.shape)
 
 print("Test acc:", total_acc / len(dataset))
