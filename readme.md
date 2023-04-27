@@ -22,11 +22,12 @@ chmod 775 train.sh
 
 ```plaintext
 WaterSegmentation
-├─ model/    <-- model and loss classes
-├─ utils/    <-- dataset reader
-├─ train.py  <-- train function
-├─ ji.py     <-- inference interface
-└─ *.sh / *.bat      <-- quick access
+├─ model/        <-- model and loss classes
+├─ utils/        <-- dataset reader
+├─ train.py      <-- train function
+├─ inference.py  <-- inference function
+├─ ji.py         <-- inference interface
+└─ *.sh / *.bat  <-- quick access
 ```
 
 ## Mannual Interface
