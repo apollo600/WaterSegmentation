@@ -2,6 +2,7 @@ import sys
 import json
 import torch
 import numpy as np
+from PIL import Image
 import torch.nn as nn
 
 sys.path.append("/project/train/src_repo/")
@@ -62,18 +63,17 @@ def process_image(handle: nn.Module = None, input_image: np.ndarray = None, args
     image = np.expand_dims(image, axis=0)
     image = torch.from_numpy(image).float()
     image = image.cuda()
+
     # 1, Classes, H, W
     pred_label = model(image)
-    # Generate dummy mask data
+
+    # Generate mask data
     t_pred_label: np.ndarray = pred_label.cpu().detach().numpy()
-    # print("label shape:", t_pred_label.shape)
-    # print(t_pred_label.transpose([0, 2, 3, 1]))
     # 1, C, H, W -> 1, H, W
     t_pred_label = np.argmax(t_pred_label, axis=1)
-    # print("after argmax shape:", t_pred_label.shape)
-    # print(t_pred_label)
     # 1, H, W -> H, W
     t_pred_label = np.squeeze(t_pred_label, axis=0)
-    # h, w, _ = input_image.shape
-    # dummy_
+    pred_mask_per_frame = Image.fromarray(np.uint8(t_pred_label))
+    pred_mask_per_frame.save(mask_output_path)
+
     return json.dumps({'mask': mask_output_path}, indent=4)
