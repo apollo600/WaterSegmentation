@@ -14,10 +14,10 @@ save_dir=models/
 # training methods
 loss=CrossEntropy
 lr=0.0005
-batch_size=8
+batch_size=2
 epoch=100
-image_width=384
-image_height=384
+image_width=640
+image_height=640
 optimizer=Adagrad
 
 

@@ -181,32 +181,7 @@ __pycache__/
 semseg/
 data_semantics.zip
 data_semantics/
-<<<<<<< HEAD
 models/
 1945/
-=======
-best_acc-0.0048.pt
-best_acc-0.0071.pt
-best_acc-0.0095.pt
-best_acc-0.0113.pt
-best_acc-0.0137.pt
-best_acc-0.0148.pt
-best_acc-0.0018.pt
-best_acc-0.0066.pt
-best_acc-0.3910.pt
-best_acc-0.5727.pt
-best_acc-0.6225.pt
-best_acc-0.6331.pt
-best_acc-0.6617.pt
-best_acc-0.4358.pt
-best_acc-0.5120.pt
-best_acc-0.5867.pt
-best_acc-0.2947.pt
-best_acc-0.4653.pt
-best_acc-0.5837.pt
-best_acc-0.6019.pt
-best_acc-0.6082.pt
-best_acc-0.6734.pt
-best_acc-0.6785.pt
->>>>>>> dev-new-model
-best_acc-0.5096.pt
+logs/
+test/

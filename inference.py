@@ -15,24 +15,24 @@ parser.add_argument("--image_height", type=int, default=640)
 
 args = parser.parse_args()
 
-model = ji.init()
+model = ji.init(args.model_path)
 
-dataset = MyData("/home/data/1945", 5, args.image_width, args.image_height, is_train=False, one_hot=False)
+dataset = MyData("./1945", 5, args.image_width, args.image_height, is_train=False, one_hot=False)
 total_acc = 0
 
-save_dir = "logs/infer"
+save_dir = "./logs/infer"
 os.makedirs(save_dir, exist_ok=True)
 
 for i in tqdm(range(len(dataset)), desc="Inferencing", ascii=True):
 
     # image: C, H, W    label: H, W
     image, label = dataset[i]
-    image = image.numpy()
-    label = label.numpy()
     image = np.transpose(image, [1, 2, 0])
-    output_json = ji.process_image(model, image, 
-        '{"mask_output_path": "/project/ev_sdk/mask.png"}')
-    pred_label = Image.open("/project/ev_sdk/mask.png")
+    output_json = ji.process_image(
+        model, image, '{"mask_output_path": "./test/mask.png"}'  #/project/ev_sdk/mask.png
+    )
+    pred_label = Image.open("./test/mask.png")  #/project/ev_sdk/mask.png
+    pred_label = pred_label.resize((args.image_width, args.image_height), Image.BILINEAR)
     pred_label = np.array(pred_label)
 
     # save pred label

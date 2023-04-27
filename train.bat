@@ -16,8 +16,8 @@ set loss=CrossEntropy
 set lr=0.0005
 set batch_size=2
 set epoch=100
-set image_width=384
-set image_height=384
+set image_width=640
+set image_height=640
 set optimizer=Adagrad
 
 
