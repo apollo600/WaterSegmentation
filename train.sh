@@ -8,4 +8,4 @@ python /project/train/src_repo/train.py \
     --num_classes 5 \
     --image_width 384 \
     --image_height 384 \
-    --optimizer AdamW
+    --optimizer Adagrad

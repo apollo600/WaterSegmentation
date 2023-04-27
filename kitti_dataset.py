@@ -47,7 +47,8 @@ class KittiData(Dataset):
         image = Image.open(os.path.join(self.path, self.image_paths[index]))
         image = image.resize((self.image_width, self.image_height), Image.BILINEAR)
         image = np.array(image)
-        image = np.transpose(image, [2, 0, 1])
+        if self.is_train:
+            image = np.transpose(image, [2, 0, 1])
 
         label = Image.open(os.path.join(self.path, self.label_paths[index]))
         label = label.resize((self.image_width, self.image_height), Image.BILINEAR)
@@ -57,12 +58,14 @@ class KittiData(Dataset):
             label_one_hot = np.zeros((label.shape[0], label.shape[1], self.class_num))
             for i in range(self.class_num):
                 label_one_hot[:,:,i] = (label == i)
-            image = torch.from_numpy(image).float()
-            label_one_hot = torch.from_numpy(label_one_hot).long()
+            if self.is_train:
+                image = torch.from_numpy(image).float()
+                label_one_hot = torch.from_numpy(label_one_hot).long()
             return image, label_one_hot
         else:
-            image = torch.from_numpy(image).float()
-            label = torch.from_numpy(label).long()
+            if self.is_train:
+                image = torch.from_numpy(image).float()
+                label = torch.from_numpy(label).long()
             return image, label
 
     def __len__(self):

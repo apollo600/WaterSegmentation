@@ -71,9 +71,9 @@ def train(train_loader, train_model, args):
         pbar = tqdm(total=batches, desc=f"Epoch {epoch+1}/{init_epoch}: ", maxinterval=0.3, ascii=True)
         for iteration, (data, label) in enumerate(train_loader):
             data, label = data.cuda(), label.cuda()
-            # label: N, H, W, C     pred_label: N, C, H, W
+            # label: N, H, W    pred_label: N, C, H, W
             pred_label = train_model(data)
-            
+
             if args.loss == "CrossEntropy":
                 # N, C, H, W => C, N*H*W
                 pred_label = pred_label.contiguous().permute(0, 2, 3, 1)
