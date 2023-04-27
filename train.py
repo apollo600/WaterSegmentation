@@ -20,15 +20,15 @@ def get_parser():
 
     parser = argparse.ArgumentParser(description='Train UNET')
     parser.add_argument("--dataset", type=str, default="Kitti", help="dataset to use")
-    parser.add_argument("--epoch", type=int, default="10", help="train epochs")
+    parser.add_argument("--loss", type=str, default="CrossEntropy", help="loss function to use")
     parser.add_argument("--lr", type=float, default="0.001", help="initial learning rate")
     parser.add_argument("--batch_size", type=int, default="2", help="size to train each batch")
-    parser.add_argument("--num_classes", type=int, default="34", help="number of classes")
-    parser.add_argument("--loss", type=str, default="CrossEntropy", help="loss function to use")
-    parser.add_argument("--optimizer", type=str, default="AdamW", help="optimizer to use")
+    parser.add_argument("--epoch", type=int, default="10", help="train epochs")
     parser.add_argument("--save_dir", type=str, default="", help="root dir of logs saved")
+    parser.add_argument("--num_classes", type=int, default="34", help="number of classes")
     parser.add_argument("--image_width", type=int, default=640)
     parser.add_argument("--image_height", type=int, default=640)
+    parser.add_argument("--optimizer", type=str, default="AdamW", help="optimizer to use")
 
     args = parser.parse_args()
 
@@ -52,6 +52,8 @@ def train(train_loader, train_model, args):
         optimizer = optim.AdamW(train_model.parameters(), init_lr)
     elif args.optimizer == "SGD":
         optimizer = optim.SGD(train_model.parameters(), lr=init_lr)
+    elif args.optimizer == "Adagrad":
+        optimizer = optim.Adagrad(train_model.parameters(), lr=init_lr)
     else:
         raise RuntimeError("wrong type of optimizer given:", args.optimizer)
 
@@ -80,7 +82,7 @@ def train(train_loader, train_model, args):
                 label = label.view(-1)
             else:
                 pass
-            loss = criterion(pred_label, label)       
+            loss = criterion(pred_label, label)
     
             optimizer.zero_grad()
             loss.backward()
