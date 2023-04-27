@@ -63,9 +63,9 @@ def process_image(handle: nn.Module = None, input_image: np.ndarray = None, args
     image = torch.from_numpy(image).float()
     image = image.cuda()
     # 1, Classes, H, W
-    pred_label: np.ndarray = model(image)
+    pred_label = model(image)
     # Generate dummy mask data
-    t_pred_label = pred_label.cpu().detach().numpy()
+    t_pred_label: np.ndarray = pred_label.cpu().detach().numpy()
     # print("label shape:", t_pred_label.shape)
     # print(t_pred_label.transpose([0, 2, 3, 1]))
     # 1, C, H, W -> 1, H, W
