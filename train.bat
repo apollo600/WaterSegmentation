@@ -11,7 +11,7 @@ set dataset_dir=1945/
 set save_root=./
 set save_dir=models/
 set log_root=./
-set log_dir=logs/
+set log_dir=log/
 
 @REM training methods
 set loss=CrossEntropy
