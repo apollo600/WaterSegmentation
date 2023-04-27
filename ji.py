@@ -28,7 +28,7 @@ def checkGPU():
 
     print(">>> GPU List <<<")
     for i in range(gpu_count):
-        print(i+1, torch.cuda.get_device_name(i))
+        print(f"{i+1}. {torch.cuda.get_device_name(i)}")
         
 
 def init():
@@ -82,6 +82,8 @@ def process_image(handle=None, input_image=None, args=None, **kwargs):
     pred_label = model(image)
     # Generate dummy mask data
     t_pred_label = pred_label.cpu().detach().numpy()
+    print("label shape:", )
+    print(t_pred_label)
     # 1, C, H, W -> 1, H, W
     t_pred_label = np.argmax(t_pred_label, axis=1)
     # 1, H, W -> H, W
@@ -128,6 +130,9 @@ if __name__ == "__main__":
     os.makedirs(save_dir, exist_ok=True)
 
     for i in tqdm(range(len(dataset)), desc="Inferencing", ascii=True):
+        if i == 1:
+            break
+    
         image, label = dataset[i]
         # C, H, W -> H, W, C
         image = image.transpose([1, 2, 0])
