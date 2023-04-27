@@ -138,7 +138,12 @@ if __name__ == "__main__":
         pred_label = Image.open("/project/ev_sdk/mask.png")
         pred_label = np.array(pred_label)
 
-        visualize(pred_label, os.path.join(save_dir, f"{i:5d}.png"))
+        # save pred label
+        visualize(pred_label, os.path.join(save_dir, f"{i:05d}_pred.png"))
+
+        # save src and label
+        Image.fromarray(image).save(os.path.join(save_dir, f"{i:05d}_src.png"))
+        visualize(label, os.path.join(save_dir, f"{i:05d}_gt.png"))
 
         total_acc += (pred_label == label).sum() / np.prod(pred_label.shape)
     print("Test acc:", total_acc / len(dataset))
