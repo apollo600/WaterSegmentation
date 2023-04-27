@@ -1,54 +1,76 @@
-# Water Segmentation
+# Water Segmentation Competition
+
+The repo is for [this competition](https://www.cvmart.net/topList/10488).
 
 ## Usage
 
-Note 1: The `[dataset-name]` below should be `Kitti` or `My`, default is `My`.  
-Note 2: Paths in Windows and Linux are different. Change if you need.
+Environment: pytorch, numpy, tqdm. No more packages.
+
+Just following the command below.
 
 ### Windows
 
 ```shell
 train [dataset-name]
+inference
 ```
 
 ### Linux
 
 ```shell
-chmod 775 train.sh
+chmod 775 train.sh inference.sh
 ./train.sh [dataset-name]
+./inference.sh
 ```
+
+### Competition Upload
+
+[This url again](https://www.cvmart.net/topList/10488) if you need to refer.
+
+```shell
+cd /project/train/
+rm -rf src_repo
+git clone $THIS_REPO
+mv $THIS_REPO_NAME src_repo
+...  # test or train the repo as you want
+<Train it>  # command: bash /project/train/src_repo/train.sh
+...  # wait till your training is done...
+cp ji.py /project/ev_sdk/  # copy the interface
+vim ji.py  # to specify the model path in the file
+<Test it>
+DONE~
+```
+
+### PS
+
+- Note 1: The `[dataset-name]` below should be `Kitti` or `My`, default is `My`.
+- Note 2: Root paths in Windows and Linux are different. Change `*.bat` or `*.sh` file if you need.
+- Note 3: `inference` requires you to specify the model path in the `inference.bat` or `inference.sh` file.
 
 ## Architecture
 
 ```plaintext
 WaterSegmentation
 ├─ model/        <-- model and loss classes
-├─ utils/        <-- dataset reader
+├─ utils/        <-- dataset reader, visualization, ...
 ├─ train.py      <-- train function
 ├─ inference.py  <-- inference function
 ├─ ji.py         <-- inference interface
 └─ *.sh / *.bat  <-- quick access
 ```
 
-## Mannual Interface
+## Interface
+
+Refer to [this](https://www.cvmart.net/topList/10488?tab=RankDescription).
 
 ```python
-def init() -> HANDLE:
-    return HANDLE()
-
-def process_image(handle: HANDLE, input_image=None, args=None, **kwargs) ->
-    args = json.loads(args)
-    mask_output_path = args['mask_output_path']
-    # Process image here
-    # Generate dummy mask data
-    h, w, _ = input_image.shape
-    dummy_data = np.random.randint(low=0, high=2, size=(w, h), dtype=np.uint8)
-    pred_mask_per_frame = Image.fromarray(dummy_data)
-    pred_mask_per_frame.save(mask_output_path)
-    return json.dumps({'mask': mask_output_path}, indent=4)
+def init() -> nn.Module:
+def process_image(
+    handle: nn.Module, input_image: np.ndarray,
+    args: Any, **kwargs
+) -> str
 ```
 
 ## Todo
 
-- [ ] ??
-- [ ] ??
+See Issues.
