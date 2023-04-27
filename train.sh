@@ -15,7 +15,7 @@ log_dir=log/train/
 
 # training methods
 loss=CrossEntropy
-lr=0.0005
+lr=0.0001
 batch_size=2
 epoch=100
 image_width=640

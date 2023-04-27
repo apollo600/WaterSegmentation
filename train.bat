@@ -15,7 +15,7 @@ set log_dir=log/train/
 
 @REM training methods
 set loss=CrossEntropy
-set lr=0.0005
+set lr=0.0001
 set batch_size=2
 set epoch=100
 set image_width=640
