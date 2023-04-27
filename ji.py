@@ -28,7 +28,7 @@ def checkGPU():
 
     print(">>> GPU List <<<")
     for i in range(gpu_count):
-        print(i+1, torch.cuda.get_device_name(i))
+        print(f"{i+1}. {torch.cuda.get_device_name(i)}")
         
 
 def init():
@@ -82,8 +82,12 @@ def process_image(handle=None, input_image=None, args=None, **kwargs):
     pred_label = model(image)
     # Generate dummy mask data
     t_pred_label = pred_label.cpu().detach().numpy()
+    print("label shape:", t_pred_label.shape)
+    print(t_pred_label.transpose([0, 2, 3, 1]))
     # 1, C, H, W -> 1, H, W
     t_pred_label = np.argmax(t_pred_label, axis=1)
+    print("after argmax shape:", t_pred_label.shape)
+    print(t_pred_label)
     # 1, H, W -> H, W
     t_pred_label = np.squeeze(t_pred_label, axis=0)
     # h, w, _ = input_image.shape
@@ -94,17 +98,43 @@ def process_image(handle=None, input_image=None, args=None, **kwargs):
     return json.dumps({'mask': mask_output_path}, indent=4)
 
 
+def visualize(label_img, output_path):
+    color_map = {
+        # tuple means R, G. B
+        0: (0, 0, 0), # background
+        1: (105, 119, 35), # algae
+        2: (112, 6, 20), # dead_twigs_leaves
+        3: (147, 112, 219), # rubbish
+        4: (230, 153, 102), # water
+    }
+
+    h, w = label_img.shape[:2]
+    color_img = np.zeros((h, w, 3), dtype=np.uint8)
+    for i, c in color_map.items():
+        color_img[label_img == i, :] = c
+    Image.fromarray(color_img).save(output_path)
+
+
+
 if __name__ == "__main__":        
     args = get_parser()
     
-    # 2023-04-26-15:26:55_epoch-100_lr-0.0005_loss-CrossEntropy_optim-AdamW_best_acc-0.7752.pt
+    # Best model now: /project/train/models/2023-04-26-15:26:55_epoch-100_lr-0.0005_loss-CrossEntropy_optim-AdamW_best_acc-0.7752.pt
+    # Best local model: /project/train/models/2023-04-26-14\:34\:28_epoch-100_lr-0.0005_loss-CrossEntropy_optim-AdamW_best_acc-0.6238.pt
     model = init()
 
     from utils.dataset import MyData
     from tqdm import tqdm
     dataset = MyData("/home/data/1945", 5, args.image_width, args.image_height, is_train=False, one_hot=False)
     total_acc = 0
+
+    save_dir = "logs/infer"
+    os.makedirs(save_dir, exist_ok=True)
+
     for i in tqdm(range(len(dataset)), desc="Inferencing", ascii=True):
+        if i == 1:
+            break
+    
         image, label = dataset[i]
         # C, H, W -> H, W, C
         image = image.transpose([1, 2, 0])
@@ -114,6 +144,13 @@ if __name__ == "__main__":
 
         pred_label = Image.open("/project/ev_sdk/mask.png")
         pred_label = np.array(pred_label)
+
+        # save pred label
+        visualize(pred_label, os.path.join(save_dir, f"{i:05d}_pred.png"))
+
+        # save src and label
+        Image.fromarray(image).save(os.path.join(save_dir, f"{i:05d}_src.png"))
+        visualize(label, os.path.join(save_dir, f"{i:05d}_gt.png"))
 
         total_acc += (pred_label == label).sum() / np.prod(pred_label.shape)
     print("Test acc:", total_acc / len(dataset))
