@@ -94,15 +94,22 @@ def process_image(handle=None, input_image=None, args=None, **kwargs):
     return json.dumps({'mask': mask_output_path}, indent=4)
 
 
-def visulize(label_img, output_path):
+def visualize(label_img, output_path):
     color_map = {
         # tuple means R, G. B
         0: (0, 0, 0), # background
         1: (105, 119, 35), # algae
         2: (112, 6, 20), # dead_twigs_leaves
         3: (147, 112, 219), # rubbish
-        4: (), # water
-                                }
+        4: (230, 153, 102), # water
+    }
+
+    h, w = label_img.shape[:2]
+    color_img = np.zeros((h, w, 3), dtype=np.uint8)
+    for i, c in color_map.items():
+        color_img[label_img == i, :] = c
+    Image.fromarray(color_img).save(output_path)
+
 
 
 if __name__ == "__main__":        
@@ -116,6 +123,10 @@ if __name__ == "__main__":
     from tqdm import tqdm
     dataset = MyData("/home/data/1945", 5, args.image_width, args.image_height, is_train=False, one_hot=False)
     total_acc = 0
+
+    save_dir = "logs/infer"
+    os.makedirs(save_dir, exist_ok=True)
+
     for i in tqdm(range(len(dataset)), desc="Inferencing", ascii=True):
         image, label = dataset[i]
         # C, H, W -> H, W, C
@@ -126,6 +137,8 @@ if __name__ == "__main__":
 
         pred_label = Image.open("/project/ev_sdk/mask.png")
         pred_label = np.array(pred_label)
+
+        visualize(pred_label, os.path.join(save_dir, f"{i:5d}.png"))
 
         total_acc += (pred_label == label).sum() / np.prod(pred_label.shape)
     print("Test acc:", total_acc / len(dataset))
