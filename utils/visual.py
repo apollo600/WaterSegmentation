@@ -4,11 +4,11 @@ from PIL import Image
 def visualize(label_img, output_path):
     color_map = {
         # tuple means R, G. B
-        0: (0, 0, 0), # background
-        1: (105, 119, 35), # algae
-        2: (112, 6, 20), # dead_twigs_leaves
-        3: (147, 112, 219), # rubbish
-        4: (230, 153, 102), # water
+        0: (0, 0, 0), # background: black
+        1: (255, 255, 255), # algae: white
+        2: (56, 94, 15), # dead_twigs_leaves: green
+        3: (255, 97, 3), # rubbish: orange
+        4: (135, 206, 235), # water: blue
     }
 
     h, w = label_img.shape[:2]
