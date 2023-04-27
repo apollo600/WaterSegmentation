@@ -11,7 +11,7 @@ dataset_dir=1945/
 save_root=/project/train/
 save_dir=models/
 log_root=/project/train/
-sog_dir=logs/
+log_dir=logs/
 
 # training methods
 loss=CrossEntropy
