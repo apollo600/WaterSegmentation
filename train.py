@@ -57,7 +57,7 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
     else:
         raise RuntimeError("wrong type of optimizer given:", args.optimizer)
 
-    time_stamp = time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime(time.time()))
+    time_stamp = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime(time.time()))
     if args.save_dir == "":
         log_dir = f"{time_stamp}_epoch-{args.epoch}_lr-{args.lr}_loss-{args.loss}_optim-{args.optimizer}"
     else:
