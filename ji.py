@@ -6,7 +6,7 @@ from PIL import Image
 import torch.nn as nn
 
 sys.path.append("/project/train/src_repo/")
-from model.model import UNET
+from model.model2 import UNET
 
 
 def checkGPU():
