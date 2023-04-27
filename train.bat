@@ -20,7 +20,7 @@ set batch_size=2
 set epoch=100
 set image_width=640
 set image_height=640
-set optimizer=Adagrad
+set optimizer=RMSprop
 
 
 set argc=0
