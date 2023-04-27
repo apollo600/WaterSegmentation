@@ -19,13 +19,13 @@ def get_parser():
     import argparse
 
     parser = argparse.ArgumentParser(description='Train UNET')
+    parser.add_argument("--dataset", type=str, default="Kitti", help="dataset to use")
     parser.add_argument("--epoch", type=int, default="10", help="train epochs")
     parser.add_argument("--lr", type=float, default="0.001", help="initial learning rate")
     parser.add_argument("--batch_size", type=int, default="2", help="size to train each batch")
     parser.add_argument("--num_classes", type=int, default="34", help="number of classes")
     parser.add_argument("--loss", type=str, default="CrossEntropy", help="loss function to use")
     parser.add_argument("--optimizer", type=str, default="AdamW", help="optimizer to use")
-    parser.add_argument("--dataset", type=str, default="Kitti", help="dataset to use")
     parser.add_argument("--save_dir", type=str, default="", help="root dir of logs saved")
     parser.add_argument("--image_width", type=int, default=640)
     parser.add_argument("--image_height", type=int, default=640)
