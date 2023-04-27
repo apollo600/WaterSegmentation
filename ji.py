@@ -82,10 +82,12 @@ def process_image(handle=None, input_image=None, args=None, **kwargs):
     pred_label = model(image)
     # Generate dummy mask data
     t_pred_label = pred_label.cpu().detach().numpy()
-    print("label shape:", )
-    print(t_pred_label)
+    print("label shape:", t_pred_label.shape)
+    print(t_pred_label.transpose([0, 2, 3, 1]))
     # 1, C, H, W -> 1, H, W
     t_pred_label = np.argmax(t_pred_label, axis=1)
+    print("after argmax shape:", t_pred_label.shape)
+    print(t_pred_label)
     # 1, H, W -> H, W
     t_pred_label = np.squeeze(t_pred_label, axis=0)
     # h, w, _ = input_image.shape
