@@ -20,7 +20,7 @@ batch_size=2
 epoch=100
 image_width=640
 image_height=640
-optimizer=Adagrad
+optimizer=RMSprop
 
 
 if [[ $# -gt 0 ]] ; then

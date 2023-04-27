@@ -60,6 +60,8 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
         optimizer = optim.SGD(train_model.parameters(), lr=init_lr)
     elif args.optimizer == "Adagrad":
         optimizer = optim.Adagrad(train_model.parameters(), lr=init_lr)
+    elif args.optimizer == "RMSprop":
+        optimizer = optim.RMSprop(train_model.parameters(), lr=init_lr)
     else:
         raise RuntimeError("wrong type of optimizer given:", args.optimizer)
 
