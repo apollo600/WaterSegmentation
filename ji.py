@@ -134,7 +134,8 @@ if __name__ == "__main__":
     for i in tqdm(range(len(dataset)), desc="Inferencing", ascii=True):
         # image: C, H, W    label: H, W
         image, label = dataset[i]
-        
+
+        image = np.array(image)
         image = np.transpose(image, [1, 2, 0])
 
         output_json = process_image(model, image, 
