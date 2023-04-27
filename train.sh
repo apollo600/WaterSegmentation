@@ -10,6 +10,8 @@ dataset_root=/home/data/
 dataset_dir=1945/
 save_root=/project/train/
 save_dir=models/
+log_root=/project/train/
+sog_dir=logs/
 
 # training methods
 loss=CrossEntropy
@@ -43,6 +45,8 @@ python ./train.py \
     --data_dir $dataset_dir \
     --save_root $save_root \
     --save_dir $save_dir \
+    --log_root $log_root \
+    --log_dir $log_dir \
     --loss $loss \
     --lr $lr \
     --batch_size $batch_size \

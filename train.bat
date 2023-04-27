@@ -10,6 +10,8 @@ set dataset_root=./
 set dataset_dir=1945/
 set save_root=./
 set save_dir=models/
+set log_root=./
+set log_dir=logs/
 
 @REM training methods
 set loss=CrossEntropy
@@ -45,6 +47,8 @@ python ./train.py ^
     --data_dir %dataset_dir% ^
     --save_root %save_root% ^
     --save_dir %save_dir% ^
+    --log_root %log_root% ^
+    --log_dir %log_dir% ^
     --loss %loss% ^
     --lr %lr% ^
     --batch_size %batch_size% ^
