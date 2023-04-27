@@ -116,7 +116,7 @@ def visualize(label_img, output_path):
 
 
 
-if __name__ == "__main__":        
+if __name__ == "__main__":
     args = get_parser()
     
     # Best model now: /project/train/models/2023-04-26-15:26:55_epoch-100_lr-0.0005_loss-CrossEntropy_optim-AdamW_best_acc-0.7752.pt
@@ -136,8 +136,6 @@ if __name__ == "__main__":
             break
     
         image, label = dataset[i]
-        # C, H, W -> H, W, C
-        image = image.transpose([1, 2, 0])
 
         output_json = process_image(model, image, 
             '{"mask_output_path": "/project/ev_sdk/mask.png"}')
