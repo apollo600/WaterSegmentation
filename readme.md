@@ -24,12 +24,12 @@ chmod 775 train.sh
 WaterSegmentation
 ├─ model/    <-- model and loss classes
 ├─ utils/    <-- dataset reader
-├─ train.py  <-- usual train function
-├─ ji.py     <-- platform train interface
+├─ train.py  <-- train function
+├─ ji.py     <-- inference interface
 └─ *.sh / *.bat      <-- quick access
 ```
 
-# Mannual Interface
+## Mannual Interface
 
 ```python
 def init() -> HANDLE:
