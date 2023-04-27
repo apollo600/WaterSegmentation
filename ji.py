@@ -136,7 +136,7 @@ if __name__ == "__main__":
         image, label = dataset[i]
         image = image.numpy()
         label = label.numpy()
-        
+
         image = np.transpose(image, [1, 2, 0])
 
         output_json = process_image(model, image, 
@@ -149,6 +149,7 @@ if __name__ == "__main__":
         visualize(pred_label, os.path.join(save_dir, f"{i:05d}_pred.png"))
 
         # save src and label
+        image.astype(np.uint8)
         Image.fromarray(image).save(os.path.join(save_dir, f"{i:05d}_src.png"))
         visualize(label, os.path.join(save_dir, f"{i:05d}_gt.png"))
 
