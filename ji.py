@@ -15,8 +15,8 @@ from model.model import UNET
 def get_parser():
     parser = argparse.ArgumentParser(description='Test UNET')
     parser.add_argument("--model_path", type=str, default="/project/train/models/2023-04-26-15:26:55_epoch-100_lr-0.0005_loss-CrossEntropy_optim-AdamW_best_acc-0.7752.pt", help="path of model static dict to load")
-    parser.add_argument("--image_width", type=int, default=640)
-    parser.add_argument("--image_height", type=int, default=640)
+    parser.add_argument("--image_width", type=int, default=384)
+    parser.add_argument("--image_height", type=int, default=384)
 
     args = parser.parse_args()
 
@@ -133,6 +133,9 @@ if __name__ == "__main__":
 
     for i in tqdm(range(len(dataset)), desc="Inferencing", ascii=True):
         image, label = dataset[i]
+        print(image.shape, label.shape)
+
+        image = np.transpose(image, [1, 2, 0])
 
         output_json = process_image(model, image, 
             '{"mask_output_path": "/project/ev_sdk/mask.png"}')
