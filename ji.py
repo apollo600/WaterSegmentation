@@ -135,7 +135,7 @@ if __name__ == "__main__":
         # image: C, H, W    label: H, W
         image, label = dataset[i]
 
-        image = np.array(image)
+        image = image.numpy()
         image = np.transpose(image, [1, 2, 0])
 
         output_json = process_image(model, image, 
