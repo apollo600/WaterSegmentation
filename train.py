@@ -10,7 +10,7 @@ import numpy as np
 from tqdm import tqdm
 from PIL import Image
 
-from model.model import UNET
+from model.model2 import UNET
 from model.loss import FocalLoss
 from utils.dataset import MyData
 from utils.kitti_dataset import KittiData
@@ -193,7 +193,7 @@ if __name__ == "__main__":
 
     # Create the model
     print("Loading model to device")
-    model = UNET(in_channels=3, out_channels=args.num_classes)
+    model = UNET(3, args.num_classes)
     train_model = model.train()
     train_model.cuda()
 
