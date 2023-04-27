@@ -52,7 +52,7 @@ class CropAndConcat(nn.Module):
         return x
 
 
-class UNET(nn.Module):
+class UNet(nn.Module):
     def __init__(self, in_channels: int, out_channels: int):
         super().__init__()
 
