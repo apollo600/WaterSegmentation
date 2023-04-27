@@ -173,10 +173,7 @@ core.*#
 .ipynb_checkpoints/
 
 resnet101_v2.pth
-best_acc-0.0015924072265625.pt
-best_acc-0.3374853515625.pt
-best_acc-0.5225146484375.pt
-best_acc-0.6942083740234375.pt
+best_acc-*.pt
 
 2023-*/
 PSPNet/
@@ -184,19 +181,5 @@ __pycache__/
 semseg/
 data_semantics.zip
 data_semantics/
-best_acc-0.0048.pt
-best_acc-0.0071.pt
-best_acc-0.0095.pt
-best_acc-0.0113.pt
-best_acc-0.0137.pt
-best_acc-0.0148.pt
-best_acc-0.0018.pt
-best_acc-0.0066.pt
-best_acc-0.3910.pt
-best_acc-0.5727.pt
-best_acc-0.6225.pt
-best_acc-0.6331.pt
-best_acc-0.6617.pt
-best_acc-0.4358.pt
-best_acc-0.5120.pt
-best_acc-0.5867.pt
+
+models/

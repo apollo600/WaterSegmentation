@@ -10,9 +10,9 @@ import torch
 
 sys.path.append("/project/train/src_repo/")
 
-from model import UNET
+from model.model import UNET
  
-def get_parser():                        
+def get_parser():
     parser = argparse.ArgumentParser(description='Test UNET')
     parser.add_argument("--model_path", type=str, default="/project/train/models/2023-04-26-15:26:55_epoch-100_lr-0.0005_loss-CrossEntropy_optim-AdamW_best_acc-0.7752.pt", help="path of model static dict to load")
     parser.add_argument("--image_width", type=int, default=640)
@@ -100,7 +100,7 @@ if __name__ == "__main__":
     # 2023-04-26-15:26:55_epoch-100_lr-0.0005_loss-CrossEntropy_optim-AdamW_best_acc-0.7752.pt
     model = init()
 
-    from dataset import MyData
+    from utils.dataset import MyData
     from tqdm import tqdm
     dataset = MyData("/home/data/1945", 5, args.image_width, args.image_height, is_train=False, one_hot=False)
     total_acc = 0

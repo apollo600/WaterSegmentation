@@ -38,18 +38,21 @@ class KittiData(Dataset):
     def __getitem__(self, index):
         # print(f"Read from {self.image_paths[index]} & {self.label_paths[index]}")
 
-        assert(self.image_paths[index].split('/')[-1] == self.label_paths[index].split('/')[-1])
+        assert(
+            self.image_paths[index].replace('\\', '/').split('/')[-1]
+            == self.label_paths[index].replace('\\', '/').split('/')[-1]
+        )
         
         transform = transforms.Compose([
             transforms.ToTensor()
         ])
 
-        image = Image.open(os.path.join(self.path, self.image_paths[index]))
+        image = Image.open(self.image_paths[index])
         image = image.resize((self.image_width, self.image_height), Image.BILINEAR)
         image = np.array(image)
         image = np.transpose(image, [2, 0, 1])
 
-        label = Image.open(os.path.join(self.path, self.label_paths[index]))
+        label = Image.open(self.label_paths[index])
         label = label.resize((self.image_width, self.image_height), Image.BILINEAR)
         label = np.array(label)
 

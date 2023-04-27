@@ -5,17 +5,16 @@ import torch.utils.data as data
 from torch.utils.data.dataloader import DataLoader
 
 import os
-from tqdm import tqdm
-import numpy as np
 import time
+import numpy as np
+from tqdm import tqdm
 
-from model import UNET
-from dataset import MyData
-from kitti_dataset import KittiData
-from loss import FocalLoss
+from model.model import UNET
+from model.loss import FocalLoss
+from utils.dataset import MyData
+from utils.kitti_dataset import KittiData
 
-
-def get_parser():                        
+def get_parser():
     import argparse
 
     parser = argparse.ArgumentParser(description='Train UNET')
@@ -25,6 +24,8 @@ def get_parser():
     parser.add_argument("--num_classes", type=int, default="34", help="number of classes")
     parser.add_argument("--loss", type=str, default="CrossEntropy", help="loss function to use")
     parser.add_argument("--optimizer", type=str, default="AdamW", help="optimizer to use")
+    parser.add_argument("--data_root", type=str, default=".", help="data root file (where training/ testing/ or *.pngs is at). But <My> will not use data_root")
+    parser.add_argument("--save_root", type=str, default=".", help="save root file (where models/ is at)")
     parser.add_argument("--dataset", type=str, default="Kitti", help="dataset to use")
     parser.add_argument("--save_dir", type=str, default="", help="root dir of logs saved")
     parser.add_argument("--image_width", type=int, default=640)
@@ -59,7 +60,7 @@ def train(train_loader, train_model, args):
     if args.save_dir == "":
         log_dir = f"{time_stamp}_epoch-{args.epoch}_lr-{args.lr}_loss-{args.loss}_optim-{args.optimizer}"
     else:
-        log_dir = args.save_dir
+        log_dir = os.path.join(args.save_root, args.save_dir)
     os.makedirs(log_dir, exist_ok=True)
 
     best_acc = 0
@@ -136,14 +137,22 @@ if __name__ == "__main__":
     # Load the data from the folders
     if args.loss == "CrossEntropy":
         if args.dataset == "Kitti":
-            dataset = KittiData("/project/train/src_repo/data_semantics", args.num_classes, image_width=args.image_width, image_height=args.image_height, one_hot=False)
-        elif args.dataset == "My":
-            dataset = MyData("/home/data/1945", num_classes=args.num_classes, image_width=args.image_width, image_height=args.image_height, one_hot=False)
-    else:
-        if args.dataset == "Kitti":
-            dataset = KittiData("/project/train/src_repo/data_semantics", args.num_classes, image_width=args.image_width, image_height=args.image_height, one_hot=True)
+            dataset = KittiData(
+                os.path.join(args.data_root, "data_semantics"),
+                args.num_classes, image_width=args.image_width,
+                image_height=args.image_height, one_hot=True
+            )
         elif args.dataset == "My":
             dataset = MyData("/home/data/1945", num_classes=args.num_classes, image_width=args.image_width, image_height=args.image_height, one_hot=True)
+    else:
+        if args.dataset == "Kitti":
+            dataset = KittiData(
+                os.path.join(args.data_root, "data_semantics"),
+                args.num_classes, image_width=args.image_width,
+                image_height=args.image_height, one_hot=False
+            )
+        elif args.dataset == "My":
+            dataset = MyData("/home/data/1945", num_classes=args.num_classes, image_width=args.image_width, image_height=args.image_height, one_hot=False)
     train_size = int(0.9 * len(dataset))
     val_size = len(dataset) - train_size
     train_dataset, val_dataset = data.random_split(dataset, (train_size, val_size))
