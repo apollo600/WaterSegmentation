@@ -34,13 +34,16 @@ fi
 set -x
 
 python ./train.py \
-    --data_root $dataset_root \
-    --save_root $save_root \
-    --data_dir $dataset_dir \
-    --save_dir $save_dir \
     --dataset $dataset_name \
-    --num_classes $num_classes \
+    --data_root $dataset_root \
+    --data_dir $dataset_dir \
     --loss $loss \
     --lr $lr \
     --batch_size $batch_size \
     --epoch $epoch
+    --save_root $save_root \
+    --save_dir $save_dir \
+    --num_classes $num_classes \
+    --image_width 384 \
+    --image_height 384 \
+    --optimizer Adagrad
