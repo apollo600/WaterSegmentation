@@ -1,11 +1,13 @@
-from torch.utils.data.dataset import Dataset
-import torchvision.transforms as transforms
 import os
 import cv2
-from tqdm import tqdm
 import numpy as np
-import torch
+from tqdm import tqdm
 from PIL import Image
+from typing import Tuple
+
+import torch
+from torch.utils.data.dataset import Dataset
+import torchvision.transforms as transforms
 
 
 class KittiData(Dataset):        
@@ -35,23 +37,22 @@ class KittiData(Dataset):
             self.label_paths = [os.path.join(path, "testing", "semantic", x) for x in label_paths]
         print(f"Found {len(self.image_paths)} images")
 
-    def __getitem__(self, index):
-        # print(f"Read from {self.image_paths[index]} & {self.label_paths[index]}")
+    def __getitem__(self, index) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Input: image [H, W, C (RGB)]
+        Train or Test: image [C (RGB), H, W], label [H, W]
+        Note: label will be [H, W, C (Classes)] if one_hot is True
+        """
 
         assert(
             self.image_paths[index].replace('\\', '/').split('/')[-1]
             == self.label_paths[index].replace('\\', '/').split('/')[-1]
         )
-        
-        transform = transforms.Compose([
-            transforms.ToTensor()
-        ])
 
         image = Image.open(self.image_paths[index])
         image = image.resize((self.image_width, self.image_height), Image.BILINEAR)
         image = np.array(image)
-        if not self.is_train:
-            image = np.transpose(image, [2, 0, 1])
+        image = np.transpose(image, [2, 0, 1])
 
         label = Image.open(self.label_paths[index])
         label = label.resize((self.image_width, self.image_height), Image.BILINEAR)
@@ -61,14 +62,12 @@ class KittiData(Dataset):
             label_one_hot = np.zeros((label.shape[0], label.shape[1], self.class_num))
             for i in range(self.class_num):
                 label_one_hot[:,:,i] = (label == i)
-            if self.is_train:
-                image = torch.from_numpy(image).float()
-                label_one_hot = torch.from_numpy(label_one_hot).long()
+            image = torch.from_numpy(image).float()
+            label_one_hot = torch.from_numpy(label_one_hot).long()
             return image, label_one_hot
         else:
-            if self.is_train:
-                image = torch.from_numpy(image).float()
-                label = torch.from_numpy(label).long()
+            image = torch.from_numpy(image).float()
+            label = torch.from_numpy(label).long()
             return image, label
 
     def __len__(self):
