@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from tqdm import tqdm
 from PIL import Image
-from typing import Tuple
+from typing import Tuple, Union
 
 import torch
 from torch.utils.data.dataset import Dataset
@@ -37,7 +37,7 @@ class KittiData(Dataset):
             self.label_paths = [os.path.join(path, "testing", "semantic", x) for x in label_paths]
         print(f"Found {len(self.image_paths)} images")
 
-    def __getitem__(self, index) -> Tuple[np.ndarray, np.ndarray]:
+    def __getitem__(self, index) -> Tuple[Union[np.ndarray, torch.Tensor], Union[np.ndarray, torch.Tensor]]:
         """
         Input: image [H, W, C (RGB)]
         Train or Test: image [C (RGB), H, W], label [H, W]
@@ -52,8 +52,7 @@ class KittiData(Dataset):
         image = Image.open(self.image_paths[index])
         image = image.resize((self.image_width, self.image_height), Image.BILINEAR)
         image = np.array(image)
-        if self.is_train:
-            image = np.transpose(image, [2, 0, 1])
+        image = np.transpose(image, [2, 0, 1])
 
         label = Image.open(self.label_paths[index])
         label = label.resize((self.image_width, self.image_height), Image.BILINEAR)

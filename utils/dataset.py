@@ -2,7 +2,7 @@ import os
 import cv2
 import numpy as np
 from PIL import Image
-from typing import Tuple
+from typing import Tuple, Union
 
 import torch
 from torch.utils.data.dataset import Dataset
@@ -25,7 +25,7 @@ class MyData(Dataset):
         self.label_paths = [ x + ".png" for x in file_list ]
         print(f"Found {len(file_list)} images")
 
-    def __getitem__(self, index) -> Tuple[np.ndarray, np.ndarray]:
+    def __getitem__(self, index) -> Tuple[Union[np.ndarray, torch.Tensor], Union[np.ndarray, torch.Tensor]]:
         """
         Input: image [H, W, C (RGB)]
         Train or Test: image [C (RGB), H, W], label [H, W]
@@ -45,12 +45,14 @@ class MyData(Dataset):
             label_one_hot = np.zeros((label.shape[0], label.shape[1], self.class_num))
             for i in range(self.class_num):
                 label_one_hot[:,:,i] = (label == i)
-            image = torch.from_numpy(image).float()
-            label_one_hot = torch.from_numpy(label_one_hot).long()
+            if self.is_train:
+                image = torch.from_numpy(image).float()
+                label_one_hot = torch.from_numpy(label_one_hot).long()
             return image, label_one_hot
         else:
-            image = torch.from_numpy(image).float()
-            label = torch.from_numpy(label).long()
+            if self.is_train:
+                image = torch.from_numpy(image).float()
+                label = torch.from_numpy(label).long()
             return image, label
 
     def __len__(self):
