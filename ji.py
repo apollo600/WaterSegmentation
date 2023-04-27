@@ -66,19 +66,15 @@ def process_image(handle: nn.Module = None, input_image: np.ndarray = None, args
     # 1, Classes, H, W
     pred_label: np.ndarray = model(image)
     # Generate dummy mask data
-    t_pred_label: np.ndarray = pred_label.cpu().detach().numpy()
-    print("label shape:", t_pred_label.shape)
-    print(t_pred_label.transpose([0, 2, 3, 1]))
+    t_pred_label = pred_label.cpu().detach().numpy()
+    # print("label shape:", t_pred_label.shape)
+    # print(t_pred_label.transpose([0, 2, 3, 1]))
     # 1, C, H, W -> 1, H, W
     t_pred_label = np.argmax(t_pred_label, axis=1)
-    print("after argmax shape:", t_pred_label.shape)
-    print(t_pred_label)
+    # print("after argmax shape:", t_pred_label.shape)
+    # print(t_pred_label)
     # 1, H, W -> H, W
     t_pred_label = np.squeeze(t_pred_label, axis=0)
     # h, w, _ = input_image.shape
-    # dummy_data = np.random.randint(low=0, high=2, size=(w, h), dtype=np.uint8)
-    dummy_data = t_pred_label.astype(np.uint8)
-    pred_mask_per_frame = Image.fromarray(dummy_data)
-    pred_mask_per_frame.save(mask_output_path)
-    
+    # dummy_
     return json.dumps({'mask': mask_output_path}, indent=4)
