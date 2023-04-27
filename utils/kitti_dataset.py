@@ -10,18 +10,18 @@ from torch.utils.data.dataset import Dataset
 import torchvision.transforms as transforms
 
 
-class KittiData(Dataset):        
-    def __init__(self, path, num_classes, image_width, image_height, augmentation=False, is_train=True, one_hot=True):                
+class KittiData(Dataset):
+    def __init__(self, path, num_classes, image_width, image_height, augmentation=False, to_torch=True, one_hot=True):
         super().__init__()
         self.path = path
         self.class_num = num_classes
         self.image_width = image_width
         self.image_height = image_height
         self.augmentation = augmentation
-        self.is_train = is_train
+        self.to_torch = to_torch
         self.one_hot = one_hot
 
-        if is_train:
+        if to_torch:
             image_paths = os.listdir(os.path.join(path, "training", "image_2"))
             image_paths.sort()
             self.image_paths = [os.path.join(path, "training", "image_2", x) for x in image_paths]
@@ -58,16 +58,16 @@ class KittiData(Dataset):
         label = label.resize((self.image_width, self.image_height), Image.BILINEAR)
         label = np.array(label)
 
-        if self.one_hot:       
+        if self.one_hot:
             label_one_hot = np.zeros((label.shape[0], label.shape[1], self.class_num))
             for i in range(self.class_num):
                 label_one_hot[:,:,i] = (label == i)
-            if self.is_train:
+            if self.to_torch:
                 image = torch.from_numpy(image).float()
                 label_one_hot = torch.from_numpy(label_one_hot).long()
             return image, label_one_hot
         else:
-            if self.is_train:
+            if self.to_torch:
                 image = torch.from_numpy(image).float()
                 label = torch.from_numpy(label).long()
             return image, label

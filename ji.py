@@ -56,7 +56,10 @@ def process_image(handle: nn.Module = None, input_image: np.ndarray = None, args
     model = handle
     
     # Process image here
-    image = input_image
+    h, w, _= input_image.shape
+    image = Image.fromarray(input_image)
+    image = image.resize((640, 640), Image.BILINEAR)
+    image = np.array(image)
     # H, W, C -> C, H, W
     image = np.transpose(image, [2, 0, 1])
     # C, H, W -> 1, Channels, H, W
@@ -74,6 +77,7 @@ def process_image(handle: nn.Module = None, input_image: np.ndarray = None, args
     # 1, H, W -> H, W
     t_pred_label = np.squeeze(t_pred_label, axis=0)
     pred_mask_per_frame = Image.fromarray(np.uint8(t_pred_label))
+    pred_mask_per_frame = pred_mask_per_frame.resize((w, h), Image.BILINEAR)
     pred_mask_per_frame.save(mask_output_path)
 
     return json.dumps({'mask': mask_output_path}, indent=4)
