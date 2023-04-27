@@ -35,7 +35,12 @@ class MyData(Dataset):
         image = Image.open(os.path.join(self.path, self.image_paths[index]))
         image = image.resize((self.image_width, self.image_height), Image.BILINEAR)
         image = np.array(image)
+<<<<<<< HEAD:utils/dataset.py
         image = np.transpose(image, [2, 0, 1])
+=======
+        if self.is_train:
+            image = np.transpose(image, [2, 0, 1])
+>>>>>>> dev-new-model:dataset.py
 
         label = Image.open(os.path.join(self.path, self.label_paths[index]))
         label = label.resize((self.image_width, self.image_height), Image.BILINEAR)

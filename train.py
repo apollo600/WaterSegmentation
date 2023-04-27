@@ -18,19 +18,19 @@ def get_parser():
     import argparse
 
     parser = argparse.ArgumentParser(description='Train UNET')
-    parser.add_argument("--epoch", type=int, default="10", help="train epochs")
-    parser.add_argument("--lr", type=float, default="0.001", help="initial learning rate")
-    parser.add_argument("--batch_size", type=int, default="2", help="size to train each batch")
-    parser.add_argument("--num_classes", type=int, default="34", help="number of classes")
-    parser.add_argument("--loss", type=str, default="CrossEntropy", help="loss function to use")
-    parser.add_argument("--optimizer", type=str, default="AdamW", help="optimizer to use")
+    parser.add_argument("--dataset", type=str, default="Kitti", help="dataset to use")
     parser.add_argument("--data_root", type=str, default=".", help="data root file (where training/ testing/ or *.pngs is at)")
     parser.add_argument("--data_dir", type=str, default="", help="root dir of data saved")
-    parser.add_argument("--dataset", type=str, default="Kitti", help="dataset to use")
+    parser.add_argument("--loss", type=str, default="CrossEntropy", help="loss function to use")
+    parser.add_argument("--lr", type=float, default="0.001", help="initial learning rate")
+    parser.add_argument("--batch_size", type=int, default="2", help="size to train each batch")
+    parser.add_argument("--epoch", type=int, default="10", help="train epochs")
     parser.add_argument("--save_root", type=str, default=".", help="save root file (where models/ is at)")
     parser.add_argument("--save_dir", type=str, default="", help="root dir of logs saved")
+    parser.add_argument("--num_classes", type=int, default="34", help="number of classes")
     parser.add_argument("--image_width", type=int, default=640)
     parser.add_argument("--image_height", type=int, default=640)
+    parser.add_argument("--optimizer", type=str, default="AdamW", help="optimizer to use")
 
     args = parser.parse_args()
 
@@ -54,6 +54,8 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
         optimizer = optim.AdamW(train_model.parameters(), init_lr)
     elif args.optimizer == "SGD":
         optimizer = optim.SGD(train_model.parameters(), lr=init_lr)
+    elif args.optimizer == "Adagrad":
+        optimizer = optim.Adagrad(train_model.parameters(), lr=init_lr)
     else:
         raise RuntimeError("wrong type of optimizer given:", args.optimizer)
 
@@ -71,9 +73,9 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
         pbar = tqdm(total=batches, desc=f"Epoch {epoch+1}/{init_epoch}: ", maxinterval=0.3, ascii=True)
         for iteration, (data, label) in enumerate(train_loader):
             data, label = data.cuda(), label.cuda()
-            # label: N, C, H, W     pred_label: N, C, H, W
+            # label: N, H, W    pred_label: N, C, H, W
             pred_label = train_model(data)
-            
+
             if args.loss == "CrossEntropy":
                 # N, C, H, W => C, N*H*W
                 pred_label = pred_label.contiguous().permute(0, 2, 3, 1)
@@ -82,13 +84,25 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
                 label = label.view(-1)
             else:
                 pass
-            loss = criterion(pred_label, label)       
+            loss = criterion(pred_label, label)
     
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 
-            pbar.set_description(f"Epoch {epoch+1}/{init_epoch}: loss: {loss:.4f}")
+            # copy the tensor to host memory first
+            t_pred_label = pred_label.cpu().detach().numpy()
+            t_label = label.cpu().detach().numpy()
+            # get max arg as output label
+            t_pred_label = np.argmax(t_pred_label, axis=1)
+            if args.loss == "CrossEntropy":
+                pass
+            elif args.loss == "Focal":    
+                t_label = np.transpose(t_label, [0, 3, 1, 2]).argmax(axis=1)
+            # update accuracy
+            acc = np.sum(t_label == t_pred_label) / np.prod(t_label.shape)
+
+            pbar.set_description(f"Epoch {epoch+1}/{init_epoch} loss: {loss:.4f} train_acc: {acc:.4f}")
             pbar.update(1)
         pbar.close()
 
