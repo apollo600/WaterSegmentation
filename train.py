@@ -24,9 +24,10 @@ def get_parser():
     parser.add_argument("--num_classes", type=int, default="34", help="number of classes")
     parser.add_argument("--loss", type=str, default="CrossEntropy", help="loss function to use")
     parser.add_argument("--optimizer", type=str, default="AdamW", help="optimizer to use")
-    parser.add_argument("--data_root", type=str, default=".", help="data root file (where training/ testing/ or *.pngs is at). But <My> will not use data_root")
-    parser.add_argument("--save_root", type=str, default=".", help="save root file (where models/ is at)")
+    parser.add_argument("--data_root", type=str, default=".", help="data root file (where training/ testing/ or *.pngs is at)")
+    parser.add_argument("--data_dir", type=str, default="", help="root dir of data saved")
     parser.add_argument("--dataset", type=str, default="Kitti", help="dataset to use")
+    parser.add_argument("--save_root", type=str, default=".", help="save root file (where models/ is at)")
     parser.add_argument("--save_dir", type=str, default="", help="root dir of logs saved")
     parser.add_argument("--image_width", type=int, default=640)
     parser.add_argument("--image_height", type=int, default=640)
@@ -70,14 +71,14 @@ def train(train_loader, train_model, args):
         pbar = tqdm(total=batches, desc=f"Epoch {epoch+1}/{init_epoch}: ", maxinterval=0.3, ascii=True)
         for iteration, (data, label) in enumerate(train_loader):
             data, label = data.cuda(), label.cuda()
-            # label: N, H, W, C     pred_label: N, C, H, W
+            # label: N, C, H, W     pred_label: N, C, H, W
             pred_label = train_model(data)
             
             if args.loss == "CrossEntropy":
                 # N, C, H, W => C, N*H*W
                 pred_label = pred_label.contiguous().permute(0, 2, 3, 1)
                 pred_label = pred_label.reshape(-1, pred_label.size(3))
-                # N, H, W => N*H*W
+                # N, C, H, W => C*N*H*W
                 label = label.view(-1)
             else:
                 pass
@@ -135,24 +136,18 @@ if __name__ == "__main__":
     print("Using device", device, os.environ['CUDA_VISIBLE_DEVICES'])
 
     # Load the data from the folders
-    if args.loss == "CrossEntropy":
-        if args.dataset == "Kitti":
-            dataset = KittiData(
-                os.path.join(args.data_root, "data_semantics"),
-                args.num_classes, image_width=args.image_width,
-                image_height=args.image_height, one_hot=True
-            )
-        elif args.dataset == "My":
-            dataset = MyData("/home/data/1945", num_classes=args.num_classes, image_width=args.image_width, image_height=args.image_height, one_hot=True)
-    else:
-        if args.dataset == "Kitti":
-            dataset = KittiData(
-                os.path.join(args.data_root, "data_semantics"),
-                args.num_classes, image_width=args.image_width,
-                image_height=args.image_height, one_hot=False
-            )
-        elif args.dataset == "My":
-            dataset = MyData("/home/data/1945", num_classes=args.num_classes, image_width=args.image_width, image_height=args.image_height, one_hot=False)
+    one_hot = True
+    if args.loss == "CrossEntropy": one_hot = False
+    if args.dataset == "Kitti":
+        dataset = KittiData(
+            os.path.join(args.data_root, args.data_dir), args.num_classes,
+            image_width=args.image_width, image_height=args.image_height, one_hot=one_hot
+        )
+    elif args.dataset == "My":
+        dataset = MyData(
+            os.path.join(args.data_root, args.data_dir), num_classes=args.num_classes,
+            image_width=args.image_width, image_height=args.image_height, one_hot=one_hot
+        )
     train_size = int(0.9 * len(dataset))
     val_size = len(dataset) - train_size
     train_dataset, val_dataset = data.random_split(dataset, (train_size, val_size))
