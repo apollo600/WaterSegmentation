@@ -37,7 +37,7 @@ def get_parser():
     return args
 
 
-def train(train_loader, train_model, args):
+def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Module, args):
     init_epoch = args.epoch
     init_lr = args.lr
     init_batch = args.batch_size
@@ -125,9 +125,9 @@ def train(train_loader, train_model, args):
                 torch.save(train_model.state_dict(), model_path)
             else:
                 print(f"acc: {total_acc:.4f}")
-            
 
-if __name__ == "__main__":            
+
+if __name__ == "__main__":
     args = get_parser()
 
     # Get device
@@ -136,21 +136,23 @@ if __name__ == "__main__":
     print("Using device", device, os.environ['CUDA_VISIBLE_DEVICES'])
 
     # Load the data from the folders
-    one_hot = True
-    if args.loss == "CrossEntropy": one_hot = False
+    one_hot = False if args.loss == "CrossEntropy" else True
     if args.dataset == "Kitti":
         dataset = KittiData(
-            os.path.join(args.data_root, args.data_dir), args.num_classes,
-            image_width=args.image_width, image_height=args.image_height, one_hot=one_hot
+            os.path.join(args.data_root, args.data_dir), num_classes=args.num_classes,
+            image_width=args.image_width, image_height=args.image_height, one_hot=one_hot, is_train=True
         )
     elif args.dataset == "My":
         dataset = MyData(
             os.path.join(args.data_root, args.data_dir), num_classes=args.num_classes,
-            image_width=args.image_width, image_height=args.image_height, one_hot=one_hot
+            image_width=args.image_width, image_height=args.image_height, one_hot=one_hot, is_train=True
         )
     train_size = int(0.9 * len(dataset))
     val_size = len(dataset) - train_size
     train_dataset, val_dataset = data.random_split(dataset, (train_size, val_size))
+
+    r, s = dataset[0]
+    print(r.shape, s.shape)
 
     # Create the loaders
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=0)
@@ -164,4 +166,4 @@ if __name__ == "__main__":
 
     # Train
     print("Start Train")
-    train(train_loader, train_model, args)
+    train(train_loader, val_loader, train_model, args)
