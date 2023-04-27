@@ -40,7 +40,6 @@ def get_parser():
 def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Module, args):
     init_epoch = args.epoch
     init_lr = args.lr
-    init_batch = args.batch_size
 
     if args.loss == "Focal":
         criterion = FocalLoss()
