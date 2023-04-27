@@ -88,7 +88,19 @@ def train(train_loader, train_model, args):
             loss.backward()
             optimizer.step()
 
-            pbar.set_description(f"Epoch {epoch+1}/{init_epoch}: loss: {loss:.4f}")
+            # copy the tensor to host memory first
+            t_pred_label = pred_label.cpu().detach().numpy()
+            t_label = label.cpu().detach().numpy()
+            # get max arg as output label
+            t_pred_label = np.argmax(t_pred_label, axis=1)
+            if args.loss == "CrossEntropy":
+                pass
+            elif args.loss == "Focal":    
+                t_label = np.transpose(t_label, [0, 3, 1, 2]).argmax(axis=1)
+            # update accuracy
+            acc = np.sum(t_label == t_pred_label) / np.prod(t_label.shape)
+
+            pbar.set_description(f"Epoch {epoch+1}/{init_epoch} loss: {loss:.4f} train_acc: {acc:.4f}")
             pbar.update(1)
         pbar.close()
 
