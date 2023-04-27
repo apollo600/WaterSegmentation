@@ -15,7 +15,7 @@ parser.add_argument("--image_height", type=int, default=640)
 
 args = parser.parse_args()
 
-model = ji.init()
+model = ji.init(args.model_path)
 
 dataset = MyData("/home/data/1945", 5, args.image_width, args.image_height, is_train=False, one_hot=False)
 total_acc = 0
