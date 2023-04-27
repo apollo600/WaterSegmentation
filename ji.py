@@ -132,9 +132,6 @@ if __name__ == "__main__":
     os.makedirs(save_dir, exist_ok=True)
 
     for i in tqdm(range(len(dataset)), desc="Inferencing", ascii=True):
-        if i == 1:
-            break
-    
         image, label = dataset[i]
 
         output_json = process_image(model, image, 
