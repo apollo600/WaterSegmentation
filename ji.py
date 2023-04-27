@@ -62,7 +62,7 @@ def process_image(handle: nn.Module = None, input_image: np.ndarray = None, args
     image = np.array(image)
     # H, W, C -> C, H, W
     image = np.transpose(image, [2, 0, 1])
-    # C, H, W -> 1, Channels, H, W
+    # C, H, W -> 1, C, H, W
     image = np.expand_dims(image, axis=0)
     image = torch.from_numpy(image).float()
     image = image.cuda()
