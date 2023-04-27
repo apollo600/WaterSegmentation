@@ -8,7 +8,7 @@ from utils import visual
 from utils.raw_dataset import RawData
 
 
-parser = argparse.ArgumentParser(description='Test UNET')
+parser = argparse.ArgumentParser(description='Test UNet')
 
 parser.add_argument("--model_path", type=str, default="/project/train/models/None", help="path of model static dict to load")
 parser.add_argument("--data_root", type=str, default="./", help="data directory root path (where training/ testing/ or *.png is in)")

@@ -10,7 +10,7 @@ import numpy as np
 from tqdm import tqdm
 from PIL import Image
 
-from model.model2 import UNET
+from model.model2 import UNet
 from model.loss import FocalLoss
 from utils.dataset import MyData
 from utils.kitti_dataset import KittiData
@@ -19,7 +19,7 @@ from utils import visual
 def get_parser():
     import argparse
 
-    parser = argparse.ArgumentParser(description='Train UNET')
+    parser = argparse.ArgumentParser(description='Train UNet')
     parser.add_argument("--dataset", type=str, default="Kitti", help="dataset to use")
     parser.add_argument("--num_classes", type=int, default="34", help="number of classes")
     parser.add_argument("--data_root", type=str, default="./", help="data directory root path (where training/ testing/ or *.png is in)")
@@ -195,7 +195,7 @@ if __name__ == "__main__":
 
     # Create the model
     print("Loading model to device")
-    model = UNET(3, args.num_classes)
+    model = UNet(3, args.num_classes)
     train_model = model.train()
     train_model.cuda()
 
