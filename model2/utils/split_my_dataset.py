@@ -2,7 +2,6 @@
 
 import os
 import random
-from shutil import copyfile
 
 
 def split(file_list, train_percentage=0.9, output_path=""):           
@@ -51,11 +50,14 @@ def build_dir_structure(data_path, root_path):
     )
 
     # Copy Image and form relevant data
-    copyfile(os.path.join(data), dst)
+    os.system(f"cp {os.path.join(data_path, '*.jpg')}, {os.path.join(root_path, 'JPEGImages')}")
+    os.system(f"cp {os.path.join(data_path, '*.png')}, {os.path.join(root_path, 'SegmentationClass')}")
+
+    file_list = os.listdir(data_path)
+    file_list = [ x[:-4] for x in file_list if x.endswith('.jpg') ]
+    
+    split(file_list, 0.9, os.path.join(root_path, "ImageSets"))
 
 
 if __name__ == "__main__":            
-    file_list = os.listdir("/home/data/1945")
-    file_list = [ x[:-4] for x in file_list if x.endswith('.jpg') ]
-    
-    split(file_list, 0.9, "/project/train/src_repo/MyImageSets")
+    build_dir_structure("/home/data/1945", "/project/train/src_repo/MyDataset")
