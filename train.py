@@ -65,7 +65,7 @@ def get_parser():
     parser.add_argument("--lr_decay_type", type=str, default="cos", help="使用的权值下降方式, [cos, step]")
     parser.add_argument("--dice_loss", action="store_true", help="种类少(几类)时, 设置为True")
     parser.add_argument("--focal_loss", action="store_true", help="防止正负样本不平衡，需要给每个类型样本设置权重")
-    parser.add_argument("--class_weights", default=[1, 1, 1, 1, 1], help="每个类别的权重，长度和 num_classes 相同")
+    parser.add_argument("--class_weights",type=int, nargs='+', help="每个类别的权重，长度和 num_classes 相同")
 
     
     args = parser.parse_args()
