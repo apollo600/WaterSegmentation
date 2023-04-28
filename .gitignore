@@ -186,3 +186,4 @@ models/
 logs/
 test/
 VOC2012test_tar.tar
+VOCtrainval_11-May-2012.tar
