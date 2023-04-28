@@ -16,3 +16,13 @@ def visualize(label_img, output_path):
     for i, c in color_map.items():
         color_img[label_img == i, :] = c
     Image.fromarray(color_img).save(output_path)
+
+
+def show_config(**kwargs):
+    print('Configurations:')
+    print('-' * 70)
+    print('|%25s | %40s|' % ('keys', 'values'))
+    print('-' * 70)
+    for key, value in kwargs.items():
+        print('|%25s | %40s|' % (str(key), str(value)))
+    print('-' * 70)
