@@ -49,12 +49,11 @@ def process_image(handle: nn.Module = None, input_image: np.ndarray = None, args
 
     args = json.loads(args)
     mask_output_path = args['mask_output_path']
-    model = handle
-    
+
     # Process image here
     h, w, _= input_image.shape
     image = Image.fromarray(input_image)
-    image = image.resize((640, 640), Image.BILINEAR)
+    image = image.resize((512, 512), Image.BILINEAR)
     image = np.array(image)
     # H, W, C -> C, H, W
     image = np.transpose(image, [2, 0, 1])
@@ -64,7 +63,7 @@ def process_image(handle: nn.Module = None, input_image: np.ndarray = None, args
     image = image.cuda()
 
     # 1, Classes, H, W
-    pred_label = model(image)
+    pred_label = handle(image)
 
     # Generate mask data
     t_pred_label: np.ndarray = pred_label.cpu().detach().numpy()
