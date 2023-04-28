@@ -15,8 +15,8 @@ import numpy as np
 from PIL import Image
 from tqdm import tqdm
 from torch.utils.tensorboard import SummaryWriter
-from model2.utils import cvtColor, preprocess_input, resize_image
-from model2.utils_metrics import compute_mIoU
+from model2.utils.utils import cvtColor, preprocess_input, resize_image
+from model2.utils.utils_metrics import compute_mIoU
 
 
 class LossHistory():

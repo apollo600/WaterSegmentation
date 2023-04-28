@@ -25,7 +25,7 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
     # ------------------------------------------------------#
 
     time_str        = datetime.datetime.strftime(datetime.datetime.now(),'%Y_%m_%d_%H_%M_%S')
-    log_dir         = os.path.join(save_dir, "loss_" + str(time_str))
+    log_dir         = os.path.join(args.save_root, args.save_dir, "loss_" + str(time_str))
     loss_history    = LossHistory(log_dir, model, input_shape=input_shape)
     
     # 冻结主体部分
