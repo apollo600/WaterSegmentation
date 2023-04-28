@@ -146,6 +146,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
             break
         imgs, pngs, labels = batch
         imgs = imgs.float()
+        labels = labels.long()
 
         with torch.no_grad():
             weights = torch.from_numpy(args.class_weights)
