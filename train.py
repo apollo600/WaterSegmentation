@@ -65,8 +65,8 @@ def get_parser():
     parser.add_argument("--momentum", type=float, default=0.9, help="Used in optimizer")
     parser.add_argument("--weight_decay", type=float, default=1e-4, help="权值衰减，使用 Adam 时建议设置为 0")
     parser.add_argument("--lr_decay_type", type=str, default="cos", help="使用的权值下降方式, [cos, step]")
-    parser.add_argument("--dice_loss", action="store_true", help="种类少(几类)时, 设置为True")
-    parser.add_argument("--focal_loss", action="store_true", help="防止正负样本不平衡，需要给每个类型样本设置权重")
+    parser.add_argument("--dice_loss", action="store_true", default=False, help="种类少(几类)时, 设置为True")
+    parser.add_argument("--focal_loss", action="store_true", default=False, help="防止正负样本不平衡，需要给每个类型样本设置权重")
     parser.add_argument("--class_weights",type=int, nargs='+', help="每个类别的权重，长度和 num_classes 相同")
 
     
@@ -285,6 +285,7 @@ if __name__ == "__main__":
         input_shape=(args.image_width, args.image_height), init_epoch=args.init_epoch, freeze_epoch=args.freeze_epoch, 
         unfreeze_epoch=args.unfreeze_epoch, freeze_batch_size=args.freeze_batch_size, unfreeze_batch_size=args.unfreeze_batch_size,
         init_lr=args.lr, min_lr=args.min_lr, optimizer=args.optimizer, momentum=args.momentum, lr_decay_type=args.lr_decay_type, 
+        focal_
         )
 
     # Train

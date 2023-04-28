@@ -27,7 +27,6 @@ python train.py \
     --momentum 0.9 \
     --weight_decay 0 \
     --lr_decay_type cos \
-    --dice_loss \
     --focal_loss \
     # --class_weights 1 1 10 10 20 1
     # --loss "" \
