@@ -222,13 +222,13 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
             # ----------------------#
             #   计算损失
             # ----------------------#
-            if focal_loss:
+            if args.focal_loss:
                 loss = Focal_Loss(outputs, pngs, weights,
                                   num_classes=num_classes)
             else:
                 loss = CE_Loss(outputs, pngs, weights, num_classes=num_classes)
 
-            if dice_loss:
+            if args.dice_loss:
                 main_dice = Dice_loss(outputs, labels)
                 loss = loss + main_dice
             # -------------------------------#
