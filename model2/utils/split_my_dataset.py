@@ -2,6 +2,7 @@
 
 import os
 import random
+from shutil import copyfile
 
 
 def split(file_list, train_percentage=0.9, output_path=""):           
@@ -29,10 +30,28 @@ def split(file_list, train_percentage=0.9, output_path=""):
             f.write(f"{file_list[i]}\n")
                 
 
-def build_dir_structure(root_path):
+def build_dir_structure(data_path, root_path):
+                                                    
+    """
+    .
+    ├── ImageSets
+    ├── JPEGImages
+    ├── SegmentationClass
+    """
     
-    
-    
+    # Make Directories
+    os.makedirs(
+        os.path.join(root_path, "ImageSets"), exist_ok=True
+    )
+    os.makedirs(
+        os.path.join(root_path, "JPEGImages"), exist_ok=True
+    )
+    os.makedirs(
+        os.path.join(root_path, "SegmentationClass"), exist_ok=True
+    )
+
+    # Copy Image and form relevant data
+    copyfile(os.path.join(data), dst)
 
 
 if __name__ == "__main__":            
