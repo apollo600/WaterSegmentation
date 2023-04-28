@@ -153,7 +153,6 @@ if __name__ == "__main__":
     val_loader = DataLoader(val_dataset, batch_size=1, shuffle=False)
 
     # Create the model
-    print("Loading model to device")
     if args.model == "Unet":
         model = UNet(3, args.num_classes)
     elif args.model == "Deeplab":
@@ -163,6 +162,7 @@ if __name__ == "__main__":
         # 加载预训练模型
         model_dict = model.state_dict()
         # 使用 map_location 直接加载到显存
+        print("Load pretrained model to device")
         pretrained_dict = torch.load(args.pretrain_model_path, map_location=device)
         load_key, no_load_key, temp_dict = [], [], {}
         for k, v in pretrained_dict.items():
@@ -177,6 +177,8 @@ if __name__ == "__main__":
         print("\nSuccessful Load Key:", str(load_key)[:500], "……\nSuccessful Load Key Num:", len(load_key))
         print("\nFail To Load Key:", str(no_load_key)[:500], "……\nFail To Load Key num:", len(no_load_key))
         # print("\n\033[1;33;44m温馨提示，head部分没有载入是正常现象，Backbone部分没有载入是错误的。\033[0m")
+    
+    print("Loading model to device")
     train_model = model.train()
     train_model.cuda()
 

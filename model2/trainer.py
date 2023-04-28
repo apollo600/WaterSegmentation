@@ -11,6 +11,7 @@ from model2.loss import Dice_loss, CE_Loss, Focal_Loss
 from model2.utils.utils_metrics import f_score
 from model2.utils.utils import get_lr
 import datetime
+from functools import partial
 
 
 def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Module, args, optimizer, train_size, val_size):
@@ -26,10 +27,10 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
 
     time_str        = datetime.datetime.strftime(datetime.datetime.now(),'%Y_%m_%d_%H_%M_%S')
     log_dir         = os.path.join(args.save_root, args.save_dir, "loss_" + str(time_str))
-    loss_history    = LossHistory(log_dir, model, input_shape=input_shape)
+    loss_history    = LossHistory(log_dir, train_model, input_shape=(args.image_width, args.image_height))
     
     # 冻结主体部分
-    for param in model.backbone.parameters():
+    for param in train_model.backbone.parameters():
         param.requires_grad = False
 
     batch_size = args.freeze_batch_size
@@ -58,7 +59,7 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
     #   获得学习率下降的公式
     # ---------------------------------------#
     lr_scheduler_func = get_lr_scheduler(
-        lr_decay_type, Init_lr_fit, Min_lr_fit, UnFreeze_Epoch)
+        args.lr_decay_type, Init_lr_fit, Min_lr_fit, UnFreeze_Epoch)
 
     # ---------------------------------------#
     #   判断每一个世代的长度
@@ -72,7 +73,7 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
     # ----------------------#
     #   记录eval的map曲线
     # ----------------------#
-    eval_callback = EvalCallback(train_model, input_shape, num_classes, val_lines, VOCdevkit_path, log_dir, Cuda,
+    eval_callback = EvalCallback(train_model, (args.image_width, args.image_height), args.num_classes + 1, val_lines, VOCdevkit_path, log_dir, Cuda,
                                 eval_flag=eval_flag, period=eval_period)
 
     # ---------------------------------------#
