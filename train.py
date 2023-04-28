@@ -125,7 +125,10 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
 if __name__ == "__main__":
     args = get_parser()
 
-    args.class_weights = np.array(args.class_weights)
+    if args.class_weights is None:
+        args.class_weights = np.ones([args.num_classes])
+    else:
+        args.class_weights = np.array(args.class_weights)
 
     # Get device
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
@@ -171,7 +174,7 @@ if __name__ == "__main__":
     if args.model == "Unet":
         model = UNet(3, args.num_classes)
     elif args.model == "Deeplab":
-        model = DeepLab(num_classes=args.num_classes+1, backbone=args.backbone, downsample_factor=args.downsample_factor, pretrained=False)
+        model = DeepLab(num_classes=args.num_classes, backbone=args.backbone, downsample_factor=args.downsample_factor, pretrained=False)
         # 初始化大模型中的参数
         weights_init(model, init_type="normal")
         # 加载预训练模型

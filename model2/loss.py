@@ -26,6 +26,7 @@ def Focal_Loss(inputs, target, cls_weights, num_classes=21, alpha=0.5, gamma=2):
     temp_target = target.view(-1)
 
     temp_target = temp_target.type(torch.LongTensor).cuda()
+    cls_weights = cls_weights.type(torch.FloatTensor).cuda()
     logpt  = -nn.CrossEntropyLoss(weight=cls_weights, ignore_index=num_classes, reduction='none')(temp_inputs, temp_target)
     pt = torch.exp(logpt)
     if alpha is not None:
