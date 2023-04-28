@@ -28,7 +28,7 @@ python train.py \
     --weight_decay 0 \
     --lr_decay_type cos \
     --focal_loss \
-    --class_weights 1 1 10 10 100 1
+    --class_weights 1 1 50 50 100 1
     # --loss "" \
     # --batch_size \
     # --epoch \
