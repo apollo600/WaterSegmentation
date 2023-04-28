@@ -197,7 +197,7 @@ if __name__ == "__main__":
 
     # Create the model
     print("Loading model to device")
-    model = DeepLabV3Plus(args.num_classes)
+    model = UNet(3, args.num_classes)
     train_model = model.train()
     train_model.cuda()
 
