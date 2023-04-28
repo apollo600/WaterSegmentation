@@ -14,8 +14,8 @@ import datetime
 from functools import partial
 
 
-def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Module, args, optimizer, train_size, val_size):
-                                    
+def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Module, args, optimizer, train_size, val_size, val_filelist, data_root):
+                                                                                                
     # ------------------------------------------------------#
     #   主干特征提取网络特征通用，冻结训练可以加快训练速度
     #   也可以在训练初期防止权值被破坏。
@@ -73,8 +73,9 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
     # ----------------------#
     #   记录eval的map曲线
     # ----------------------#
-    eval_callback = EvalCallback(train_model, (args.image_width, args.image_height), args.num_classes + 1, val_lines, VOCdevkit_path, log_dir, Cuda,
-                                eval_flag=eval_flag, period=eval_period)
+    eval_callback = EvalCallback(train_model, (args.image_width, args.image_height), args.num_classes + 1, val_filelist, data_root, 
+                                os.path.join(args.log_root, args.log_dir), 
+                                eval_flag=True, period=1)
 
     # ---------------------------------------#
     #   开始模型训练

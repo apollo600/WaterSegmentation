@@ -1,9 +1,9 @@
 set -x
 
 python train.py \
-    --dataset My \
-    --num_classes 6 \
-    --data_root "/home/data/" \
+    --dataset Pascal \
+    --num_classes 21 \
+    --data_root "/project" \
     --data_dir "1945" \
     --save_root "/project/train/" \
     --save_dir "models" \
