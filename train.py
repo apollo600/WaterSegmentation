@@ -13,7 +13,7 @@ from PIL import Image
 from model.UNet import UNet
 from model.deeplabv3_plus import DeepLabV3Plus
 # from model.loss import FocalLoss
-from utils.dataset import MyData
+# from utils.dataset import MyData
 from utils.kitti_dataset import KittiData
 from model.trainer import Unet_trainer
 
@@ -22,6 +22,7 @@ from utils.visual import show_config
 from model2.loss import Focal_Loss, Dice_loss, CE_Loss
 from model2.trainer import Deeplab_trainer
 from model2.utils.pascal_dataset import PascalData
+from model2.utils.my_dataset import MyData
 
 
 def get_parser():
@@ -146,13 +147,13 @@ if __name__ == "__main__":
         val_size = len(dataset) - train_size
         train_dataset, val_dataset = data.random_split(dataset, (train_size, val_size))
     elif args.dataset == "My":
-        dataset = MyData(
-            os.path.join(args.data_root, args.data_dir), num_classes=args.num_classes,
-            image_width=args.image_width, image_height=args.image_height, one_hot=one_hot, to_torch=True
-        )
-        train_size = int(0.9 * len(dataset))
-        val_size = len(dataset) - train_size
-        train_dataset, val_dataset = data.random_split(dataset, (train_size, val_size))
+        data_root = os.path.join(args.data_root, args.data_dir)
+        train_filelist = open(os.path.join("/project/train/src_repo", "MyImageSets", "train.txt"), "r").readlines()
+        val_filelist = open(os.path.join("/project/train/src_repo", "MyImageSets", "val.txt"), "r").readlines()
+        train_dataset = MyData(data_root, train_filelist, args.image_width, args.image_height, args.num_classes, train=True)
+        val_dataset = MyData(data_root, val_filelist, args.image_width, args.image_height, args.num_classes, train=False)
+        train_size = len(train_dataset)
+        val_size = len(val_dataset)
     elif args.dataset == "Pascal":
         data_root = os.path.join(args.data_root, args.data_dir)
         train_filelist = open(os.path.join(data_root, "ImageSets", "Segmentation", "train.txt"), "r").readlines()
