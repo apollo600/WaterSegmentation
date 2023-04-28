@@ -123,10 +123,15 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
         print("\033[1;33;44m[Warning] 本次运行的总训练数据量为%d，Unfreeze_batch_size为%d，共训练%d个Epoch，计算出总训练步长为%d。\033[0m"%(train_size, args.unfreeze_batch_size, args.unfreeze_epoch, total_step))
         print("\033[1;33;44m[Warning] 由于总训练步长为%d，小于建议总步长%d，建议设置总世代为%d。\033[0m"%(total_step, wanted_step, wanted_epoch))
 
-    if args.model == "Deeplab":
-        pass
-    else:
-        Unet_trainer_one_epoch(train_loader, val_loader, train_model, args, criterion, optimizer)
+    for epoch in range(init_epoch):
+        batches = len(train_loader)
+        pbar = tqdm(
+            total=batches, desc=f"Epoch {epoch+1}/{init_epoch}: ", maxinterval=0.3, ascii=True)
+        
+        if args.model == "Deeplab":
+            pass
+        else:
+            Unet_trainer_one_epoch(train_loader, val_loader, train_model, args, criterion, optimizer, pbar)
 
 
 if __name__ == "__main__":
