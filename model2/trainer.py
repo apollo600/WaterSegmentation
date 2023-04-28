@@ -105,11 +105,11 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
             #   获得学习率下降的公式
             # ---------------------------------------#
             lr_scheduler_func = get_lr_scheduler(
-                lr_decay_type, Init_lr_fit, Min_lr_fit, UnFreeze_Epoch)
+                args.lr_decay_type, Init_lr_fit, Min_lr_fit, UnFreeze_Epoch)
 
             # 进入解冻模式，并在此解冻
-            for param in model.backbone.parameters():
-                param.requires_grad = True
+            for param in train_model.backbone.parameters():
+                    param.requires_grad = True
 
             epoch_step = train_size // batch_size
             epoch_step_val = val_size // batch_size
