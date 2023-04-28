@@ -14,15 +14,15 @@ class PascalData(Dataset):
                                                                                                                                                                                                                                                  
         super().__init__()
         self.root = root
-        self.file_list = self.file_list
+        self.file_list = file_list
         self.class_num = num_classes
         self.image_width = image_width
         self.image_height = image_height
         self.to_torch = to_torch
         self.one_hot = one_hot
 
-        self.image_paths = [ os.path.join(path, "JPEGImages", x + ".jpg") for x in file_list ]
-        self.label_paths = [ os.path.join(path, "SegmentationClass", x + ".png") for x in file_list ]
+        self.image_paths = [ os.path.join(root, "JPEGImages", x.strip() + ".jpg") for x in file_list ]
+        self.label_paths = [ os.path.join(root, "SegmentationClass", x.strip() + ".png") for x in file_list ]
         print(f"Found {len(file_list)} images")
 
     def __getitem__(self, index) -> Tuple[Union[np.ndarray, torch.Tensor], Union[np.ndarray, torch.Tensor]]:
