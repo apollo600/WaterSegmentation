@@ -54,4 +54,5 @@ python $train_path \
     --epoch $epoch \
     --image_width $image_width \
     --image_height $image_height \
-    --optimizer $optimizer
+    --optimizer $optimizer \
+    --model Unet
