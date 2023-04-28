@@ -113,7 +113,7 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
     #   每个训练世代包含若干训练步长，每个训练步长进行一次梯度下降。
     #   此处仅建议最低训练世代，上不封顶，计算时只考虑了解冻部分
     #----------------------------------------------------------#
-    wanted_step = 1.5e4 if optimizer_type == "SGD" else 0.5e4
+    wanted_step = 1.5e4 if args.optimizer == "SGD" else 0.5e4
     total_step  = train_size // args.unfreeze_batch_size * args.unfreeze_epoch
     if total_step <= wanted_step:
         if train_size // args.unfreeze_batch_size == 0:
@@ -123,59 +123,36 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
         print("\033[1;33;44m[Warning] 本次运行的总训练数据量为%d，Unfreeze_batch_size为%d，共训练%d个Epoch，计算出总训练步长为%d。\033[0m"%(train_size, args.unfreeze_batch_size, args.unfreeze_epoch, total_step))
         print("\033[1;33;44m[Warning] 由于总训练步长为%d，小于建议总步长%d，建议设置总世代为%d。\033[0m"%(total_step, wanted_step, wanted_epoch))
 
-    for epoch in range(init_epoch):
-        batches = len(train_loader)
-        pbar = tqdm(total=batches, desc=f"Epoch {epoch+1}/{init_epoch}: ", maxinterval=0.3, ascii=True)
+    if args.model == "Deeplab":
+        pass
+    else:
+        for epoch in range(init_epoch):
+            batches = len(train_loader)
+            pbar = tqdm(total=batches, desc=f"Epoch {epoch+1}/{init_epoch}: ", maxinterval=0.3, ascii=True)
 
-        for iteration, (data, label) in enumerate(train_loader):
+            for iteration, (data, label) in enumerate(train_loader):
 
-            data, label = data.cuda(), label.cuda()
-            # label: N, H, W; pred_label: N, C, H, W
-            pred_label = train_model(data)
+                data, label = data.cuda(), label.cuda()
+                # label: N, H, W; pred_label: N, C, H, W
+                pred_label = train_model(data)
 
-            if args.loss == "CrossEntropy":
-                # N, C, H, W => C, N*H*W
-                pred_label = pred_label.contiguous().permute(0, 2, 3, 1)
-                pred_label = pred_label.reshape(-1, pred_label.size(3))
-                # N, C, H, W => C*N*H*W
-                label = label.view(-1)
-            else:
-                pass
-            loss = criterion(pred_label, label)
-    
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-
-            # copy the tensor to host memory first
-            t_pred_label = pred_label.cpu().detach().numpy()
-            t_label = label.cpu().detach().numpy()
-            # get max arg as output label
-            t_pred_label = np.argmax(t_pred_label, axis=1)
-            if args.loss == "CrossEntropy":
-                pass
-            elif args.loss == "Focal":
-                t_label = np.transpose(t_label, [0, 3, 1, 2]).argmax(axis=1)
-            # update accuracy
-            acc = np.sum(t_label == t_pred_label) / np.prod(t_label.shape)
-
-            pbar.set_description(f"Epoch {epoch+1}/{init_epoch} loss: {loss:.4f} train_acc: {acc:.4f}")
-            pbar.update(1)
-        pbar.close()
-
-        print("Start Test")
-        with torch.no_grad():
-            batches = len(val_loader)
-            total_acc = 0
-            pbar = tqdm(total=batches, maxinterval=0.3, ascii=True)
-
-            for iteration, (data, label) in enumerate(val_loader):
-
-                pred_label = train_model(data.cuda())
+                if args.loss == "CrossEntropy":
+                    # N, C, H, W => C, N*H*W
+                    pred_label = pred_label.contiguous().permute(0, 2, 3, 1)
+                    pred_label = pred_label.reshape(-1, pred_label.size(3))
+                    # N, C, H, W => C*N*H*W
+                    label = label.view(-1)
+                else:
+                    pass
+                loss = criterion(pred_label, label)
+        
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
 
                 # copy the tensor to host memory first
                 t_pred_label = pred_label.cpu().detach().numpy()
-                t_label = label.detach().numpy()
+                t_label = label.cpu().detach().numpy()
                 # get max arg as output label
                 t_pred_label = np.argmax(t_pred_label, axis=1)
                 if args.loss == "CrossEntropy":
@@ -183,32 +160,58 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
                 elif args.loss == "Focal":
                     t_label = np.transpose(t_label, [0, 3, 1, 2]).argmax(axis=1)
                 # update accuracy
-                acc = np.sum(t_label == t_pred_label) / np.prod(t_label.shape[1:])
-                total_acc += acc
+                acc = np.sum(t_label == t_pred_label) / np.prod(t_label.shape)
 
-                # visual pictures
-                max_picture_shown_each_epoch = 3
-                if args.log_visual and iteration < max_picture_shown_each_epoch:
-                    log_path = os.path.join(args.log_root, args.log_dir)
-                    os.makedirs(log_path, exist_ok=True)
-                    visual.visualize(np.squeeze(t_pred_label, axis=0), os.path.join(log_path, f"e{epoch}_i{iteration}_pred.png"))
-                    visual.visualize(np.squeeze(t_label, axis=0), os.path.join(log_path, f"e{epoch}_i{iteration}_label.png"))
-                    Image.fromarray(np.squeeze(np.uint8(data.detach().numpy()), axis=0).transpose([1, 2, 0])).save(os.path.join(log_path, f"e{epoch}_i{iteration}_src.png"))
-
+                pbar.set_description(f"Epoch {epoch+1}/{init_epoch} loss: {loss:.4f} train_acc: {acc:.4f}")
                 pbar.update(1)
             pbar.close()
 
-            total_acc /= batches
-            if total_acc > best_acc: 
-                print(f"Update acc {best_acc:.4f} => {total_acc:.4f}")
-                best_acc = total_acc
-                if args.save_dir == "":
-                    model_path = os.path.join(log_dir, f"best_acc-{total_acc:.4f}.pt")
+            print("Start Test")
+            with torch.no_grad():
+                batches = len(val_loader)
+                total_acc = 0
+                pbar = tqdm(total=batches, maxinterval=0.3, ascii=True)
+
+                for iteration, (data, label) in enumerate(val_loader):
+
+                    pred_label = train_model(data.cuda())
+
+                    # copy the tensor to host memory first
+                    t_pred_label = pred_label.cpu().detach().numpy()
+                    t_label = label.detach().numpy()
+                    # get max arg as output label
+                    t_pred_label = np.argmax(t_pred_label, axis=1)
+                    if args.loss == "CrossEntropy":
+                        pass
+                    elif args.loss == "Focal":
+                        t_label = np.transpose(t_label, [0, 3, 1, 2]).argmax(axis=1)
+                    # update accuracy
+                    acc = np.sum(t_label == t_pred_label) / np.prod(t_label.shape[1:])
+                    total_acc += acc
+
+                    # visual pictures
+                    max_picture_shown_each_epoch = 3
+                    if args.log_visual and iteration < max_picture_shown_each_epoch:
+                        log_path = os.path.join(args.log_root, args.log_dir)
+                        os.makedirs(log_path, exist_ok=True)
+                        visual.visualize(np.squeeze(t_pred_label, axis=0), os.path.join(log_path, f"e{epoch}_i{iteration}_pred.png"))
+                        visual.visualize(np.squeeze(t_label, axis=0), os.path.join(log_path, f"e{epoch}_i{iteration}_label.png"))
+                        Image.fromarray(np.squeeze(np.uint8(data.detach().numpy()), axis=0).transpose([1, 2, 0])).save(os.path.join(log_path, f"e{epoch}_i{iteration}_src.png"))
+
+                    pbar.update(1)
+                pbar.close()
+
+                total_acc /= batches
+                if total_acc > best_acc: 
+                    print(f"Update acc {best_acc:.4f} => {total_acc:.4f}")
+                    best_acc = total_acc
+                    if args.save_dir == "":
+                        model_path = os.path.join(log_dir, f"best_acc-{total_acc:.4f}.pt")
+                    else:
+                        model_path = os.path.join(log_dir, f"{time_stamp}_epoch-{args.epoch}_lr-{args.lr}_loss-{args.loss}_optim-{args.optimizer}_best_acc-{total_acc:.4f}.pt")
+                    torch.save(train_model, model_path)
                 else:
-                    model_path = os.path.join(log_dir, f"{time_stamp}_epoch-{args.epoch}_lr-{args.lr}_loss-{args.loss}_optim-{args.optimizer}_best_acc-{total_acc:.4f}.pt")
-                torch.save(train_model, model_path)
-            else:
-                print(f"acc: {total_acc:.4f}")
+                    print(f"acc: {total_acc:.4f}")
 
 
 if __name__ == "__main__":
@@ -247,7 +250,7 @@ if __name__ == "__main__":
     if args.model == "Unet":
         model = UNet(3, args.num_classes)
     elif args.model == "Deeplab":
-        model = DeepLab(num_classes=args.num_classes+1, backbone=args.backbone, downsample_factor=args.downsample_factor)
+        model = DeepLab(num_classes=args.num_classes+1, backbone=args.backbone, downsample_factor=args.downsample_factor, pretrained=False)
         # 初始化大模型中的参数
         weights_init(model, init_type="normal")
         # 加载预训练模型
