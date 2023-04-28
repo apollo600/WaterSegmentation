@@ -21,7 +21,7 @@ from utils import visual
 def get_parser():
     import argparse
 
-    parser = argparse.ArgumentParser(description='Train UNet')
+    parser = argparse.ArgumentParser(description='Train')
     parser.add_argument("--dataset", type=str, default="Kitti", help="dataset to use")
     parser.add_argument("--num_classes", type=int, default="34", help="number of classes")
     parser.add_argument("--data_root", type=str, default="./", help="data directory root path (where training/ testing/ or *.png is in)")
@@ -197,7 +197,7 @@ if __name__ == "__main__":
 
     # Create the model
     print("Loading model to device")
-    model = UNet(3, args.num_classes)
+    model = DeepLabV3Plus(args.num_classes)
     train_model = model.train()
     train_model.cuda()
 
