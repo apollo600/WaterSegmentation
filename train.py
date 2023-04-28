@@ -24,7 +24,7 @@ def get_parser():
 
     parser = argparse.ArgumentParser(description='Train')
     parser.add_argument("--dataset", type=str, default="Kitti", help="dataset to use")
-    parser.add_argument("--num_classes", type=int, default="34", help="number of classes")
+    parser.add_argument("--num_classes", type=int, default="34", help="number of classes, in Deeplab should = num_classes + 1")
     parser.add_argument("--data_root", type=str, default="./", help="data directory root path (where training/ testing/ or *.png is in)")
     parser.add_argument("--data_dir", type=str, default="dataset/", help="directory where data are saved")
     parser.add_argument("--save_root", type=str, default="./", help="save directory root path (where models/ is in)")
@@ -42,6 +42,9 @@ def get_parser():
 
     # Add since Deeplabv3+
     parser.add_argument("--model", type=str, default="Deeplab", help="[Unet, Deeplab]")
+    # 注意修改 num_classes = 5 + 1 = 6
+    parser.add_argument("--backbone", default="mobilenet", help="使用的主干网络, [mobilenet, xception]")
+    parser.add_argument("--pretrain_model_path", default="", help="")
 
     args = parser.parse_args()
 
