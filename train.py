@@ -137,6 +137,15 @@ if __name__ == "__main__":
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print("Using device", device, os.environ['CUDA_VISIBLE_DEVICES'])
 
+    # 展示参数
+    if args.model == "Deeplab":
+        show_config(num_classes=args.num_classes, backbone=args.backbone, pretrain_model_path=args.pretrain_model_path,
+        input_shape=(args.image_width, args.image_height), init_epoch=args.init_epoch, freeze_epoch=args.freeze_epoch, 
+        unfreeze_epoch=args.unfreeze_epoch, freeze_batch_size=args.freeze_batch_size, unfreeze_batch_size=args.unfreeze_batch_size,
+        init_lr=args.lr, min_lr=args.min_lr, optimizer=args.optimizer, momentum=args.momentum, lr_decay_type=args.lr_decay_type, 
+        focal_loss=args.focal_loss, dice_loss=args.dice_loss, class_weights=args.class_weights, 
+        )
+
     # Load the data from the folders
     one_hot = False if args.loss == "CrossEntropy" else True
     if args.dataset == "Kitti":
@@ -202,15 +211,6 @@ if __name__ == "__main__":
     print("Loading model to device")
     train_model = model.train()
     train_model.cuda()
-
-    # 展示参数
-    if args.model == "Deeplab":
-        show_config(num_classes=args.num_classes, backbone=args.backbone, pretrain_model_path=args.pretrain_model_path,
-        input_shape=(args.image_width, args.image_height), init_epoch=args.init_epoch, freeze_epoch=args.freeze_epoch, 
-        unfreeze_epoch=args.unfreeze_epoch, freeze_batch_size=args.freeze_batch_size, unfreeze_batch_size=args.unfreeze_batch_size,
-        init_lr=args.lr, min_lr=args.min_lr, optimizer=args.optimizer, momentum=args.momentum, lr_decay_type=args.lr_decay_type, 
-        focal_loss=args.focal_loss, dice_loss=args.dice_loss
-        )
 
     # Train
     print("Start Train")
