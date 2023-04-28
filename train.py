@@ -21,6 +21,7 @@ from model2.deeplab_v3plus import DeepLab, weights_init
 from utils.visual import show_config
 from model2.loss import Focal_Loss, Dice_loss, CE_Loss
 from model2.trainer import Deeplab_trainer
+from model2.utils.pascal_dataset import PascalData
 
 
 def get_parser():
@@ -136,14 +137,26 @@ if __name__ == "__main__":
             os.path.join(args.data_root, args.data_dir), num_classes=args.num_classes,
             image_width=args.image_width, image_height=args.image_height, one_hot=one_hot, to_torch=True
         )
+        train_size = int(0.9 * len(dataset))
+        val_size = len(dataset) - train_size
+        train_dataset, val_dataset = data.random_split(dataset, (train_size, val_size))
     elif args.dataset == "My":
         dataset = MyData(
             os.path.join(args.data_root, args.data_dir), num_classes=args.num_classes,
             image_width=args.image_width, image_height=args.image_height, one_hot=one_hot, to_torch=True
         )
-    train_size = int(0.9 * len(dataset))
-    val_size = len(dataset) - train_size
-    train_dataset, val_dataset = data.random_split(dataset, (train_size, val_size))
+        train_size = int(0.9 * len(dataset))
+        val_size = len(dataset) - train_size
+        train_dataset, val_dataset = data.random_split(dataset, (train_size, val_size))
+    elif args.dataset == "Pascal":
+        data_root = os.path.join(args.data_root, args.data_dir)
+        train_filelist = open(os.path.join(data_root, "ImageSets", ""))
+        dataset = PascalData(
+            os.path.join(args.data_root, args.data_dir), 
+            file_list, args.num_classes + 1, args.image_width, args.image_height
+        )
+        
+    
 
     r, s = dataset[0]
     print("image shape and label shape:", r.shape, s.shape)
