@@ -13,7 +13,7 @@ import cv2
 class MyData(Dataset):
     def __init__(self, dataset_path, annotation_lines, image_width, image_height, num_classes, train):
                                                                                                                 
-        super(PascalData, self).__init__()
+        super(MyData, self).__init__()
         self.annotation_lines   = annotation_lines
         self.length             = len(annotation_lines)
         self.input_shape        = (image_width, image_height)
@@ -31,8 +31,8 @@ class MyData(Dataset):
         #-------------------------------#
         #   从文件中读取图像
         #-------------------------------#
-        jpg         = Image.open(os.path.join(os.path.join(self.dataset_path, "JPEGImages"), name + ".jpg"))
-        png         = Image.open(os.path.join(os.path.join(self.dataset_path, "SegmentationClass"), name + ".png"))
+        jpg         = Image.open(os.path.join(os.path.join(self.dataset_path), name + ".jpg"))
+        png         = Image.open(os.path.join(os.path.join(self.dataset_path), name + ".png"))
         #-------------------------------#
         #   数据增强
         #-------------------------------#
