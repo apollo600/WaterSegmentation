@@ -67,11 +67,8 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
     # ----------------------#
     #   记录eval的map曲线
     # ----------------------#
-    if local_rank == 0:
-        eval_callback = EvalCallback(model, input_shape, num_classes, val_lines, VOCdevkit_path, log_dir, Cuda,
-                                     eval_flag=eval_flag, period=eval_period)
-    else:
-        eval_callback = None
+    eval_callback = EvalCallback(train_model, input_shape, num_classes, val_lines, VOCdevkit_path, log_dir, Cuda,
+                                eval_flag=eval_flag, period=eval_period)
 
     # ---------------------------------------#
     #   开始模型训练
@@ -116,15 +113,15 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
 
         set_optimizer_lr(optimizer, lr_scheduler_func, epoch)
 
-        fit_one_epoch(model_train, model, loss_history, eval_callback, optimizer, epoch,
-                      epoch_step, epoch_step_val, gen, gen_val, UnFreeze_Epoch, Cuda, dice_loss, focal_loss, cls_weights, num_classes, fp16, scaler, save_period, save_dir, local_rank)
+        fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch,
+                      epoch_step, epoch_step_val, train_loader, val_loader, UnFreeze_Epoch, args.cls_weights, args.num_classes, save_period=1, save_dir, local_rank)
 
     # if local_rank == 0:
     #     loss_history.writer.close()
 
 
-def fit_one_epoch(train_model, model, loss_history, eval_callback, optimizer, epoch, epoch_step, epoch_step_val,
-                  train_loader, gen_val, Epoch, cuda, dice_loss, focal_loss, cls_weights, num_classes, fp16, scaler,
+def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, epoch_step, epoch_step_val,
+                  train_loader, val_loader, Epoch, cls_weights, num_classes, fp16, scaler,
                   save_period, save_dir, args):
 
     total_loss = 0
@@ -199,17 +196,16 @@ def fit_one_epoch(train_model, model, loss_history, eval_callback, optimizer, ep
                     desc=f'Epoch {epoch + 1}/{Epoch}', postfix=dict, mininterval=0.3)
 
     train_model.eval()
-    for iteration, batch in enumerate(gen_val):
+    for iteration, batch in enumerate(val_loader):
         if iteration >= epoch_step_val:
             break
         imgs, pngs, labels = batch
         with torch.no_grad():
             weights = torch.from_numpy(cls_weights)
-            if cuda:
-                imgs = imgs.cuda(local_rank)
-                pngs = pngs.cuda(local_rank)
-                labels = labels.cuda(local_rank)
-                weights = weights.cuda(local_rank)
+            imgs = imgs.cuda(local_rank)
+            pngs = pngs.cuda(local_rank)
+            labels = labels.cuda(local_rank)
+            weights = weights.cuda(local_rank)
 
             # ----------------------#
             #   前向传播
@@ -253,15 +249,15 @@ def fit_one_epoch(train_model, model, loss_history, eval_callback, optimizer, ep
     #   保存权值
     # -----------------------------------------------#
     if (epoch + 1) % save_period == 0 or epoch + 1 == Epoch:
-        torch.save(model.state_dict(), os.path.join(save_dir, 'ep%03d-loss%.3f-val_loss%.3f.pth' %
+        torch.save(train_model.state_dict(), os.path.join(save_dir, 'ep%03d-loss%.3f-val_loss%.3f.pth' %
                    (epoch + 1, total_loss / epoch_step, val_loss / epoch_step_val)))
 
     if len(loss_history.val_loss) <= 1 or (val_loss / epoch_step_val) <= min(loss_history.val_loss):
         print('Save best model to best_epoch_weights.pth')
-        torch.save(model.state_dict(), os.path.join(
+        torch.save(train_model.state_dict(), os.path.join(
             save_dir, "best_epoch_weights.pth"))
 
-    torch.save(model.state_dict(), os.path.join(
+    torch.save(train_model.state_dict(), os.path.join(
         save_dir, "last_epoch_weights.pth"))
 
 
