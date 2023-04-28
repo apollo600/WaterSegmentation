@@ -12,13 +12,15 @@ from PIL import Image
 
 from model.UNet import UNet
 from model.deeplabv3_plus import DeepLabV3Plus
-from model.loss import FocalLoss
+# from model.loss import FocalLoss
 from utils.dataset import MyData
 from utils.kitti_dataset import KittiData
 from utils import visual
 
 from model2.deeplab_v3plus import DeepLab, weights_init
 from utils.visual import show_config
+from model2.loss import Focal_Loss, Dice_loss, CE_Loss
+
 
 def get_parser():
     import argparse
@@ -252,7 +254,10 @@ if __name__ == "__main__":
 
     # 展示参数
     show_config(num_classes=args.num_classes, backbone=args.backbone, pretrain_model_path=args.pretrain_model_path,
-    input_shape=(args.image_width, args.image_height), init_epoch=)
+    input_shape=(args.image_width, args.image_height), init_epoch=args.init_epoch, freeze_epoch=args.freeze_epoch, 
+    unfreeze_epoch=args.unfreeze_epoch, freeze_batch_size=args.freeze_batch_size, unfreeze_batch_size=args.unfreeze_batch_size,
+    init_lr=args.lr, min_lr=args.min_lr, optimizer=args.optimizer, momentum=args.momentum, lr_decay_type=args.lr_decay_type, 
+    )
 
     # Train
     print("Start Train")
