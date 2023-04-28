@@ -23,6 +23,7 @@ from model2.loss import Focal_Loss, Dice_loss, CE_Loss
 from model2.trainer import Deeplab_trainer
 from model2.utils.pascal_dataset import PascalData
 from model2.utils.my_dataset import MyData
+from model2.utils.split_my_dataset import build_dir_structure
 
 
 def get_parser():
@@ -148,8 +149,9 @@ if __name__ == "__main__":
         train_dataset, val_dataset = data.random_split(dataset, (train_size, val_size))
     elif args.dataset == "My":
         data_root = os.path.join(args.data_root, args.data_dir)
-        train_filelist = open(os.path.join("/project/train/src_repo", "MyImageSets", "train.txt"), "r").readlines()
-        val_filelist = open(os.path.join("/project/train/src_repo", "MyImageSets", "val.txt"), "r").readlines()
+        build_dir_structure(data_root, data_root)
+        train_filelist = open(os.path.join(data_root, "ImageSets", "Segmentation", "train.txt"), "r").readlines()
+        val_filelist = open(os.path.join(data_root, "ImageSets", "Segmentation", "val.txt"), "r").readlines()
         train_dataset = MyData(data_root, train_filelist, args.image_width, args.image_height, args.num_classes, train=True)
         val_dataset = MyData(data_root, val_filelist, args.image_width, args.image_height, args.num_classes, train=False)
         train_size = len(train_dataset)

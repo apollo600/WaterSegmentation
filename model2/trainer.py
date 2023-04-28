@@ -39,6 +39,7 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
     Init_Epoch = args.init_epoch
     Freeze_Epoch = args.freeze_epoch
     UnFreeze_Epoch = args.unfreeze_epoch
+    Unfreeze_batch_size = args.unfreeze_batch_size
     UnFreeze_flag = False
 
     # -------------------------------------------------------------------#
@@ -93,7 +94,7 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
             nbs = 16
             lr_limit_max = 5e-4 if args.optimizer == 'Adam' else 1e-1
             lr_limit_min = 3e-4 if args.optimizer == 'Adam' else 5e-4
-            if backbone == "Xception":
+            if args.backbone == "Xception":
                 lr_limit_max = 1e-4 if args.optimizer == 'Adam' else 1e-1
                 lr_limit_min = 1e-4 if args.optimizer == 'Adam' else 5e-4
             Init_lr_fit = min(max(batch_size / nbs * Init_lr,

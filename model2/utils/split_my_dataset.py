@@ -2,6 +2,7 @@
 
 import os
 import random
+from shutil import copyfile
 
 
 def split(file_list, train_percentage=0.9, output_path=""):           
@@ -40,7 +41,7 @@ def build_dir_structure(data_path, root_path):
     
     # Make Directories
     os.makedirs(
-        os.path.join(root_path, "ImageSets"), exist_ok=True
+        os.path.join(root_path, "ImageSets", "Segmentation"), exist_ok=True
     )
     os.makedirs(
         os.path.join(root_path, "JPEGImages"), exist_ok=True
@@ -49,15 +50,23 @@ def build_dir_structure(data_path, root_path):
         os.path.join(root_path, "SegmentationClass"), exist_ok=True
     )
 
-    # Copy Image and form relevant data
-    os.system(f"cp {os.path.join(data_path, '*.jpg')}, {os.path.join(root_path, 'JPEGImages')}")
-    os.system(f"cp {os.path.join(data_path, '*.png')}, {os.path.join(root_path, 'SegmentationClass')}")
-
     file_list = os.listdir(data_path)
     file_list = [ x[:-4] for x in file_list if x.endswith('.jpg') ]
     
-    split(file_list, 0.9, os.path.join(root_path, "ImageSets"))
+    for x in file_list:
+        copyfile(
+            os.path.join(data_path, x + ".jpg"),
+            os.path.join(root_path, "JPEGImages", x + ".jpg")
+        )
+        copyfile(
+            os.path.join(data_path, x + ".png"),
+            os.path.join(root_path, "SegmentationClass", x + ".png")
+        )
+    
+    split(file_list, 0.9, os.path.join(root_path, "ImageSets", "Segmentation"))
 
+    os.system(f"tree -d {root_path}")
+    
 
 if __name__ == "__main__":            
     build_dir_structure("/home/data/1945", "/project/train/src_repo/MyDataset")
