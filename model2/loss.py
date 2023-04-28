@@ -43,7 +43,7 @@ def Dice_loss(inputs, target, beta=1, smooth = 1e-5):
         inputs = F.interpolate(inputs, size=(ht, wt), mode="bilinear", align_corners=True)
         
     temp_inputs = torch.softmax(inputs.transpose(1, 2).transpose(2, 3).contiguous().view(n, -1, c),-1)
-    temp_target = target.view(n, -1, ct)
+    temp_target = target.view(n, -1, ct).type(torch.FloatTensor)
 
     #--------------------------------------------#
     #   计算dice loss
