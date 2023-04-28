@@ -6,7 +6,7 @@ python train.py \
     --data_root "/home/data/" \
     --data_dir "1945" \
     --save_root "/project/train/" \
-    --save_dir "models" \
+    --save_dir "models/deeplab" \
     --log_root "/project/train" \
     --log_dir "log" \
     --lr "5e-4" \
@@ -19,7 +19,7 @@ python train.py \
     --pretrain_model_path "/project/train/models/deeplab_mobilenetv2.pth" \
     --downsample_factor 16 \
     --init_epoch 0 \
-    --freeze_epoch 25 \
+    --freeze_epoch 2 \
     --freeze_batch_size 8 \
     --unfreeze_epoch 50 \
     --unfreeze_batch_size 8 \
@@ -28,7 +28,7 @@ python train.py \
     --weight_decay 0 \
     --lr_decay_type cos \
     --focal_loss \
-    --class_weights 1 1 10 10 20 1
+    --class_weights 1 1 10 10 100 1
     # --loss "" \
     # --batch_size \
     # --epoch \
