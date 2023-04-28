@@ -205,9 +205,9 @@ if __name__ == "__main__":
     args = get_parser()
 
     if args.class_weights is None:
-        args.class_weights = np.ones([args.num_classes])
+        args.class_weights = np.ones([args.num_classes], dtype=np.float32)
     else:
-        args.class_weights = np.array(args.class_weights)
+        args.class_weights = np.array(args.class_weights, dtype=np.float32)
 
     # Get device
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
@@ -285,7 +285,7 @@ if __name__ == "__main__":
         input_shape=(args.image_width, args.image_height), init_epoch=args.init_epoch, freeze_epoch=args.freeze_epoch, 
         unfreeze_epoch=args.unfreeze_epoch, freeze_batch_size=args.freeze_batch_size, unfreeze_batch_size=args.unfreeze_batch_size,
         init_lr=args.lr, min_lr=args.min_lr, optimizer=args.optimizer, momentum=args.momentum, lr_decay_type=args.lr_decay_type, 
-        focal_
+        focal_loss=args.focal_loss, dice_loss=args.dice_loss
         )
 
     # Train

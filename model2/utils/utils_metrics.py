@@ -18,6 +18,9 @@ def f_score(inputs, target, beta=1, smooth = 1e-5, threhold = 0.5):
     temp_inputs = torch.softmax(inputs.transpose(1, 2).transpose(2, 3).contiguous().view(n, -1, c),-1)
     temp_target = target.view(n, -1, ct)
 
+    temp_inputs = temp_inputs.type(torch.DoubleTensor).cuda()
+    temp_target = temp_target.type(torch.DoubleTensor).cuda()
+
     #--------------------------------------------#
     #   计算dice系数
     #--------------------------------------------#
