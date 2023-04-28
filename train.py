@@ -150,12 +150,12 @@ if __name__ == "__main__":
         train_dataset, val_dataset = data.random_split(dataset, (train_size, val_size))
     elif args.dataset == "Pascal":
         data_root = os.path.join(args.data_root, args.data_dir)
-        train_filelist = open(os.path.join(data_root, "ImageSets", ""))
-        dataset = PascalData(
-            os.path.join(args.data_root, args.data_dir), 
-            file_list, args.num_classes + 1, args.image_width, args.image_height
-        )
-        
+        train_filelist = open(os.path.join(data_root, "ImageSets", "Segmentation", "train.txt"), "r").readlines()
+        val_filelist = open(os.path.join(data_root, "ImageSets", "Segmentation", "val.txt"), "r").readlines()
+        train_dataset = PascalData(data_root, train_filelist, args.num_classes, args.image_width, args.image_height)
+        val_dataset = PascalData(data_root, val_filelist, args.num_classes, args.image_width, args.image_height)
+        train_size = len(train_dataset)
+        val_size = len(val_size)
     
 
     r, s = dataset[0]
