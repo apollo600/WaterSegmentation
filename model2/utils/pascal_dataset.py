@@ -6,12 +6,14 @@ from typing import Tuple, Union
 import torch
 from torch.utils.data.dataset import Dataset
 import torchvision.transforms as transforms
+from model2.utils.utils import cvtColor, preprocess_input
+import cv2
 
 
 class PascalData(Dataset):
-    def __init__(self, dataset_path, annotation_lines, image_wdith, image_height, num_classes, train):
-                                                                                                
-        super(DeeplabDataset, self).__init__()
+    def __init__(self, dataset_path, annotation_lines, image_width, image_height, num_classes, train):
+                                                                                                        
+        super(PascalData, self).__init__()
         self.annotation_lines   = annotation_lines
         self.length             = len(annotation_lines)
         self.input_shape        = (image_width, image_height)

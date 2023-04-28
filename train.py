@@ -125,6 +125,8 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
 if __name__ == "__main__":
     args = get_parser()
 
+    args.class_weights = np.array(args.class_weights)
+
     # Get device
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -152,13 +154,13 @@ if __name__ == "__main__":
         data_root = os.path.join(args.data_root, args.data_dir)
         train_filelist = open(os.path.join(data_root, "ImageSets", "Segmentation", "train.txt"), "r").readlines()
         val_filelist = open(os.path.join(data_root, "ImageSets", "Segmentation", "val.txt"), "r").readlines()
-        train_dataset = Pas
-        val_dataset = PascalData(data_root, val_filelist, args.num_classes, args.image_width, args.image_height)
+        train_dataset = PascalData(data_root, train_filelist, args.image_width, args.image_height, args.num_classes, train=True)
+        val_dataset = PascalData(data_root, val_filelist, args.image_width, args.image_height, args.num_classes, train=False)
         train_size = len(train_dataset)
         val_size = len(val_dataset)
     
 
-    r, s = train_dataset[0]
+    r, s, label_onehot = train_dataset[0]
     print("image shape and label shape:", r.shape, s.shape)
 
     # Create the loaders
