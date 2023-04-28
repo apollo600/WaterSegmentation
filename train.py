@@ -152,7 +152,7 @@ if __name__ == "__main__":
         data_root = os.path.join(args.data_root, args.data_dir)
         train_filelist = open(os.path.join(data_root, "ImageSets", "Segmentation", "train.txt"), "r").readlines()
         val_filelist = open(os.path.join(data_root, "ImageSets", "Segmentation", "val.txt"), "r").readlines()
-        train_dataset = PascalData(data_root, train_filelist, args.num_classes, args.image_width, args.image_height)
+        train_dataset = Pas
         val_dataset = PascalData(data_root, val_filelist, args.num_classes, args.image_width, args.image_height)
         train_size = len(train_dataset)
         val_size = len(val_dataset)
