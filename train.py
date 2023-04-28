@@ -117,7 +117,7 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
     if args.model == "Deeplab":
         pass
     else:
-        Unet_trainer(train_loader, val_loader, train_model, args, criterion, optimizer, init_epoch, log_dir)
+        Unet_trainer(train_loader, val_loader, train_model, args, criterion, optimizer, init_epoch)
 
 
 if __name__ == "__main__":

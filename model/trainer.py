@@ -6,6 +6,7 @@ from utils import visual
 from PIL import Image
 from torch.utils.data.dataloader import DataLoader
 import torch.nn as nn
+import time
 
 
 def Unet_trainer(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Module, args, criterion, optimizer, init_epoch):
