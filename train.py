@@ -17,6 +17,7 @@ from utils.dataset import MyData
 from utils.kitti_dataset import KittiData
 from utils import visual
 
+from model2.deeplab_v3plus import DeepLab
 
 def get_parser():
     import argparse
@@ -201,7 +202,9 @@ if __name__ == "__main__":
     # Create the model
     print("Loading model to device")
     if args.model == "Unet":
-                    model = UNet(3, args.num_classes)
+        model = UNet(3, args.num_classes)
+    elif args.model == "Deeplab":
+        model = Deeplab()
     train_model = model.train()
     train_model.cuda()
 
