@@ -89,6 +89,10 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
             loss.backward()
             optimizer.step()
 
+            # offload
+            data.detach()
+            label.detach()
+
             # copy the tensor to host memory first
             t_pred_label = pred_label.cpu().detach().numpy()
             t_label = label.cpu().detach().numpy()
