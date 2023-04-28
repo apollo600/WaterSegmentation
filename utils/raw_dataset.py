@@ -31,7 +31,3 @@ class RawData(Dataset):
 
     def __len__(self):
         return len(self.image_paths)
-
-    def get_train_list(self):
-        return self.image_paths
-    
