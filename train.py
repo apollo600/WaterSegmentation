@@ -39,6 +39,9 @@ def get_parser():
     parser.add_argument("--optimizer", type=str, default="AdamW", help="optimizer to use")
     parser.add_argument("--log_visual", action="store_true", default=True, help="save visualized picture while training")
 
+    # Add since Deeplabv3+
+    parser.add_argument("--model", type=str, default="Deeplab", help="[Unet, Deeplab]")
+
     args = parser.parse_args()
 
     return args
@@ -197,7 +200,8 @@ if __name__ == "__main__":
 
     # Create the model
     print("Loading model to device")
-    model = UNet(3, args.num_classes)
+    if args.model == "Unet":
+                    model = UNet(3, args.num_classes)
     train_model = model.train()
     train_model.cuda()
 
