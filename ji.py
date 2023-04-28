@@ -5,9 +5,6 @@ import numpy as np
 from PIL import Image
 import torch.nn as nn
 
-sys.path.append("/project/train/src_repo/")
-from model.model2 import UNet
-
 
 def checkGPU():
     gpu_count = torch.cuda.device_count()
@@ -25,12 +22,11 @@ def init(model_path: str = None) -> nn.Module:
     checkGPU()
 
     print("Load Model")
-    model = UNet(3, 5)
     if model_path is None:
         # Best model now: /project/train/models/2023-04-26-15:26:55_epoch-100_lr-0.0005_loss-CrossEntropy_optim-AdamW_best_acc-0.7752.pt
         # Best local model: /project/train/models/2023-04-26-14\:34\:28_epoch-100_lr-0.0005_loss-CrossEntropy_optim-AdamW_best_acc-0.6238.pt
         model_path = "真实环境所用pt"
-    model.load_state_dict(torch.load(model_path))
+    model = torch.load(model_path)
     model = model.cuda()
 
     return model

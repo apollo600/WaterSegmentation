@@ -10,11 +10,13 @@ import numpy as np
 from tqdm import tqdm
 from PIL import Image
 
-from model.model2 import UNet
+from model.UNet import UNet
+from model.deeplabv3_plus import DeepLabV3Plus
 from model.loss import FocalLoss
 from utils.dataset import MyData
 from utils.kitti_dataset import KittiData
 from utils import visual
+
 
 def get_parser():
     import argparse
@@ -157,7 +159,7 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
                     model_path = os.path.join(log_dir, f"best_acc-{total_acc:.4f}.pt")
                 else:
                     model_path = os.path.join(log_dir, f"{time_stamp}_epoch-{args.epoch}_lr-{args.lr}_loss-{args.loss}_optim-{args.optimizer}_best_acc-{total_acc:.4f}.pt")
-                torch.save(train_model.state_dict(), model_path)
+                torch.save(train_model, model_path)
             else:
                 print(f"acc: {total_acc:.4f}")
 
