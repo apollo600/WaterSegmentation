@@ -6,6 +6,7 @@ from utils import visual
 from PIL import Image
 from torch.utils.data.dataloader import DataLoader
 import torch.nn as nn
+from model2.utils.callbacks import EvalCallback
 
 
 def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Module, args, optimizer, train_size, val_size):
