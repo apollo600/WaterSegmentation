@@ -29,7 +29,7 @@ python train.py \
     --lr_decay_type cos \
     --dice_loss \
     --focal_loss \
-    --class_weights 1 1 10 10 20 1
+    # --class_weights 1 1 10 10 20 1
     # --loss "" \
     # --batch_size \
     # --epoch \
