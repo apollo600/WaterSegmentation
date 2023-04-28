@@ -12,6 +12,7 @@ from model2.utils.utils_metrics import f_score
 from model2.utils.utils import get_lr
 import datetime
 from functools import partial
+import math
 
 
 def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Module, args, optimizer, train_size, val_size, val_filelist, data_root):
@@ -109,7 +110,7 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
 
             # 进入解冻模式，并在此解冻
             for param in train_model.backbone.parameters():
-                    param.requires_grad = True
+                param.requires_grad = True
 
             epoch_step = train_size // batch_size
             epoch_step_val = val_size // batch_size
