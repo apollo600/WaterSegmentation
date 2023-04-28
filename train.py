@@ -85,8 +85,10 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
         raise RuntimeError("wrong type of criterion given:", args.loss)
     criterion = criterion.cuda()
 
-    if args.optimizer == "AdamW":
-        optimizer = optim.AdamW(train_model.parameters(), init_lr)
+    if args.optimizer == "Adam":
+            
+        elif args.optimizer == "AdamW":
+                optimizer = optim.AdamW(train_model.parameters(), init_lr)
     elif args.optimizer == "SGD":
         optimizer = optim.SGD(train_model.parameters(), lr=init_lr)
     elif args.optimizer == "Adagrad":
