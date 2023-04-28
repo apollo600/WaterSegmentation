@@ -9,7 +9,16 @@ import torch.nn as nn
 
 
 def Unet_trainer(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Module, args, criterion, optimizer, init_epoch):
-                                                                        
+                                                                                                                                    
+    time_stamp = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime(time.time()))
+    if args.save_dir == "":
+        log_dir = f"{time_stamp}_epoch-{args.epoch}_lr-{args.lr}_loss-{args.loss}_optim-{args.optimizer}"
+    else:
+        log_dir = os.path.join(args.save_root, args.save_dir)
+    os.makedirs(log_dir, exist_ok=True)
+    
+    best_acc = 0
+    
     for epoch in range(init_epoch):
         batches = len(train_loader)
         pbar = tqdm(
