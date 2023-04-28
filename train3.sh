@@ -1,12 +1,12 @@
 set -x
 
-python train.py \
+python /project/train/src_repo/train.py \
     --dataset My \
     --num_classes 6 \
     --data_root "/home/data/" \
     --data_dir "1945" \
     --save_root "/project/train/" \
-    --save_dir "models/deeplab" \
+    --save_dir "models" \
     --log_root "/project/train" \
     --log_dir "log" \
     --lr "5e-4" \
@@ -19,9 +19,9 @@ python train.py \
     --pretrain_model_path "/project/train/models/deeplab_mobilenetv2.pth" \
     --downsample_factor 16 \
     --init_epoch 0 \
-    --freeze_epoch 7 \
+    --freeze_epoch 25 \
     --freeze_batch_size 8 \
-    --unfreeze_epoch 20 \
+    --unfreeze_epoch 50 \
     --unfreeze_batch_size 8 \
     --min_lr 5e-6 \
     --momentum 0.9 \

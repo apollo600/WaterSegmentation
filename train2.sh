@@ -1,6 +1,6 @@
 set -x
 
-python train.py \
+python /project/train/src_repo/train.py \
     --dataset Pascal \
     --num_classes 21 \
     --data_root "/project/train/src_repo/VOCdevkit/" \
