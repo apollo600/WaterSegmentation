@@ -6,10 +6,10 @@ from nets.mobilenetv2 import mobilenetv2
 
 
 class DeepLab(nn.Module):
-    def __init__(self, num_classes, backbone="mobilenet", pretrained=True, downsample_factor=16):
-        super(DeepLab, self).__init__()
-        if backbone=="xception":
-            #----------------------------------#
+    def __init__(self, num_classes, backbone="Mobilenet", pretrained=True, downsample_factor=16):
+            super(DeepLab, self).__init__()
+        if backbone=="Xception":
+                #----------------------------------#
             #   获得两个特征层
             #   浅层特征    [128,128,256]
             #   主干部分    [30,30,2048]
@@ -17,8 +17,8 @@ class DeepLab(nn.Module):
             self.backbone = xception(downsample_factor=downsample_factor, pretrained=pretrained)
             in_channels = 2048
             low_level_channels = 256
-        elif backbone=="mobilenet":
-            #----------------------------------#
+        elif backbone=="Mobilenet":
+                #----------------------------------#
             #   获得两个特征层
             #   浅层特征    [128,128,24]
             #   主干部分    [30,30,320]

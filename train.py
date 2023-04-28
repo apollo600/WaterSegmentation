@@ -46,7 +46,7 @@ def get_parser():
     # Add since Deeplabv3+
     parser.add_argument("--model", type=str, default="Deeplab", help="[Unet, Deeplab]")
     # 在创建模型实例时修改 num_classes = 5 + 1 = 6
-    parser.add_argument("--backbone", default="mobilenet", help="使用的主干网络, [mobilenet, xception]")
+    parser.add_argument("--backbone", default="Mobilenet", help="使用的主干网络, [mobilenet, xception]")
     parser.add_argument("--pretrain_model_path", default="", help=" 模型的 预训练权重 对不同数据集是通用的，\
                                                                     因为特征是通用的.模型的 预训练权重 比较重要的部分是 主干特征提取网络的权值部分，用于进行特征提取。")
     parser.add_argument("--downsample_factor", type=int, default=16, help="下采样的倍数，越小显存占用越多 [8, 16]")
@@ -86,9 +86,9 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
     criterion = criterion.cuda()
 
     if args.optimizer == "Adam":
-            
-        elif args.optimizer == "AdamW":
-                optimizer = optim.AdamW(train_model.parameters(), init_lr)
+        optimizer = optim.Adam(train_model.parameters(), lr=init_lr, weight_decay=args.weight_decay)
+    elif args.optimizer == "AdamW":
+        optimizer = optim.AdamW(train_model.parameters(), init_lr)
     elif args.optimizer == "SGD":
         optimizer = optim.SGD(train_model.parameters(), lr=init_lr)
     elif args.optimizer == "Adagrad":
