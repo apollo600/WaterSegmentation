@@ -15,7 +15,7 @@ from model.deeplabv3_plus import DeepLabV3Plus
 # from model.loss import FocalLoss
 from utils.dataset import MyData
 from utils.kitti_dataset import KittiData
-from utils import visual
+from model.trainer import Unet_trainer_one_epoch
 
 from model2.deeplab_v3plus import DeepLab, weights_init
 from utils.visual import show_config
@@ -126,7 +126,7 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
     if args.model == "Deeplab":
         pass
     else:
-        
+        Unet_trainer_one_epoch(train_loader, val_loader, train_model, args, criterion, optimizer)
 
 
 if __name__ == "__main__":
