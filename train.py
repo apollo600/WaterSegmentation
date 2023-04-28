@@ -60,7 +60,9 @@ def get_parser():
     parser.add_argument("--momentum", type=float, default=0.9, help="Used in optimizer")
     parser.add_argument("--weight_decay", type=float, default=1e-4, help="权值衰减，使用 Adam 时建议设置为 0")
     parser.add_argument("--lr_decay_type", type=str, default="cos", help="使用的权值下降方式, [cos, step]")
-    
+    parser.add_argument("--dice_loss", action=store_true, help="种类少(几类)时, 设置为True")
+    parser.add_argument("--focal_loss", action=store_true, help="防止正负样本不平衡，需要给每个类型样本设置权重")
+    parser.add_argument("--class_weights", default=[1, 1, 1, 1, 1], help="权重")
     
     args = parser.parse_args()
 
