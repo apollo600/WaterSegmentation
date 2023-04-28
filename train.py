@@ -17,7 +17,7 @@ from utils.dataset import MyData
 from utils.kitti_dataset import KittiData
 from utils import visual
 
-from model2.deeplab_v3plus import DeepLab
+from model2.deeplab_v3plus import DeepLab, weights_init
 
 def get_parser():
     import argparse
@@ -42,7 +42,7 @@ def get_parser():
 
     # Add since Deeplabv3+
     parser.add_argument("--model", type=str, default="Deeplab", help="[Unet, Deeplab]")
-    # 注意修改 num_classes = 5 + 1 = 6
+    # 在创建模型实例时修改 num_classes = 5 + 1 = 6
     parser.add_argument("--backbone", default="mobilenet", help="使用的主干网络, [mobilenet, xception]")
     parser.add_argument("--pretrain_model_path", default="", help=" 模型的 预训练权重 对不同数据集是通用的，\
                                                                     因为特征是通用的.模型的 预训练权重 比较重要的部分是 主干特征提取网络的权值部分，用于进行特征提取。")
@@ -62,7 +62,8 @@ def get_parser():
     parser.add_argument("--lr_decay_type", type=str, default="cos", help="使用的权值下降方式, [cos, step]")
     parser.add_argument("--dice_loss", action=store_true, help="种类少(几类)时, 设置为True")
     parser.add_argument("--focal_loss", action=store_true, help="防止正负样本不平衡，需要给每个类型样本设置权重")
-    parser.add_argument("--class_weights", default=[1, 1, 1, 1, 1], help="权重")
+    parser.add_argument("--class_weights", default=[1, 1, 1, 1, 1], help="每个类别的权重，长度和 num_classes 相同")
+
     
     args = parser.parse_args()
 
@@ -225,7 +226,8 @@ if __name__ == "__main__":
     if args.model == "Unet":
         model = UNet(3, args.num_classes)
     elif args.model == "Deeplab":
-        model = Deeplab()
+        model = DeepLab(num_classes=args.num_classes+1, backbone=args.backbone, downsample_factor=args.downsample_factor)
+        weights_init(model, init_type="normal")
     train_model = model.train()
     train_model.cuda()
 
