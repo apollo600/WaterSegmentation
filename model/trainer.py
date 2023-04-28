@@ -1,10 +1,16 @@
 from tqdm import tqdm
+import numpy as np
+import torch
+import os
+from utils import visual
+from PIL import Image
+from torch.utils.data.dataloader import DataLoader
+import torch.nn as nn
 
 
-
-def Unet_trainer_one_epoch(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Module, args, criterion, ):        
-                                        for epoch in range(init_epoch):
-                                batches = len(train_loader)
+def Unet_trainer_one_epoch(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Module, args, criterion, optimizer):        
+    for epoch in range(init_epoch):
+        batches = len(train_loader)
         pbar = tqdm(total=batches, desc=f"Epoch {epoch+1}/{init_epoch}: ", maxinterval=0.3, ascii=True)
 
         for iteration, (data, label) in enumerate(train_loader):
