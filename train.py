@@ -20,6 +20,7 @@ from model.trainer import Unet_trainer
 from model2.deeplab_v3plus import DeepLab, weights_init
 from utils.visual import show_config
 from model2.loss import Focal_Loss, Dice_loss, CE_Loss
+from model2.trainer import Deeplab_trainer
 
 
 def get_parser():
@@ -115,7 +116,7 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
         print("\033[1;33;44m[Warning] 由于总训练步长为%d，小于建议总步长%d，建议设置总世代为%d。\033[0m"%(total_step, wanted_step, wanted_epoch))
 
     if args.model == "Deeplab":
-        pass
+        Deeplab_trainer(train_loader, val_loader, train_model, args, optimizer, train_size, val_size)
     else:
         Unet_trainer(train_loader, val_loader, train_model, args, criterion, optimizer, init_epoch)
 

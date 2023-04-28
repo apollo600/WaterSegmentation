@@ -6,14 +6,15 @@ from utils import visual
 from PIL import Image
 from torch.utils.data.dataloader import DataLoader
 import torch.nn as nn
-from model2.utils.callbacks import EvalCallback
+from model2.utils.callbacks import EvalCallback, LossHistory
 from model2.loss import Dice_loss, CE_Loss, Focal_Loss
 from model2.utils.utils_metrics import f_score
 from model2.utils.utils import get_lr
+import datetime
 
 
 def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Module, args, optimizer, train_size, val_size):
-
+                                    
     # ------------------------------------------------------#
     #   主干特征提取网络特征通用，冻结训练可以加快训练速度
     #   也可以在训练初期防止权值被破坏。
@@ -23,6 +24,10 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
     #   提示OOM或者显存不足请调小Batch_size
     # ------------------------------------------------------#
 
+    time_str        = datetime.datetime.strftime(datetime.datetime.now(),'%Y_%m_%d_%H_%M_%S')
+    log_dir         = os.path.join(save_dir, "loss_" + str(time_str))
+    loss_history    = LossHistory(log_dir, model, input_shape=input_shape)
+    
     # 冻结主体部分
     for param in model.backbone.parameters():
         param.requires_grad = False
@@ -114,16 +119,15 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
         set_optimizer_lr(optimizer, lr_scheduler_func, epoch)
 
         fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch,
-                      epoch_step, epoch_step_val, train_loader, val_loader, UnFreeze_Epoch, args.cls_weights, args.num_classes, save_period=1, save_dir, local_rank)
+                      epoch_step, epoch_step_val, train_loader, val_loader, UnFreeze_Epoch, 
+                      args.cls_weights, args.num_classes, save_period=1, save_dir=os.path.join(args.save_root, args.save_dir))
 
-    # if local_rank == 0:
-    #     loss_history.writer.close()
+    loss_history.writer.close()
 
 
 def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, epoch_step, epoch_step_val,
-                  train_loader, val_loader, Epoch, cls_weights, num_classes, fp16, scaler,
-                  save_period, save_dir, args):
-
+                  train_loader, val_loader, Epoch, cls_weights, num_classes, save_period, save_dir, args):
+            
     total_loss = 0
     total_f_score = 0
 
@@ -239,7 +243,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     pbar.close()
 
     print('Start Validate')
-    # loss_history.append_loss(epoch + 1, total_loss / epoch_step, val_loss / epoch_step_val)
+    loss_history.append_loss(epoch + 1, total_loss / epoch_step, val_loss / epoch_step_val)
     eval_callback.on_epoch_end(epoch + 1, train_model)
     print('Epoch:' + str(epoch + 1) + '/' + str(Epoch))
     print('Total Loss: %.3f || Val Loss: %.3f ' %
