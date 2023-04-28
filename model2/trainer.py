@@ -145,6 +145,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
         if iteration >= epoch_step:
             break
         imgs, pngs, labels = batch
+        imgs = imgs.float()
 
         with torch.no_grad():
             weights = torch.from_numpy(args.class_weights)
@@ -208,10 +209,10 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
         imgs, pngs, labels = batch
         with torch.no_grad():
             weights = torch.from_numpy(cls_weights)
-            imgs = imgs.cuda(local_rank)
-            pngs = pngs.cuda(local_rank)
-            labels = labels.cuda(local_rank)
-            weights = weights.cuda(local_rank)
+            imgs = imgs.cuda()
+            pngs = pngs.cuda()
+            labels = labels.cuda()
+            weights = weights.cuda()
 
             # ----------------------#
             #   前向传播
