@@ -14,7 +14,7 @@ save_dir=models/
 # training methods
 loss=CrossEntropy
 lr=0.0005
-batch_size=8
+batch_size=10
 epoch=100
 image_width=384
 image_height=384
