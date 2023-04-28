@@ -74,7 +74,7 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
     #   记录eval的map曲线
     # ----------------------#
     eval_callback = EvalCallback(train_model, (args.image_width, args.image_height), args.num_classes + 1, val_filelist, data_root, 
-                                os.path.join(args.log_root, args.log_dir), 
+                                os.path.join(args.log_root, args.log_dir), cuda=True, 
                                 eval_flag=True, period=1)
 
     # ---------------------------------------#
@@ -122,7 +122,7 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
 
         fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch,
                       epoch_step, epoch_step_val, train_loader, val_loader, UnFreeze_Epoch, 
-                      args.cls_weights, args.num_classes, save_period=1, save_dir=os.path.join(args.save_root, args.save_dir))
+                      args.class_weights, args.num_classes, save_period=1, save_dir=os.path.join(args.save_root, args.save_dir), args=args)
 
     loss_history.writer.close()
 
