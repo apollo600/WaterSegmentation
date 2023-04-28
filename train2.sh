@@ -20,9 +20,9 @@ python train.py \
     --downsample_factor 16 \
     --init_epoch 0 \
     --freeze_epoch 2 \
-    --freeze_batch_size 8 \
-    --unfreeze_epoch 2 \
-    --unfreeze_batch_size 4 \
+    --freeze_batch_size 16 \
+    --unfreeze_epoch 4 \
+    --unfreeze_batch_size 8 \
     --min_lr 5e-6 \
     --momentum 0.9 \
     --weight_decay 0 \
