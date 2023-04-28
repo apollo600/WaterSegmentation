@@ -6,6 +6,7 @@ set dataset_name=My
 set num_classes=5
 
 @REM paths
+set train_path=./train.py
 set dataset_root=./
 set dataset_dir=1945/
 set save_root=./
@@ -40,7 +41,7 @@ if %argc% gtr 0 (
 
 @echo on
 
-python ./train.py ^
+python %train_path% ^
     --dataset %dataset_name% ^
     --num_classes %num_classes% ^
     --data_root %dataset_root% ^
