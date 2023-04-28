@@ -14,4 +14,8 @@ python train.py \
 --image_width 512 \
 --image_height 512 \
 --optimizer "Adam" \
+--log_visual \
+--model Deeplab \
+--backbone Mobilenet \
+--pretrain_model_path "/" \
 
