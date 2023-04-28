@@ -44,7 +44,17 @@ def get_parser():
     parser.add_argument("--model", type=str, default="Deeplab", help="[Unet, Deeplab]")
     # 注意修改 num_classes = 5 + 1 = 6
     parser.add_argument("--backbone", default="mobilenet", help="使用的主干网络, [mobilenet, xception]")
-    parser.add_argument("--pretrain_model_path", default="", help="")
+    parser.add_argument("--pretrain_model_path", default="", help=" 模型的 预训练权重 对不同数据集是通用的，\
+                                                                    因为特征是通用的.模型的 预训练权重 比较重要的部分是 主干特征提取网络的权值部分，用于进行特征提取。")
+    parser.add_argument("--downsample_factor", type=int, default=16, help="下采样的倍数，越小显存占用越多 [8, 16]")
+    parser.add_argument("--init_epoch", type=int, default=0, help=" 模型当前开始的训练世代, 其值可以大于Freeze_Epoch, 如设置: \
+                                                                    Init_Epoch = 60、Freeze_Epoch = 50、UnFreeze_Epoch = 100 \
+                                                                    会跳过冻结阶段, 直接从60代开始, 并调整对应的学习率。 \
+                                                                    断点续练时使用）")
+    parser.add_argument("--freeze_epoch", type=int, default=50, help="模型冻结训练的Freeze_Epoch, (当Freeze_Train=False时失效)")
+    parser.add_argument("--freeze_batch_size", type=int, default=8, help="由于 Freeze 阶段使用显存较少，可以适当调大 Batch Size, 但需要注意保持和 Unfreeze 时 batch size 的大小在 1-2 倍之间")
+    parser.add_argument("--unfreeze_epoch", type=int, default=100, help="用于修改主干部分，主干的意义是提取特征，这一部分占据显存较大")
+    parser.add_argument("--unfreeze_batch_size", type=int, default=4, help="")
 
     args = parser.parse_args()
 
