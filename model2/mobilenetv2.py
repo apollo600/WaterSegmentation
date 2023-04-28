@@ -148,11 +148,10 @@ def load_url(url, model_dir='./model_data', map_location=None):
     else:
         return model_zoo.load_url(url,model_dir=model_dir)
 
-def mobilenetv2(pretrained=False, model_path, **kwargs):
+def mobilenetv2(pretrained=False, **kwargs):
     model = MobileNetV2(n_class=1000, **kwargs)
     if pretrained:
-        model.load_state_dict(model_path, strict=False)
-        # model.load_state_dict(load_url('https://github.com/bubbliiiing/deeplabv3-plus-pytorch/releases/download/v1.0/mobilenet_v2.pth.tar'), strict=False)
+        model.load_state_dict(load_url('https://github.com/bubbliiiing/deeplabv3-plus-pytorch/releases/download/v1.0/mobilenet_v2.pth.tar'), strict=False)
     return model
 
 if __name__ == "__main__":
