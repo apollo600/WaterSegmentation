@@ -117,7 +117,7 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
         print("\033[1;33;44m[Warning] 由于总训练步长为%d，小于建议总步长%d，建议设置总世代为%d。\033[0m"%(total_step, wanted_step, wanted_epoch))
 
     if args.model == "Deeplab":
-        Deeplab_trainer(train_loader, val_loader, train_model, args, optimizer, train_size, val_size)
+        Deep
     else:
         Unet_trainer(train_loader, val_loader, train_model, args, criterion, optimizer, init_epoch)
 
@@ -155,10 +155,10 @@ if __name__ == "__main__":
         train_dataset = PascalData(data_root, train_filelist, args.num_classes, args.image_width, args.image_height)
         val_dataset = PascalData(data_root, val_filelist, args.num_classes, args.image_width, args.image_height)
         train_size = len(train_dataset)
-        val_size = len(val_size)
+        val_size = len(val_dataset)
     
 
-    r, s = dataset[0]
+    r, s = train_dataset[0]
     print("image shape and label shape:", r.shape, s.shape)
 
     # Create the loaders

@@ -3,8 +3,8 @@ set -x
 python train.py \
     --dataset Pascal \
     --num_classes 21 \
-    --data_root "/project" \
-    --data_dir "1945" \
+    --data_root "/project/train/src_repo/VOCdevkit/" \
+    --data_dir "VOC2012" \
     --save_root "/project/train/" \
     --save_dir "models" \
     --log_root "/project/train" \
