@@ -195,12 +195,11 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
                             'lr': get_lr(optimizer)})
         pbar.update(1)
 
-    if local_rank == 0:
-        pbar.close()
-        print('Finish Train')
-        print('Start Validation')
-        pbar = tqdm(total=epoch_step_val,
-                    desc=f'Epoch {epoch + 1}/{Epoch}', postfix=dict, mininterval=0.3)
+    pbar.close()
+    print('Finish Train')
+    print('Start Validation')
+    pbar = tqdm(total=epoch_step_val,
+                desc=f'Epoch {epoch + 1}/{Epoch}', postfix=dict, mininterval=0.3)
 
     train_model.eval()
     for iteration, batch in enumerate(val_loader):
