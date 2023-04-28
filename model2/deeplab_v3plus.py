@@ -1,13 +1,13 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from nets.xception import xception
-from nets.mobilenetv2 import mobilenetv2
+from model2.xception import xception
+from model2.mobilenetv2 import mobilenetv2
 
 
 class DeepLab(nn.Module):
     def __init__(self, num_classes, backbone="Mobilenet", pretrained=True, downsample_factor=16):
-            super(DeepLab, self).__init__()
+        super(DeepLab, self).__init__()
         if backbone=="Xception":
                 #----------------------------------#
             #   获得两个特征层
