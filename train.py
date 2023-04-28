@@ -54,8 +54,14 @@ def get_parser():
     parser.add_argument("--freeze_epoch", type=int, default=50, help="模型冻结训练的Freeze_Epoch, (当Freeze_Train=False时失效)")
     parser.add_argument("--freeze_batch_size", type=int, default=8, help="由于 Freeze 阶段使用显存较少，可以适当调大 Batch Size, 但需要注意保持和 Unfreeze 时 batch size 的大小在 1-2 倍之间")
     parser.add_argument("--unfreeze_epoch", type=int, default=100, help="用于修改主干部分，主干的意义是提取特征，这一部分占据显存较大")
-    parser.add_argument("--unfreeze_batch_size", type=int, default=4, help="")
-
+    parser.add_argument("--unfreeze_batch_size", type=int, default=4, help="设置的稍微小一点")
+    # 注意修改 lr 为 SGD: 7e-3, Adam: 5e-4
+    parser.add_argument("--min_lr", type=float, default=5e-6, help="init_lr * 0.01")
+    parser.add_argument("--momentum", type=float, default=0.9, help="Used in optimizer")
+    parser.add_argument("--weight_decay", type=float, default=1e-4, help="权值衰减，使用 Adam 时建议设置为 0")
+    parser.add_argument("--lr_decay_type", type=str, default="cos", help="使用的权值下降方式, [cos, step]")
+    
+    
     args = parser.parse_args()
 
     return args
