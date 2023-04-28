@@ -29,7 +29,7 @@ class DeepLabV3Plus(nn.Module):
         Image Segmentation."
     """
 
-    def __init__(self, nclass, backbone='xception', aux=True, pretrained_base=True, dilated=True, **kwargs):
+    def __init__(self, nclass, backbone='xception', aux=True, pretrained_base=False, dilated=True, **kwargs):
         super(DeepLabV3Plus, self).__init__()
         self.aux = aux
         self.nclass = nclass
