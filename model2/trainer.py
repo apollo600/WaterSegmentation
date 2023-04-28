@@ -24,4 +24,15 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
         param.requires_grad = False
     
     batch_size = args.freeze_batch_size
-    
+
+    #-------------------------------------------------------------------#
+    #   判断当前batch_size，自适应调整学习率
+    #-------------------------------------------------------------------#
+    nbs             = 16
+    lr_limit_max    = 5e-4 if args.optimizer == 'adam' else 1e-1
+    lr_limit_min    = 3e-4 if args.optimizer == 'adam' else 5e-4
+    if args.backbone == "Xception":
+        lr_limit_max    = 1e-4 if args.optimizer == 'adam' else 1e-1
+        lr_limit_min    = 1e-4 if args.optimizer == 'adam' else 5e-4
+    Init_lr_fit     = min(max(batch_size / nbs * Init_lr, lr_limit_min), lr_limit_max)
+    Min_lr_fit      = min(max(batch_size / nbs * Min_lr, lr_limit_min * 1e-2), lr_limit_max * 1e-2)
