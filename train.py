@@ -98,13 +98,6 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
     else:
         raise RuntimeError("wrong type of optimizer given:", args.optimizer)
 
-    time_stamp = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime(time.time()))
-    if args.save_dir == "":
-        log_dir = f"{time_stamp}_epoch-{args.epoch}_lr-{args.lr}_loss-{args.loss}_optim-{args.optimizer}"
-    else:
-        log_dir = os.path.join(args.save_root, args.save_dir)
-    os.makedirs(log_dir, exist_ok=True)
-
     #---------------------------------------------------------#
     #   总训练世代指的是遍历全部数据的总次数
     #   总训练步长指的是梯度下降的总次数 
@@ -124,7 +117,7 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
     if args.model == "Deeplab":
         pass
     else:
-        Unet_trainer(train_loader, val_loader, train_model, args, criterion, optimizer, init_epoch)
+        Unet_trainer(train_loader, val_loader, train_model, args, criterion, optimizer, init_epoch, log_dir)
 
 
 if __name__ == "__main__":
