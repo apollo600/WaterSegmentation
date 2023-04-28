@@ -13,7 +13,8 @@ class PascalData(Dataset):
     def __init__(self, root, file_list, num_classes, image_width, image_height, augmentation=False, to_torch=True, one_hot=False):
                                                                                                                                                                                                                                                  
         super().__init__()
-        self.path = path
+        self.root = root
+        self.file_list = self.file_list
         self.class_num = num_classes
         self.image_width = image_width
         self.image_height = image_height
@@ -31,12 +32,12 @@ class PascalData(Dataset):
         Note: label will be [H, W, C (Classes)] if one_hot is True
         """
 
-        image = Image.open(os.path.join(self.path, self.image_paths[index]))
+        image = Image.open(os.path.join(self.root, self.image_paths[index]))
         image = image.resize((self.image_width, self.image_height), Image.BILINEAR)
         image = np.array(image)
         image = np.transpose(image, [2, 0, 1])
 
-        label = Image.open(os.path.join(self.path, self.label_paths[index]))
+        label = Image.open(os.path.join(self.root, self.label_paths[index]))
         label = label.resize((self.image_width, self.image_height), Image.BILINEAR)
         label = np.array(label)
 
