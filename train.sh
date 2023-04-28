@@ -6,6 +6,7 @@ dataset_name=My
 num_classes=5
 
 # paths
+train_path=/project/train/src_repo/train.py
 dataset_root=/home/data/
 dataset_dir=1945/
 save_root=/project/train/
@@ -38,7 +39,7 @@ fi
 
 set -x
 
-python ./train.py \
+python $train_path \
     --dataset $dataset_name \
     --num_classes $num_classes \
     --data_root $dataset_root \
