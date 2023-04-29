@@ -4,24 +4,53 @@ The repo is for [this competition](https://www.cvmart.net/topList/10488).
 
 ## Usage
 
-Environment: pytorch, numpy, tqdm. No more packages.
+Environment (model1): pytorch, numpy, tqdm.
+Environment (model2): pytorch, numpy, tqdm, tensorboard, opencv-python.
 
 Just following the command below.
 
-### Windows
-
-```shell
-train [dataset-name]
-inference
-```
-
 ### Linux
 
+Method1 (UNet)
+
 ```shell
-chmod 775 train.sh inference.sh
-./train.sh [dataset-name]
-./inference.sh
+# change the train.sh and inference.sh path
+bash ./UNet/train.sh [dataset-name]
+bash ./UNet/inference.sh
 ```
+
+Method2 (DeepLabV3+)
+
+```shell
+# change the train.sh and inference.sh path
+bash ./DeepLab/train.sh
+python ./DeepLab/inference.py
+```
+
+### Windows
+
+Method1 (UNet)
+
+```shell
+cd $THIS_REPO_NAME
+UNet\train [dataset-name]
+UNet\inference
+```
+
+Method2 (DeepLabV3+)
+
+```shell
+cd $THIS_REPO_NAME
+DeepLab\train
+DeepLab\inference
+```
+
+The `[dataset-name]` should be `Kitti` or `My`, default is `My`.
+
+### PS
+
+- Note 1: Root paths in Windows and Linux are different. Change `*.bat` or `*.sh` file if you need.
+- Note 2: `inference` requires you to specify the model path in the `inference.bat` or `inference.sh` or `inference.py` file.
 
 ### Competition Upload
 
@@ -33,30 +62,34 @@ rm -rf src_repo
 git clone $THIS_REPO
 mv $THIS_REPO_NAME src_repo
 ...  # test or train the repo as you want
-<Train it>  # command: bash /project/train/src_repo/train.sh
+<Train it>  # command: bash /project/train/src_repo/DeepLab/train.sh
 ...  # wait till your training is done...
-cp ji.py /project/ev_sdk/  # copy the interface
-vim ji.py  # to specify the model path in the file
+cp DeepLab/ji.py /project/ev_sdk/  # copy the interface
+vim /project/ev_sdk/ji.py  # to specify the model path in the file
 <Test it>
 DONE~
 ```
-
-### PS
-
-- Note 1: The `[dataset-name]` below should be `Kitti` or `My`, default is `My`.
-- Note 2: Root paths in Windows and Linux are different. Change `*.bat` or `*.sh` file if you need.
-- Note 3: `inference` requires you to specify the model path in the `inference.bat` or `inference.sh` file.
 
 ## Architecture
 
 ```plaintext
 WaterSegmentation
-├─ model/        <-- model and loss classes
-├─ utils/        <-- dataset reader, visualization, ...
-├─ train.py      <-- train function
-├─ inference.py  <-- inference function
-├─ ji.py         <-- inference interface
-└─ *.sh / *.bat  <-- quick access
+UNet
+    ├─ docs/         <-- some documents
+    ├─ model/        <-- model and loss classes
+    ├─ utils/        <-- dataset reader, visualization, ...
+    ├─ train.py      <-- train function
+    ├─ inference.py  <-- inference function
+    ├─ ji.py         <-- inference interface
+    └─ *.sh / *.bat  <-- quick access
+DeepLab
+    ├─ docs/         <-- some documents
+    ├─ model/        <-- model and loss classes
+    ├─ utils/        <-- dataset reader, visualization, ...
+    ├─ train.py      <-- train function
+    ├─ inference.py  <-- inference function
+    ├─ ji.py         <-- inference interface
+    └─ *.sh / *.bat  <-- quick access
 ```
 
 ## Interface
