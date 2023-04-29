@@ -140,7 +140,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
 
     print('Start Train')
     pbar = tqdm(total=epoch_step,
-                desc=f'Epoch {epoch + 1}/{Epoch}', postfix=dict, maxinterval=0.3)
+                desc=f'Epoch {epoch + 1}/{Epoch} Training', postfix=dict, mininterval=10, ncols=10)
     train_model.train()
 
     for iteration, batch in enumerate(train_loader):
@@ -201,7 +201,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     print('Finish Train')
     print('Start Validate')
     pbar = tqdm(total=epoch_step_val,
-                desc=f'Epoch {epoch + 1}/{Epoch}', postfix=dict, maxinterval=0.3)
+                desc=f'Epoch {epoch + 1}/{Epoch} Validating', postfix=dict, mininterval=10, ncols=10)
 
     train_model.eval()
     for iteration, batch in enumerate(val_loader):
@@ -269,7 +269,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     # torch.save(train_model.state_dict(), os.path.join(
     #     save_dir, "last_epoch_weights.pth"))
     # if (epoch + 1) % save_period == 0 or epoch + 1 == Epoch:
-    #             torch.save(train_model, os.path.join(save_dir, 'ep%03d-loss%.3f-val_loss%.3f.pth' %
+        #             torch.save(train_model, os.path.join(save_dir, 'ep%03d-loss%.3f-val_loss%.3f.pth' %
     #                (epoch + 1, total_loss / epoch_step, val_loss / epoch_step_val)))
 
     if len(loss_history.val_loss) <= 1 or (val_loss / epoch_step_val) <= min(loss_history.val_loss):
