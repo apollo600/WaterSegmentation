@@ -79,7 +79,8 @@ class LossHistory():
         plt.cla()
         plt.close("all")
 
-        loss_img = cv2.imread(os.path.join(self.log_dir, "epoch_loss.png"))
+        loss_img = Image.open(os.path.join(self.log_dir, "epoch_loss.png"))
+        
         self.writer.add_image("epoch_loss", loss_img)
 
 class EvalCallback():
