@@ -1,4 +1,8 @@
 import os
+import sys
+
+sys.path.append("/project/ev_sdk/src")
+
 import ji
 import argparse
 import numpy as np
