@@ -276,7 +276,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
         print('Save best model to best_epoch_weights.pth')
         torch.save(train_model, os.path.join(
             save_dir, "best_epoch_weights.pth"))
-        os.system("ls -alh /project/train/models")
+        os.system(f"ls -alh {save_dir}")
 
     torch.save(train_model, os.path.join(
         save_dir, "last_epoch_weights.pth"))

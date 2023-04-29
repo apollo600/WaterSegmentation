@@ -6,7 +6,7 @@ python /project/train/src_repo/train.py \
     --data_root "/project/train/src_repo/VOCdevkit/" \
     --data_dir "VOC2012" \
     --save_root "/project/train/" \
-    --save_dir "models" \
+    --save_dir "models/pascal" \
     --log_root "/project/train" \
     --log_dir "log" \
     --lr "5e-4" \
