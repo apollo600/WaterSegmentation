@@ -28,11 +28,7 @@ python /project/train/src_repo/train.py \
     --weight_decay 0 \
     --lr_decay_type cos \
     --focal_loss \
-<<<<<<< HEAD
     --class_weights 1 1 4 4 8 1
-=======
-    --class_weights 1 1 2 2 4 1
->>>>>>> cdaf1a83f67d77a8fe6fbe39bc206303edfa9f04
     # --loss "" \
     # --batch_size \
     # --epoch \

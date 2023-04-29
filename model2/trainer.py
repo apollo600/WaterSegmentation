@@ -199,7 +199,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
         total_f_score += _f_score.item()
 
         if pbar is not None:
-                pbar.set_postfix(**{'total_loss': total_loss / (iteration + 1),
+            pbar.set_postfix(**{'total_loss': total_loss / (iteration + 1),
                                 'f_score': total_f_score / (iteration + 1),
                                 'lr': get_lr(optimizer)})
             pbar.update(1)
@@ -253,7 +253,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
             val_f_score += _f_score.item()
 
             if pbar is not None:
-                    pbar.set_postfix(**{'val_loss': val_loss / (iteration + 1),
+                pbar.set_postfix(**{'val_loss': val_loss / (iteration + 1),
                                     'f_score': val_f_score / (iteration + 1),
                                     'lr': get_lr(optimizer)})
                 pbar.update(1)
@@ -306,7 +306,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     torch.save(train_model, os.path.join(
         save_dir, "last_epoch_weights.pth"))
 
-    print("===>", end="")
+    print("===>", end=" ")
     os.system(f"ls -alh {save_dir}")
 
 
