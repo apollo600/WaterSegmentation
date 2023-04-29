@@ -26,9 +26,10 @@ def calc_miou(dataset_path, miou_out_path, image_ids, num_classes, mask_png_path
         #-------------------------------#
         #   从文件中读取图像
         #-------------------------------#
-        image_path  = os.path.join(dataset_path, "JPEGImages/"+image_id+".jpg")
-        label_path  = os.path.join(dataset_path, "SegmentationClass"+image_id+".png")
+        image_path  = os.path.join(dataset_path, "JPEGImages", image_id+".jpg")
+        label_path  = os.path.join(dataset_path, "SegmentationClass", image_id+".png")
         image       = Image.open(image_path)
+        image.save(os.path.join(miou_out_path, image_id+"_src.jpg"))
         image       = np.array(image)
         label       = Image.open(label_path)
         label       = np.array(label)
@@ -38,8 +39,10 @@ def calc_miou(dataset_path, miou_out_path, image_ids, num_classes, mask_png_path
         ji.process_image(net, image, '{"mask_output_path": "' + str(mask_png_path).replace('\\', '/') + '"}')
         image = Image.open(mask_png_path)
         image.save(os.path.join(pred_dir, image_id + ".png"))
+        image = np.array(image)
         # 可视化
-        visualize(label, os.path.join(miou_out_path, image_id+"gt.jpg"))
+        visualize(label, os.path.join(miou_out_path, image_id+"_gt.jpg"))
+        visualize(image, os.path.join(miou_out_path, image_id+"_pred.jpg"))
                 
     print("Calculate miou.")
     _, IoUs, _, _ = compute_mIoU(gt_dir, pred_dir, image_ids, num_classes, None)  # 执行计算mIoU的函数
