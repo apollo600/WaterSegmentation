@@ -14,9 +14,9 @@ from utils.visual import visualize
 import time
 
 
-def calc_miou(dataset_path, model_path, miou_out_path, image_ids, num_classes, mask_png_path, visualize):
+def calc_miou(dataset_path, model_path, miou_out_path, image_ids, num_classes, mask_png_path, enable_visualize):
                                                                                                                                                         
-    net    = ji.init("/project/train/models/pascal/best_epoch_weights.pth")
+    net    = ji.init(model_path)
     gt_dir      = os.path.join(dataset_path, "SegmentationClass/")
     pred_dir    = os.path.join(miou_out_path, 'detection-results')
     if not os.path.exists(miou_out_path):
@@ -37,8 +37,10 @@ def calc_miou(dataset_path, model_path, miou_out_path, image_ids, num_classes, m
         image = np.array(image)
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-        if visualize:
-            image.save(os.path.join(miou_out_path, image_id+"_src.jpg"))
+        if enable_visualize:
+            tmp_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            tmp_image = Image.fromarray(tmp_image)
+            tmp_image.save(os.path.join(miou_out_path, image_id+"_src.jpg"))
         label       = Image.open(label_path)
         label       = np.array(label)
         #------------------------------#
@@ -52,7 +54,7 @@ def calc_miou(dataset_path, model_path, miou_out_path, image_ids, num_classes, m
         image.save(os.path.join(pred_dir, image_id + ".png"))
         image = np.array(image)
         # 可视化
-        if visualize:
+        if enable_visualize:
             visualize(label, os.path.join(miou_out_path, image_id+"_gt.jpg"))
             visualize(image, os.path.join(miou_out_path, image_id+"_pred.jpg"))
                 
@@ -69,8 +71,8 @@ def calc_miou(dataset_path, model_path, miou_out_path, image_ids, num_classes, m
 if __name__ == "__main__":  
     # image_ids = open("/project/train/src_repo/VOCdevkit/VOC2012/ImageSets/Segmentation/val.txt", "r").readlines()
     # image_ids = [ x.strip() for x in image_ids ]
-    # calc_miou("/project/train/src_repo/VOCdevkit/VOC2012", "/project/train/models/pascal/best_epoch_weights/pth", "/project/train/log/infer/pascal", image_ids, num_classes=21, mask_png_path="/project/ev_sdk/mask.png", visualize=False)                    
+    # calc_miou("/project/train/src_repo/VOCdevkit/VOC2012", "/project/train/models/pascal/best_epoch_weights/pth", "/project/train/log/infer/pascal", image_ids, num_classes=21, mask_png_path="/project/ev_sdk/mask.png", enable_visualize=False)                    
 
     image_ids = open("/home/data/1945/ImageSets/Segmentation/val.txt", "r").readlines()
     image_ids = [ x.strip() for x in image_ids ]
-    calc_miou("/home/data/1945", "/project/train/models/my/best_epoch_weights/pth", "/project/train/log/infer/my", image_ids, num_classes=6, mask_png_path="/project/ev_sdk/mask.png", visualize=True)                             
+    calc_miou("/home/data/1945", "/project/train/models/my/best_epoch_weights.pth", "/project/train/log/infer/my", image_ids, num_classes=6, mask_png_path="/project/ev_sdk/mask.png", enable_visualize=True)                             
