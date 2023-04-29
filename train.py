@@ -72,7 +72,7 @@ def get_parser():
     parser.add_argument("--class_weights",type=int, nargs='+', help="每个类别的权重，长度和 num_classes 相同")
     parser.add_argument("--resume", action="store_true", default=False, help="是否继续训练，如果继续训练则不加载预训练模型，而是加载 last_epoch_weights.pth")
     parser.add_argument("--save_period", type=int, default=5, help="多少个 epoch 保存一次模型，便于进行继续训练")
-    parser.add_argument("--enable_tqdm", action="store_true", default=True, help="是否开启 tqdm 进度条")
+    parser.add_argument("--enable_tqdm", action="store_true", default=False, help="是否开启 tqdm 进度条")
 
     
     args = parser.parse_args()
