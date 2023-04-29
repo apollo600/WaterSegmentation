@@ -14,7 +14,7 @@ from utils.visual import visualize
 import time
 
 
-def calc_miou(dataset_path, miou_out_path, image_ids, num_classes, mask_png_path, visualize):
+def calc_miou(dataset_path, model_path, miou_out_path, image_ids, num_classes, mask_png_path, visualize):
                                                                                                                                                         
     net    = ji.init("/project/train/models/pascal/best_epoch_weights.pth")
     gt_dir      = os.path.join(dataset_path, "SegmentationClass/")
@@ -67,7 +67,10 @@ def calc_miou(dataset_path, miou_out_path, image_ids, num_classes, mask_png_path
 
 
 if __name__ == "__main__":  
-    image_ids = open("/project/train/src_repo/VOCdevkit/VOC2012/ImageSets/Segmentation/val.txt", "r").readlines()
+    # image_ids = open("/project/train/src_repo/VOCdevkit/VOC2012/ImageSets/Segmentation/val.txt", "r").readlines()
+    # image_ids = [ x.strip() for x in image_ids ]
+    # calc_miou("/project/train/src_repo/VOCdevkit/VOC2012", "/project/train/models/pascal/best_epoch_weights/pth", "/project/train/log/infer/pascal", image_ids, num_classes=21, mask_png_path="/project/ev_sdk/mask.png", visualize=False)                    
+
+    image_ids = open("/home/data/1945/ImageSets/Segmentation/val.txt", "r").readlines()
     image_ids = [ x.strip() for x in image_ids ]
-    
-    calc_miou("/project/train/src_repo/VOCdevkit/VOC2012", "/project/train/log/infer/pascal", image_ids, num_classes=21, mask_png_path="/project/ev_sdk/mask.png", visualize=False)                                           
+    calc_miou("/home/data/1945", "/project/train/models/my/best_epoch_weights/pth", "/project/train/log/infer/my", image_ids, num_classes=6, mask_png_path="/project/ev_sdk/mask.png", visualize=True)                             

@@ -140,6 +140,8 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
 
     state = 'Unfrozen' if unfreeze_flag else 'Frozen'
 
+    print("+ Start Train")
+
     pbar = tqdm(total=epoch_step,
                 desc=f'{state} Epoch {epoch + 1}/{Epoch} Training', postfix=dict, mininterval=1)
     train_model.train()
