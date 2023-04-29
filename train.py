@@ -140,7 +140,7 @@ if __name__ == "__main__":
 
     # 展示参数
     if args.model == "Deeplab":
-        show_config(num_classes=args.num_classes, backbone=args.backbone, pretrain_model_path=args.pretrain_model_path,
+        show_config(num_classes=args.num_classes, backbone=args.backbone, resume=args.resume, pretrain_model_path=args.pretrain_model_path,
         input_shape=(args.image_width, args.image_height), init_epoch=args.init_epoch, freeze_epoch=args.freeze_epoch, 
         unfreeze_epoch=args.unfreeze_epoch, freeze_batch_size=args.freeze_batch_size, unfreeze_batch_size=args.unfreeze_batch_size,
         init_lr=args.lr, min_lr=args.min_lr, optimizer=args.optimizer, momentum=args.momentum, lr_decay_type=args.lr_decay_type, 
