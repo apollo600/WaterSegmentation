@@ -51,7 +51,21 @@ def process_image(handle: nn.Module = None, input_image: np.ndarray = None, args
     mask_output_path = args['mask_output_path']
 
     # Process image here
-    h, w, _= input_image.shape
+    ih, iw, _= input_image.shape
+    h = w = 512
+
+    # BGR -> RGB
+    image = cv2.cvtColor(input_image, cv2.COLOR_BGR2RGB)
+
+    # 添加灰边
+    scale = min(w / iw, h / ih)
+    nw = int(iw * scale)
+    nh = int(ih * scale)
+
+    image = cv2.resize(input_image, (nw, nh), interpolation=cv2.INTER_CUBIC)
+    new_image = np.full((h, w, 3), 128, dtype=np.uint8)
+    new_image[int((h-nh)/2):int((h-nh)/2)+nh, int((w-nw)/2):int((w-nw)/2)+nw] = image
+
     image = Image.fromarray(input_image)
     image = image.resize((512, 512), Image.BILINEAR)
     image = np.array(image)
