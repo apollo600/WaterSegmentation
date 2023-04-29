@@ -219,5 +219,5 @@ if __name__ == "__main__":
     train_model.cuda()
 
     # Train
-    print("Start Train")
+    # print("Start Train")
     train(train_loader, val_loader, train_model, args)
