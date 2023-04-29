@@ -10,8 +10,8 @@ from model2.utils.utils import cvtColor, preprocess_input, resize_image
 from model2.utils.utils_metrics import compute_mIoU
 
 
-def calc_miou(dataset_path, miou_out_path, image_ids):
-                                                                                            
+def calc_miou(dataset_path, miou_out_path, image_ids, num_classes):
+                                                                                                                
     net    = ji.init()
     gt_dir      = os.path.join(dataset_path, "SegmentationClass/")
     pred_dir    = os.path.join(miou_out_path, 'detection-results')
@@ -29,32 +29,21 @@ def calc_miou(dataset_path, miou_out_path, image_ids):
         #------------------------------#
         #   获得预测txt
         #------------------------------#
-        image       = ji.process_image(net, image, '{"mask_output_path": "' + str(mask_png_path).replace('\\', '/') + '"}')
+        ji.process_image(net, image, '{"mask_output_path": "' + str(mask_png_path).replace('\\', '/') + '"}')
+        image = Image.open(mask_png_path)
         image.save(os.path.join(pred_dir, image_id + ".png"))
                 
     print("Calculate miou.")
-    _, IoUs, _, _ = compute_mIoU(gt_dir, pred_dir, self.image_ids, self.num_classes, None)  # 执行计算mIoU的函数
+    _, IoUs, _, _ = compute_mIoU(gt_dir, pred_dir, image_ids, num_classes, None)  # 执行计算mIoU的函数
     temp_miou = np.nanmean(IoUs) * 100
 
-    self.mious.append(temp_miou)
-    self.epoches.append(epoch)
-
-    with open(os.path.join(self.log_dir, "epoch_miou.txt"), 'a') as f:
-        f.write(str(temp_miou))
-        f.write("\n")
-    
-    plt.figure()
-    plt.plot(self.epoches, self.mious, 'red', linewidth = 2, label='train miou')
-
-    plt.grid(True)
-    plt.xlabel('Epoch')
-    plt.ylabel('Miou')
-    plt.title('A Miou Curve')
-    plt.legend(loc="upper right")
-
-    plt.savefig(os.path.join(self.log_dir, "epoch_miou.png"))
-    plt.cla()
-    plt.close("all")
+    print(temp_miou)
 
     print("Get miou done.")
-    shutil.rmtree(self.miou_out_path)
+    # shutil.rmtree(self.miou_out_path)
+
+
+if __name__ == "__main__":  
+    image_ids = 
+
+    calc_miou("/home/data/1945", ".", image_ids, num_classes)                                           
