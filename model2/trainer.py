@@ -138,7 +138,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     val_loss = 0
     val_f_score = 0
 
-    state = 'Frozen' if unfreeze_flag else 'Unfrozen'
+    state = 'Unfrozen' if unfreeze_flag else 'Frozen'
 
     print('Start Train')
     pbar = tqdm(total=epoch_step,
