@@ -4,8 +4,8 @@ The repo is for [this competition](https://www.cvmart.net/topList/10488).
 
 ## Usage
 
-Environment (model1): pytorch, numpy, tqdm.
-Environment (model2): pytorch, numpy, tqdm, tensorboard, opencv-python.
+Environment (UNet): pytorch, numpy, tqdm.  
+Environment (DeepLabV3+): pytorch, numpy, tqdm, tensorboard, opencv-python.
 
 Just following the command below.
 
