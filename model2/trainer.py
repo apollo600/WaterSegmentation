@@ -306,6 +306,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     torch.save(train_model, os.path.join(
         save_dir, "last_epoch_weights.pth"))
 
+    print("===>", end="")
     os.system(f"ls -alh {save_dir}")
 
 
