@@ -76,12 +76,13 @@ class LossHistory():
 
         plt.savefig(os.path.join(self.log_dir, "epoch_loss.png"))
 
-        plt.cla()
-        plt.close("all")
-
         loss_img = Image.open(os.path.join(self.log_dir, "epoch_loss.png"))
         loss_img = np.array(loss_img).transpose([2, 0, 1])
-        self.writer.add_image("epoch_loss", loss_img, dataformats="CHW")
+        # self.writer.add_image("epoch_loss", loss_img, dataformats="CHW")
+        self.writer.add_figure("epoch_loss", figure)
+
+        plt.cla()
+        plt.close("all")
 
 class EvalCallback():
     def __init__(self, net, input_shape, num_classes, image_ids, dataset_path, log_dir, cuda, \
