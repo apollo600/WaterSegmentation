@@ -190,7 +190,7 @@ if __name__ == "__main__":
         model = UNet(3, args.num_classes)
     elif args.model == "Deeplab":
         if not args.resume:
-                model = DeepLab(num_classes=args.num_classes, backbone=args.backbone, downsample_factor=args.downsample_factor, pretrained=False)
+            model = DeepLab(num_classes=args.num_classes, backbone=args.backbone, downsample_factor=args.downsample_factor, pretrained=False)
             # 初始化大模型中的参数
             weights_init(model, init_type="normal")
             # 加载预训练模型
