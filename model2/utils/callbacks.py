@@ -80,7 +80,7 @@ class LossHistory():
         plt.close("all")
 
         loss_img = Image.open(os.path.join(self.log_dir, "epoch_loss.png"))
-        
+        loss_img = np.array(loss_img).transpose([1, 2, 0])
         self.writer.add_image("epoch_loss", loss_img)
 
 class EvalCallback():
@@ -165,8 +165,8 @@ class EvalCallback():
             if not os.path.exists(pred_dir):
                 os.makedirs(pred_dir)
             print("Get miou.")
-            for image_id in tqdm(self.image_ids, desc="Calculate miou read images", mininterval=1):
-                    #-------------------------------#
+            for image_id in tqdm(self.image_ids, desc="Calc miou read val_images", mininterval=1):
+                #-------------------------------#
                 #   从文件中读取图像
                 #-------------------------------#
                 image_path  = os.path.join(self.dataset_path, "JPEGImages/"+image_id+".jpg")
