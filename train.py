@@ -72,6 +72,7 @@ def get_parser():
     parser.add_argument("--class_weights",type=int, nargs='+', help="每个类别的权重，长度和 num_classes 相同")
     parser.add_argument("--resume", action="store_true", default=False, help="是否继续训练，如果继续训练则不加载预训练模型，而是加载 last_epoch_weights.pth")
     parser.add_argument("--save_period", type=int, default=5, help="多少个 epoch 保存一次模型，便于进行继续训练")
+    parser.add_argument("--enable_tqdm", action="store_true", default=True, help="是否开启 tqdm 进度条")
 
     
     args = parser.parse_args()
@@ -145,7 +146,7 @@ if __name__ == "__main__":
         input_shape=(args.image_width, args.image_height), init_epoch=args.init_epoch, freeze_epoch=args.freeze_epoch, 
         unfreeze_epoch=args.unfreeze_epoch, freeze_batch_size=args.freeze_batch_size, unfreeze_batch_size=args.unfreeze_batch_size,
         init_lr=args.lr, min_lr=args.min_lr, optimizer=args.optimizer, momentum=args.momentum, lr_decay_type=args.lr_decay_type, 
-        focal_loss=args.focal_loss, dice_loss=args.dice_loss, class_weights=args.class_weights, 
+        focal_loss=args.focal_loss, dice_loss=args.dice_loss, class_weights=args.class_weights, enable_tqdm=args.enable_tqdm, 
         )
 
     # Load the data from the folders
