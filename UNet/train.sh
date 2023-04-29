@@ -16,8 +16,8 @@ log_dir=log/unet/train/
 
 # training methods
 loss=CrossEntropy
-lr=0.0005
-batch_size=10
+lr=0.0001
+batch_size=2
 epoch=100
 image_width=512
 image_height=512
