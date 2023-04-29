@@ -6,7 +6,7 @@ python /project/train/src_repo/train.py \
     --data_root "/home/data/" \
     --data_dir "1945" \
     --save_root "/project/train/" \
-    --save_dir "models" \
+    --save_dir "models/my" \
     --log_root "/project/train" \
     --log_dir "log" \
     --lr "5e-4" \
