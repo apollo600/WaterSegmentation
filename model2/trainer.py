@@ -124,14 +124,14 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
 
         fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch,
                       epoch_step, epoch_step_val, train_loader, val_loader, UnFreeze_Epoch, UnFreeze_flag, 
-                      args.class_weights, args.num_classes, save_period=1, save_dir=os.path.join(args.save_root, args.save_dir), args=args)
+                      args.class_weights, args.num_classes, save_dir=os.path.join(args.save_root, args.save_dir), args=args)
 
     loss_history.writer.close()
 
 
 def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, epoch_step, epoch_step_val,
-                  train_loader, val_loader, Epoch, unfreeze_flag, cls_weights, num_classes, save_period, save_dir, args):
-                                                                
+                  train_loader, val_loader, Epoch, unfreeze_flag, cls_weights, num_classes, save_dir, args):
+                                                                    
     total_loss = 0
     total_f_score = 0
 
