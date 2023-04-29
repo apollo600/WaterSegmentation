@@ -6,7 +6,7 @@ dataset_name=My
 num_classes=5
 
 # paths
-train_path=/project/train/src_repo/unet/train.py
+train_path=/project/train/src_repo/UNet/train.py
 dataset_root=/home/data/
 dataset_dir=1945/
 save_root=/project/train/
