@@ -9,66 +9,101 @@ Environment (model2): pytorch, numpy, tqdm, tensorboard, opencv-python.
 
 Just following the command below.
 
-### Linux
+### Linux (cvmart.net competition)
 
-Method1 (UNet)
+setup see [here](#competition-setup-and-usage)
+
+#### UNet
 
 ```shell
-# change the train.sh and inference.sh path
+bash /project/train/src_repo/UNet/train.sh
+bash /project/train/src_repo/UNet/inference.sh
+```
+
+#### DeepLabV3+
+
+```shell
+bash /project/train/src_repo/DeepLab/train.sh
+bash /project/train/src_repo/DeepLab/inference.sh
+```
+
+### Linux
+
+#### UNet
+
+```shell
+# you must change the path in train.sh and inference.sh
+# you can refer to *.bat, or just change randomly it as you want
+cd $THIS_REPO_DIR_NAME
 bash ./UNet/train.sh [dataset-name]
 bash ./UNet/inference.sh
 ```
 
-Method2 (DeepLabV3+)
+#### DeepLabV3+
 
 ```shell
-# change the train.sh and inference.sh path
+# you must change the path in train.sh and inference.sh
+# you can refer to *.bat, or just change randomly it as you want
+cd $THIS_REPO_DIR_NAME
 bash ./DeepLab/train.sh
 python ./DeepLab/inference.py
 ```
 
 ### Windows
 
-Method1 (UNet)
+#### UNet
 
 ```shell
-cd $THIS_REPO_NAME
+cd %THIS_REPO_DIR_NAME%
 UNet\train [dataset-name]
 UNet\inference
 ```
 
-Method2 (DeepLabV3+)
+The `[dataset-name]` should be `Kitti` or `My`, default is `My`.
+
+#### DeepLabV3+
 
 ```shell
-cd $THIS_REPO_NAME
+cd %THIS_REPO_DIR_NAME%
 DeepLab\train
 DeepLab\inference
 ```
 
-The `[dataset-name]` should be `Kitti` or `My`, default is `My`.
-
-### PS
-
-- Note 1: Root paths in Windows and Linux are different. Change `*.bat` or `*.sh` file if you need.
-- Note 2: `inference` requires you to specify the model path in the `inference.bat` or `inference.sh` or `inference.py` file.
-
-### Competition Upload
+## Competition Setup and Usage
 
 [This url again](https://www.cvmart.net/topList/10488) if you need to refer.
+
+### Download
 
 ```shell
 cd /project/train/
 rm -rf src_repo
-git clone $THIS_REPO
-mv $THIS_REPO_NAME src_repo
+git clone $THIS_REPO_GIT_OR_HTTP
+mv $THIS_REPO_DIR_NAME src_repo
 ...  # test or train the repo as you want
-<Train it>  # command: bash /project/train/src_repo/DeepLab/train.sh
-...  # wait till your training is done...
-cp DeepLab/ji.py /project/ev_sdk/  # copy the interface
-vim /project/ev_sdk/ji.py  # to specify the model path in the file
-<Test it>
-DONE~
 ```
+
+### Train
+
+- go to `https://www.cvmart.net/dev/10488/modelDevelopment/train`
+- click `新建训练任务`  
+- set `执行命令` to `bash /project/train/src_repo/DeepLab/train.sh`  
+- do not mark any tick in `预加载模型`
+- click `提交`
+- wait till your training is done
+
+### Test
+
+- copy the interface by using such as  
+  `mkdir -p /project/ev_sdk/src/`  
+  `cp /project/train/src_repo/DeepLab/ji.py /project/ev_sdk/src/`  
+- specify the model path in file `ji.py`  
+- go to `https://www.cvmart.net/dev/10488/modelDevelopment/test`
+- click `发起模型测试`  
+- click `请选择模型列表`, choose the file you trained in the step above  
+  make sure the model path in ji.py is the same as it here
+- click `提交`
+- wait till your testing is done
 
 ## Architecture
 
