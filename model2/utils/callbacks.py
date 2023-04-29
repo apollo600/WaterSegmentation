@@ -78,8 +78,7 @@ class LossHistory():
 
         loss_img = Image.open(os.path.join(self.log_dir, "epoch_loss.png"))
         loss_img = np.array(loss_img).transpose([2, 0, 1])
-        # self.writer.add_image("epoch_loss", loss_img, dataformats="CHW")
-        self.writer.add_figure("epoch_loss", figure)
+        self.writer.add_image("epoch_loss", loss_img, dataformats="CHW")
 
         plt.cla()
         plt.close("all")
