@@ -157,8 +157,8 @@ class EvalCallback():
         return image
     
     def on_epoch_end(self, epoch, model_eval, args):
-        if epoch % self.period == 0 and self.eval_flag:
-            self.net    = model_eval
+            if epoch % self.period == 0 and self.eval_flag:
+                self.net    = model_eval
             gt_dir      = os.path.join(self.dataset_path, "SegmentationClass/")
             pred_dir    = os.path.join(self.miou_out_path, 'detection-results')
             if not os.path.exists(self.miou_out_path):
