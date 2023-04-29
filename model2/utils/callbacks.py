@@ -2,6 +2,7 @@ import os
 
 import matplotlib
 import torch
+import torchvision
 import torch.nn.functional as F
 
 matplotlib.use('Agg')
@@ -77,6 +78,9 @@ class LossHistory():
 
         plt.cla()
         plt.close("all")
+
+        loss_img = torchvision.io.read_image(os.path.join(self.log_dir, "epoch_loss.png"))
+        self.writer.add_image("epoch_loss", loss_img)
 
 class EvalCallback():
     def __init__(self, net, input_shape, num_classes, image_ids, dataset_path, log_dir, cuda, \

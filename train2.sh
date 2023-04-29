@@ -8,7 +8,7 @@ python /project/train/src_repo/train.py \
     --save_root "/project/train/" \
     --save_dir "models/pascal" \
     --log_root "/project/train" \
-    --log_dir "log" \
+    --log_dir "tensorboard" \
     --lr "5e-4" \
     --image_width 512 \
     --image_height 512 \
@@ -19,7 +19,7 @@ python /project/train/src_repo/train.py \
     --pretrain_model_path "/project/train/models/pascal/last_epoch_weights.pth" \
     --resume \
     --downsample_factor 16 \
-    --init_epoch 14 \
+    --init_epoch 24 \
     --freeze_epoch 25 \
     --freeze_batch_size 8 \
     --unfreeze_epoch 50 \
