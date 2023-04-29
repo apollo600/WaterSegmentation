@@ -27,11 +27,7 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
     # ------------------------------------------------------#
 
     time_str        = datetime.datetime.strftime(datetime.datetime.now(),'%Y_%m_%d_%H_%M_%S')
-<<<<<<< HEAD
     log_dir         = os.path.join(args.log_root, args.log_dir, "loss_" + str(time_str))
-=======
-    log_dir         = os.path.join(args.save_root, args.save_dir, "loss_" + str(time_str))
->>>>>>> cdaf1a83f67d77a8fe6fbe39bc206303edfa9f04
     loss_history    = LossHistory(log_dir, train_model, input_shape=(args.image_width, args.image_height))
     
     # 冻结主体部分
@@ -80,11 +76,7 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
     #   记录eval的map曲线
     # ----------------------#
     eval_callback = EvalCallback(train_model, (args.image_width, args.image_height), args.num_classes, val_filelist, data_root, 
-<<<<<<< HEAD
                                 log_dir, cuda=True, 
-=======
-                                os.path.join(args.log_root, args.log_dir), cuda=True, 
->>>>>>> cdaf1a83f67d77a8fe6fbe39bc206303edfa9f04
                                 eval_flag=True, period=1)
 
     # ---------------------------------------#
@@ -131,31 +123,21 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
         set_optimizer_lr(optimizer, lr_scheduler_func, epoch)
 
         fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch,
-<<<<<<< HEAD
                       epoch_step, epoch_step_val, train_loader, val_loader, UnFreeze_Epoch, UnFreeze_flag, 
-=======
-                      epoch_step, epoch_step_val, train_loader, val_loader, UnFreeze_Epoch, 
->>>>>>> cdaf1a83f67d77a8fe6fbe39bc206303edfa9f04
                       args.class_weights, args.num_classes, save_period=1, save_dir=os.path.join(args.save_root, args.save_dir), args=args)
 
     loss_history.writer.close()
 
 
 def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, epoch_step, epoch_step_val,
-<<<<<<< HEAD
                   train_loader, val_loader, Epoch, unfreeze_flag, cls_weights, num_classes, save_period, save_dir, args):
-                                                            
-=======
-                  train_loader, val_loader, Epoch, cls_weights, num_classes, save_period, save_dir, args):
-            
->>>>>>> cdaf1a83f67d77a8fe6fbe39bc206303edfa9f04
+                                                                
     total_loss = 0
     total_f_score = 0
 
     val_loss = 0
     val_f_score = 0
 
-<<<<<<< HEAD
     state = 'Unfrozen' if unfreeze_flag else 'Frozen'
 
     print("+ Start Train")
@@ -165,11 +147,6 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
                     desc=f'{state} Epoch {epoch + 1}/{Epoch} Training', postfix=dict, mininterval=1)
     else:
         pbar = None
-=======
-    print('Start Train')
-    pbar = tqdm(total=epoch_step,
-                desc=f'Epoch {epoch + 1}/{Epoch}', postfix=dict, maxinterval=0.3)
->>>>>>> cdaf1a83f67d77a8fe6fbe39bc206303edfa9f04
     train_model.train()
 
     for iteration, batch in enumerate(train_loader):
