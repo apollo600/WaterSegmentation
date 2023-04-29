@@ -27,8 +27,8 @@ def calc_miou(dataset_path, miou_out_path, image_ids, num_classes, mask_png_path
 
     time_costs = []
 
-    for image_id in tqdm(image_ids, desc="Calculate miou read images", mininterval=1, ncols=64):
-        #-------------------------------#
+    for image_id in tqdm(image_ids, desc="Calculate miou read images", mininterval=1):
+            #-------------------------------#
         #   从文件中读取图像
         #-------------------------------#
         image_path  = os.path.join(dataset_path, "JPEGImages", image_id+".jpg")
