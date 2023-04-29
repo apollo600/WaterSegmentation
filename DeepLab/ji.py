@@ -7,6 +7,8 @@ import torch.nn as nn
 import cv2
 import torch.nn.functional as F
 
+sys.path.append('/project/train/src_repo/DeepLab')
+
 
 def checkGPU():
     gpu_count = torch.cuda.device_count()

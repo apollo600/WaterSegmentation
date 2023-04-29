@@ -225,4 +225,4 @@ class EvalCallback():
                 self.best_miou = temp_miou
                 return True, old_miou, temp_miou
             else:
-                return False, self.best_miou, None
+                return False, self.best_miou, temp_miou
