@@ -16,9 +16,9 @@ python /project/train/src_repo/train.py \
     --log_visual \
     --model Deeplab \
     --backbone Mobilenet \
-    --pretrain_model_path "/project/train/src_repo/deeplab_mobilenetv2.pth" \
+    --pretrain_model_path "/project/train/models/pascal/" \
     --downsample_factor 16 \
-    --init_epoch 0 \
+    --init_epoch 14 \
     --freeze_epoch 25 \
     --freeze_batch_size 16 \
     --unfreeze_epoch 50 \
