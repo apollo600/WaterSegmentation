@@ -204,3 +204,10 @@ class EvalCallback():
 
             print("Get miou done.")
             shutil.rmtree(self.miou_out_path)
+
+            if temp_miou > self.best_miou:
+                old_miou = self.best_miou
+                self.best_miou = temp_miou
+                return True, old_miou, temp_miou
+            else:
+                return False, self.best_miou, None
