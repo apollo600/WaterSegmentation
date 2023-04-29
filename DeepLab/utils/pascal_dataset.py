@@ -209,10 +209,4 @@ class PascalData(Dataset):
 
 #     def get_filelist(self):
 #         return self.file_list
-    
-
-if __name__ == "__main__":
-    train_dataset = MyData("/home/data/1945", num_classes=5, image_width=720, image_height=540)
-    image, label = train_dataset[0]
-    print(image.shape, label.shape)
             

@@ -78,9 +78,7 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
     init_epoch = args.epoch
     init_lr = args.lr
 
-    if args.loss == "Focal":
-        criterion = FocalLoss()
-    elif args.loss == "CrossEntropy":
+    if args.loss == "CrossEntropy":
         criterion = nn.CrossEntropyLoss()
     else:
         raise RuntimeError("wrong type of criterion given:", args.loss)
