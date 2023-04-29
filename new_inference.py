@@ -27,7 +27,7 @@ def calc_miou(dataset_path, miou_out_path, image_ids, num_classes, mask_png_path
 
     time_costs = []
 
-    for image_id in tqdm(image_ids, desc="Calculate miou read images", mininterval=1):
+    for image_id in tqdm(image_ids, desc="Reading images and Predict", mininterval=1):
         #-------------------------------#
         #   从文件中读取图像
         #-------------------------------#
@@ -66,7 +66,7 @@ def calc_miou(dataset_path, miou_out_path, image_ids, num_classes, mask_png_path
 
 
 if __name__ == "__main__":  
-    image_ids = open("/project/train/src_repo/VOCdevkit/VOC2012/ImageSets/Segmentation/trainval.txt", "r").readlines()
+    image_ids = open("/project/train/src_repo/VOCdevkit/VOC2012/ImageSets/Segmentation/val.txt", "r").readlines()
     image_ids = [ x.strip() for x in image_ids ]
     
     calc_miou("/project/train/src_repo/VOCdevkit/VOC2012", "/project/train/log/infer/pascal", image_ids, num_classes=21, mask_png_path="/project/ev_sdk/mask.png", visualize=False)                                           
