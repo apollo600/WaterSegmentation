@@ -9,7 +9,7 @@ class DeepLab(nn.Module):
     def __init__(self, num_classes, backbone="Mobilenet", pretrained=True, downsample_factor=16):
         super(DeepLab, self).__init__()
         if backbone=="Xception":
-                #----------------------------------#
+            #----------------------------------#
             #   获得两个特征层
             #   浅层特征    [128,128,256]
             #   主干部分    [30,30,2048]
@@ -18,7 +18,7 @@ class DeepLab(nn.Module):
             in_channels = 2048
             low_level_channels = 256
         elif backbone=="Mobilenet":
-                #----------------------------------#
+            #----------------------------------#
             #   获得两个特征层
             #   浅层特征    [128,128,24]
             #   主干部分    [30,30,320]
