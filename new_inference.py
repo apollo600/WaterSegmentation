@@ -19,10 +19,8 @@ def calc_miou(dataset_path, model_path, miou_out_path, image_ids, num_classes, m
     net    = ji.init(model_path)
     gt_dir      = os.path.join(dataset_path, "SegmentationClass/")
     pred_dir    = os.path.join(miou_out_path, 'detection-results')
-    if not os.path.exists(miou_out_path):
-        os.makedirs(miou_out_path)
-    if not os.path.exists(pred_dir):
-        os.makedirs(pred_dir)
+    os.makedirs(miou_out_path, exist_ok=True)
+    os.makedirs(pred_dir, exist_ok=True)
     print("Get miou.")
 
     time_costs = []

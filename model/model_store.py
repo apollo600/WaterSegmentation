@@ -39,8 +39,7 @@ def get_resnet_file(name, root='~/.torch/models'):
     else:
         print('Model file {} is not found. Downloading.'.format(file_path))
 
-    if not os.path.exists(root):
-        os.makedirs(root)
+    os.makedirs(root, exist_ok=True)
 
     zip_file_path = os.path.join(root, file_name + '.zip')
     repo_url = os.environ.get('ENCODING_REPO', encoding_repo_url)

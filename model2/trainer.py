@@ -131,7 +131,7 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
 
 def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, epoch_step, epoch_step_val,
                   train_loader, val_loader, Epoch, unfreeze_flag, cls_weights, num_classes, save_dir, args):
-                                                                    
+                                                                        
     total_loss = 0
     total_f_score = 0
 
@@ -295,6 +295,8 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     #     torch.save(train_model, os.path.join(
     #         save_dir, "best_epoch_weights.pth"))
 
+    os.makedirs(save_dir, exist_ok=True)
+    
     if update_best_model_flag and new_miou is not None:
         print(f"+ Update best model {old_miou:.4f} ==> {new_miou:.4f}")
         print('+ Save best model to best_epoch_weights.pth')
