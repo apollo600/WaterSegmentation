@@ -166,7 +166,7 @@ class EvalCallback():
             if not os.path.exists(pred_dir):
                 os.makedirs(pred_dir)
             print("Get miou.")
-            for image_id in tqdm(self.image_ids, desc="Calc miou read val_images", mininterval=1):
+            for image_id in tqdm(self.image_ids, desc="Read val_images and Calculate miou", mininterval=1):
                 #-------------------------------#
                 #   从文件中读取图像
                 #-------------------------------#
