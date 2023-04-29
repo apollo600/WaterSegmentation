@@ -10,6 +10,7 @@ from model2.utils.utils import cvtColor, preprocess_input, resize_image
 from model2.utils.utils_metrics import compute_mIoU
 from tqdm import tqdm
 from utils.visual import visualize
+import time
 
 
 def calc_miou(dataset_path, miou_out_path, image_ids, num_classes, mask_png_path):
@@ -22,6 +23,9 @@ def calc_miou(dataset_path, miou_out_path, image_ids, num_classes, mask_png_path
     if not os.path.exists(pred_dir):
         os.makedirs(pred_dir)
     print("Get miou.")
+
+    time_costs = []
+
     for image_id in tqdm(image_ids, desc="Calculate miou read images", mininterval=1, ncols=64):
         #-------------------------------#
         #   从文件中读取图像
@@ -36,7 +40,10 @@ def calc_miou(dataset_path, miou_out_path, image_ids, num_classes, mask_png_path
         #------------------------------#
         #   获得预测txt
         #------------------------------#
+        time_start = time.perf_counter()
         ji.process_image(net, image, '{"mask_output_path": "' + str(mask_png_path).replace('\\', '/') + '"}')
+        time_end = time.perf_counter()
+        time_costs.append((time_end - time_start) * 1000)
         image = Image.open(mask_png_path)
         image.save(os.path.join(pred_dir, image_id + ".png"))
         image = np.array(image)
@@ -48,7 +55,7 @@ def calc_miou(dataset_path, miou_out_path, image_ids, num_classes, mask_png_path
     _, IoUs, _, _ = compute_mIoU(gt_dir, pred_dir, image_ids, num_classes, None)  # 执行计算mIoU的函数
     temp_miou = np.nanmean(IoUs) * 100
 
-    print(temp_miou)
+    print("===> Average time: {np.mean(time_costs)} ms")
 
     print("Get miou done.")
     # shutil.rmtree(self.miou_out_path)
