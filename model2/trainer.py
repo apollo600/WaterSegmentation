@@ -250,7 +250,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     pbar.close()
 
     loss_history.append_loss(epoch + 1, total_loss / epoch_step, val_loss / epoch_step_val)
-    eval_callback.on_epoch_end(epoch + 1, train_model)
+    update_best_model_flag, old_miou, new_miou = eval_callback.on_epoch_end(epoch + 1, train_model)
     # print(f'{state} Epoch:' + str(epoch + 1) + '/' + str(Epoch))
     print(f"{state} Epoch: {epoch + 1} / {Epoch}")
     print('Total Loss: %.3f || Val Loss: %.3f ' %
@@ -278,10 +278,13 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
         torch.save(train_model, os.path.join(save_dir, 'ep%03d-loss%.3f-val_loss%.3f.pth' %
                    (epoch + 1, total_loss / epoch_step, val_loss / epoch_step_val)))
 
-    if len(loss_history.val_loss) <= 1 or (val_loss / epoch_step_val) <= min(loss_history.val_loss):
-        print('Save best model to best_epoch_weights.pth')
-        torch.save(train_model, os.path.join(
-            save_dir, "best_epoch_weights.pth"))
+    # if len(loss_history.val_loss) <= 1 or (val_loss / epoch_step_val) <= min(loss_history.val_loss):
+    #     print('Save best model to best_epoch_weights.pth')
+    #     torch.save(train_model, os.path.join(
+    #         save_dir, "best_epoch_weights.pth"))
+
+    if update_best_model_flag and new_miou is not None:
+            print(f"Update best model {}")
 
     torch.save(train_model, os.path.join(
         save_dir, "last_epoch_weights.pth"))
