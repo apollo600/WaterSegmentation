@@ -76,7 +76,7 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
     #   记录eval的map曲线
     # ----------------------#
     eval_callback = EvalCallback(train_model, (args.image_width, args.image_height), args.num_classes, val_filelist, data_root, 
-                                os.path.join(args.log_root, args.log_dir), cuda=True, 
+                                log_dir, cuda=True, 
                                 eval_flag=True, period=1)
 
     # ---------------------------------------#
