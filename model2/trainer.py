@@ -207,7 +207,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     for iteration, batch in enumerate(val_loader):
         if iteration >= epoch_step_val:
             break
-        imgs, pngs, labels = batch
+        imgs, pngs, labels = batch  
         with torch.no_grad():
             weights = torch.from_numpy(cls_weights)
             imgs = imgs.float()
