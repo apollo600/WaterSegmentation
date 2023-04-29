@@ -160,8 +160,8 @@ class EvalCallback():
             if not os.path.exists(pred_dir):
                 os.makedirs(pred_dir)
             print("Get miou.")
-            for image_id in tqdm(self.image_ids, desc="Calculate miou read images", mininterval=1, ncols=64):
-                #-------------------------------#
+            for image_id in tqdm(self.image_ids, desc="Calculate miou read images", mininterval=1, ncols=80):
+                    #-------------------------------#
                 #   从文件中读取图像
                 #-------------------------------#
                 image_path  = os.path.join(self.dataset_path, "JPEGImages/"+image_id+".jpg")
