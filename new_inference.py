@@ -34,10 +34,11 @@ def calc_miou(dataset_path, miou_out_path, image_ids, num_classes, mask_png_path
         image_path  = os.path.join(dataset_path, "JPEGImages", image_id+".jpg")
         label_path  = os.path.join(dataset_path, "SegmentationClass", image_id+".png")
         image       = Image.open(image_path)
+        image = np.array(image)
+        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
         if visualize:
             image.save(os.path.join(miou_out_path, image_id+"_src.jpg"))
-        image       = np.array(image)
-        assert(image.shape[2] == 3)
         label       = Image.open(label_path)
         label       = np.array(label)
         #------------------------------#
