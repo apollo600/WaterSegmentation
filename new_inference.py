@@ -8,11 +8,12 @@ import cv2
 from PIL import Image
 from model2.utils.utils import cvtColor, preprocess_input, resize_image
 from model2.utils.utils_metrics import compute_mIoU
+from tqdm import tqdm
 
 
 def calc_miou(dataset_path, miou_out_path, image_ids, num_classes):
                                                                                                                 
-    net    = ji.init()
+    net    = ji.init("/project/train/models/best_epoch_weights.pth")
     gt_dir      = os.path.join(dataset_path, "SegmentationClass/")
     pred_dir    = os.path.join(miou_out_path, 'detection-results')
     if not os.path.exists(miou_out_path):
@@ -44,6 +45,7 @@ def calc_miou(dataset_path, miou_out_path, image_ids, num_classes):
 
 
 if __name__ == "__main__":  
-    image_ids = 
-
-    calc_miou("/home/data/1945", ".", image_ids, num_classes)                                           
+    image_ids = open("/home/data/1945/ImageSets/Segmentation/trainval.txt", "r").readlines()
+    image_ids = [ x.strip() for x in image_ids ]
+    
+    calc_miou("/home/data/1945", ".", image_ids, num_classes=6)                                           
