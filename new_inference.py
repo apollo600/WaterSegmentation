@@ -2,7 +2,7 @@ import os
 import sys
 # sys.path.append("/project/ev_sdk/src")
 # import ji
-import _deprecated_ji as ji
+# import _deprecated_ji as ji
 import numpy as np
 import torch
 import cv2
@@ -56,7 +56,7 @@ def calc_miou(dataset_path, miou_out_path, image_ids, num_classes, mask_png_path
     _, IoUs, _, _ = compute_mIoU(gt_dir, pred_dir, image_ids, num_classes, None)  # 执行计算mIoU的函数
     temp_miou = np.nanmean(IoUs) * 100
 
-    print("===> Average time: {np.mean(time_costs)} ms")
+    print(f"===> Average time: {np.mean(time_costs)} ms")
 
     print("Get miou done.")
     # shutil.rmtree(self.miou_out_path)
