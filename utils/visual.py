@@ -20,9 +20,9 @@ def visualize(label_img, output_path):
 
 def show_config(**kwargs):
     print('Configurations:')
-    print('-' * 80)
-    print('|%25s | %50s|' % ('keys', 'values'))
-    print('-' * 80)
+    print('-' * 100)
+    print('|%25s | %70s|' % ('keys', 'values'))
+    print('-' * 100)
     for key, value in kwargs.items():
-        print('|%25s | %50s|' % (str(key), str(value)))
-    print('-' * 80)
+        print('|%25s | %70s|' % (str(key), str(value)))
+    print('-' * 100)

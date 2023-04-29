@@ -123,24 +123,26 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
         set_optimizer_lr(optimizer, lr_scheduler_func, epoch)
 
         fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch,
-                      epoch_step, epoch_step_val, train_loader, val_loader, UnFreeze_Epoch, 
+                      epoch_step, epoch_step_val, train_loader, val_loader, UnFreeze_Epoch, UnFreeze_flag, 
                       args.class_weights, args.num_classes, save_period=1, save_dir=os.path.join(args.save_root, args.save_dir), args=args)
 
     loss_history.writer.close()
 
 
 def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, epoch_step, epoch_step_val,
-                  train_loader, val_loader, Epoch, cls_weights, num_classes, save_period, save_dir, args):
-            
+                  train_loader, val_loader, Epoch, unfreeze_flag, cls_weights, num_classes, save_period, save_dir, args):
+                                                            
     total_loss = 0
     total_f_score = 0
 
     val_loss = 0
     val_f_score = 0
 
+    state = 'Frozen' if unfreeze_flag else 'Unfrozen'
+
     print('Start Train')
     pbar = tqdm(total=epoch_step,
-                desc=f'Epoch {epoch + 1}/{Epoch} Training', postfix=dict, mininterval=1)
+                desc=f'{state} Epoch {epoch + 1}/{Epoch} Training', postfix=dict, mininterval=1)
     train_model.train()
 
     for iteration, batch in enumerate(train_loader):
@@ -201,7 +203,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     print('Finish Train')
     print('Start Validate')
     pbar = tqdm(total=epoch_step_val,
-                desc=f'Epoch {epoch + 1}/{Epoch} Validating', postfix=dict, mininterval=1)
+                desc=f'{state} Epoch {epoch + 1}/{Epoch} Validating', postfix=dict, mininterval=1)
 
     train_model.eval()
     for iteration, batch in enumerate(val_loader):
@@ -250,7 +252,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
 
     loss_history.append_loss(epoch + 1, total_loss / epoch_step, val_loss / epoch_step_val)
     eval_callback.on_epoch_end(epoch + 1, train_model)
-    print('Epoch:' + str(epoch + 1) + '/' + str(Epoch))
+    print('{state} Epoch:' + str(epoch + 1) + '/' + str(Epoch))
     print('Total Loss: %.3f || Val Loss: %.3f ' %
           (total_loss / epoch_step, val_loss / epoch_step_val))
 
