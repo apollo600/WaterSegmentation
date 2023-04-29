@@ -4,6 +4,8 @@ import torch
 import numpy as np
 from PIL import Image
 import torch.nn as nn
+import cv2
+import torch.nn.functional as F
 
 
 def checkGPU():
@@ -27,6 +29,7 @@ def init(model_path: str = None) -> nn.Module:
         # Best local model: /project/train/models/2023-04-26-14\:34\:28_epoch-100_lr-0.0005_loss-CrossEntropy_optim-AdamW_best_acc-0.6238.pt
         model_path = "真实环境所用pt"
     model = torch.load(model_path)
+    model = model.eval()
     model = model.cuda()
 
     return model
@@ -51,41 +54,17 @@ def process_image(handle: nn.Module = None, input_image: np.ndarray = None, args
     mask_output_path = args['mask_output_path']
 
     # Process image here
-    ih, iw, _= input_image.shape
-    h = w = 512
-
-    # BGR -> RGB
-    image = cv2.cvtColor(input_image, cv2.COLOR_BGR2RGB)
-
-    # 添加灰边
-    scale = min(w / iw, h / ih)
-    nw = int(iw * scale)
-    nh = int(ih * scale)
-
-    image = cv2.resize(input_image, (nw, nh), interpolation=cv2.INTER_CUBIC)
-    new_image = np.full((h, w, 3), 128, dtype=np.uint8)
-    new_image[int((h-nh)/2):int((h-nh)/2)+nh, int((w-nw)/2):int((w-nw)/2)+nw] = image
-
-    image = Image.fromarray(input_image)
-    image = image.resize((512, 512), Image.BILINEAR)
-    image = np.array(image)
-    # H, W, C -> C, H, W
-    image = np.transpose(image, [2, 0, 1])
-    # C, H, W -> 1, C, H, W
-    image = np.expand_dims(image, axis=0)
-    image = torch.from_numpy(image).float()
-    image = image.cuda()
+    h, w, _= input_image.shape
+    input_tensor = torch.from_numpy(input_image).permute(2, 0, 1).unsqueeze(0).float().cuda()
+    resized_tensor= F.interpolate(input_tensor, size=512, mode='bilinear', align_corners=True)
 
     # 1, Classes, H, W
-    pred_label = handle(image)
+    pred_label = handle(resized_tensor)
 
-    # Generate mask data
-    t_pred_label: np.ndarray = pred_label.cpu().detach().numpy()
-    # 1, C, H, W -> 1, H, W
-    t_pred_label = np.argmax(t_pred_label, axis=1)
-    # 1, H, W -> H, W
-    t_pred_label = np.squeeze(t_pred_label, axis=0)
-    pred_mask_per_frame = Image.fromarray(np.uint8(t_pred_label))
+    t_pred_label = pred_label.argmax(dim=1)
+
+    # Convert tensor to PIL image
+    pred_mask_per_frame = Image.fromarray(t_pred_label[0].byte().cpu().numpy())
     pred_mask_per_frame = pred_mask_per_frame.resize((w, h), Image.BILINEAR)
     pred_mask_per_frame.save(mask_output_path)
 
