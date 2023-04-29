@@ -16,11 +16,12 @@ python /project/train/src_repo/train.py \
     --log_visual \
     --model Deeplab \
     --backbone Mobilenet \
-    --pretrain_model_path "/project/train/models/pascal/" \
+    --pretrain_model_path "/project/train/models/last_epoch_weights.pth" \
+    --resume \
     --downsample_factor 16 \
     --init_epoch 14 \
     --freeze_epoch 25 \
-    --freeze_batch_size 16 \
+    --freeze_batch_size 8 \
     --unfreeze_epoch 50 \
     --unfreeze_batch_size 8 \
     --min_lr 5e-6 \
