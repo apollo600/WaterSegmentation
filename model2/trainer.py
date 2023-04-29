@@ -142,8 +142,11 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
 
     print("+ Start Train")
 
-    pbar = tqdm(total=epoch_step,
-                desc=f'{state} Epoch {epoch + 1}/{Epoch} Training', postfix=dict, mininterval=1)
+    if args.enable_tqdm:
+        pbar = tqdm(total=epoch_step,
+                    desc=f'{state} Epoch {epoch + 1}/{Epoch} Training', postfix=dict, mininterval=1)
+    else:
+        pbar = None
     train_model.train()
 
     for iteration, batch in enumerate(train_loader):
@@ -195,16 +198,21 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
         total_loss += loss.item()
         total_f_score += _f_score.item()
 
-        pbar.set_postfix(**{'total_loss': total_loss / (iteration + 1),
-                            'f_score': total_f_score / (iteration + 1),
-                            'lr': get_lr(optimizer)})
-        pbar.update(1)
+        if pbar is not None:
+            pbar.set_postfix(**{'total_loss': total_loss / (iteration + 1),
+                                'f_score': total_f_score / (iteration + 1),
+                                'lr': get_lr(optimizer)})
+            pbar.update(1)
 
-    pbar.close()
+    if pbar is not None:
+        pbar.close()
     print('- Finish Train')
     print('+ Start Validate')
-    pbar = tqdm(total=epoch_step_val,
-                desc=f'{state} Epoch {epoch + 1}/{Epoch} Validating', postfix=dict, mininterval=1)
+    if args.enable_tqdm:
+        pbar = tqdm(total=epoch_step_val,
+                    desc=f'{state} Epoch {epoch + 1}/{Epoch} Validating', postfix=dict, mininterval=1)
+    else:
+        pbar = None
 
     train_model.eval()
     for iteration, batch in enumerate(val_loader):
@@ -244,15 +252,17 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
             val_loss += loss.item()
             val_f_score += _f_score.item()
 
-            pbar.set_postfix(**{'val_loss': val_loss / (iteration + 1),
-                                'f_score': val_f_score / (iteration + 1),
-                                'lr': get_lr(optimizer)})
-            pbar.update(1)
+            if pbar is not None:
+                pbar.set_postfix(**{'val_loss': val_loss / (iteration + 1),
+                                    'f_score': val_f_score / (iteration + 1),
+                                    'lr': get_lr(optimizer)})
+                pbar.update(1)
 
-    pbar.close()
+    if pbar is not None:
+        pbar.close()
 
     loss_history.append_loss(epoch + 1, total_loss / epoch_step, val_loss / epoch_step_val)
-    update_best_model_flag, old_miou, new_miou = eval_callback.on_epoch_end(epoch + 1, train_model)
+    update_best_model_flag, old_miou, new_miou = eval_callback.on_epoch_end(epoch + 1, train_model, args)
     # print(f'{state} Epoch:' + str(epoch + 1) + '/' + str(Epoch))
     print(f"===> In {state} Epoch: {epoch + 1} / {Epoch}")
     print('===> Total Loss: %.3f || Val Loss: %.3f ' %
