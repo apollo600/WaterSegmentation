@@ -199,8 +199,8 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
         pbar.update(1)
 
     pbar.close()
-    print('Finish Train')
-    print('Start Validate')
+    print('- Finish Train')
+    print('+ Start Validate')
     pbar = tqdm(total=epoch_step_val,
                 desc=f'{state} Epoch {epoch + 1}/{Epoch} Validating', postfix=dict, mininterval=1)
 
@@ -252,8 +252,8 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     loss_history.append_loss(epoch + 1, total_loss / epoch_step, val_loss / epoch_step_val)
     update_best_model_flag, old_miou, new_miou = eval_callback.on_epoch_end(epoch + 1, train_model)
     # print(f'{state} Epoch:' + str(epoch + 1) + '/' + str(Epoch))
-    print(f"{state} Epoch: {epoch + 1} / {Epoch}")
-    print('Total Loss: %.3f || Val Loss: %.3f ' %
+    print(f"===> In {state} Epoch: {epoch + 1} / {Epoch}")
+    print('===> Total Loss: %.3f || Val Loss: %.3f ' %
           (total_loss / epoch_step, val_loss / epoch_step_val))
 
     # -----------------------------------------------#
@@ -284,12 +284,12 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     #         save_dir, "best_epoch_weights.pth"))
 
     if update_best_model_flag and new_miou is not None:
-        print(f"Update best model {old_miou} ==> {new_miou}")
-        print('Save best model to best_epoch_weights.pth')
+        print(f"+ Update best model {old_miou:.4f} ==> {new_miou:.4f}")
+        print('+ Save best model to best_epoch_weights.pth')
         torch.save(train_model, os.path.join(
             save_dir, "best_epoch_weights.pth"))
     else:
-        print(f"Best model stays at {old_miou}")
+        print(f"- Best model stays at {old_miou:.4f}")
 
     torch.save(train_model, os.path.join(
         save_dir, "last_epoch_weights.pth"))
