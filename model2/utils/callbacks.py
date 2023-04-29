@@ -156,7 +156,7 @@ class EvalCallback():
         image = Image.fromarray(np.uint8(pr))
         return image
     
-    def on_epoch_end(self, epoch, model_eval):
+    def on_epoch_end(self, epoch, model_eval, args):
         if epoch % self.period == 0 and self.eval_flag:
             self.net    = model_eval
             gt_dir      = os.path.join(self.dataset_path, "SegmentationClass/")
@@ -165,20 +165,34 @@ class EvalCallback():
                 os.makedirs(self.miou_out_path)
             if not os.path.exists(pred_dir):
                 os.makedirs(pred_dir)
-            print("Get miou.")
-            for image_id in tqdm(self.image_ids, desc="Read val_images and Calculate miou", mininterval=1):
-                #-------------------------------#
-                #   从文件中读取图像
-                #-------------------------------#
-                image_path  = os.path.join(self.dataset_path, "JPEGImages/"+image_id+".jpg")
-                image       = Image.open(image_path)
-                #------------------------------#
-                #   获得预测txt
-                #------------------------------#
-                image       = self.get_miou_png(image)
-                image.save(os.path.join(pred_dir, image_id + ".png"))
-                        
-            print("Calculate miou.")
+            print("+ Get miou")
+            if args.enable_tqdm:
+                for image_id in tqdm(self.image_ids, desc="Read val_images and Calculate miou", mininterval=1):
+                    #-------------------------------#
+                    #   从文件中读取图像
+                    #-------------------------------#
+                    image_path  = os.path.join(self.dataset_path, "JPEGImages/"+image_id+".jpg")
+                    image       = Image.open(image_path)
+                    #------------------------------#
+                    #   获得预测txt
+                    #------------------------------#
+                    image       = self.get_miou_png(image)
+                    image.save(os.path.join(pred_dir, image_id + ".png"))
+            else:
+                print("+ Read val_images and Calculate miou")
+                for image_id in self.image_ids:
+                    #-------------------------------#
+                    #   从文件中读取图像
+                    #-------------------------------#
+                    image_path  = os.path.join(self.dataset_path, "JPEGImages/"+image_id+".jpg")
+                    image       = Image.open(image_path)
+                    #------------------------------#
+                    #   获得预测txt
+                    #------------------------------#
+                    image       = self.get_miou_png(image)
+                    image.save(os.path.join(pred_dir, image_id + ".png"))
+                            
+            print("+ Calculate miou")
             _, IoUs, _, _ = compute_mIoU(gt_dir, pred_dir, self.image_ids, self.num_classes, None)  # 执行计算mIoU的函数
             temp_miou = np.nanmean(IoUs) * 100
 
@@ -202,7 +216,7 @@ class EvalCallback():
             plt.cla()
             plt.close("all")
 
-            print("Get miou done.")
+            print("- Get miou done")
             shutil.rmtree(self.miou_out_path)
 
             if temp_miou > self.best_miou:
