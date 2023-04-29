@@ -102,6 +102,7 @@ class EvalCallback():
         self.image_ids          = [image_id.split()[0] for image_id in image_ids]
         self.mious      = [0]
         self.epoches    = [0]
+        self.best_miou = 0.0
         if self.eval_flag:
             with open(os.path.join(self.log_dir, "epoch_miou.txt"), 'a') as f:
                 f.write(str(0))

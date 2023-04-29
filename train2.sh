@@ -7,6 +7,7 @@ python /project/train/src_repo/train.py \
     --data_dir "VOC2012" \
     --save_root "/project/train/" \
     --save_dir "models/pascal" \
+    --save_period 5 \
     --log_root "/project/train" \
     --log_dir "tensorboard" \
     --lr "1e-4" \
