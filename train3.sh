@@ -8,7 +8,7 @@ python /project/train/src_repo/train.py \
     --save_root "/project/train/" \
     --save_dir "models/my" \
     --log_root "/project/train" \
-    --log_dir "log" \
+    --log_dir "tensorboard" \
     --lr "5e-4" \
     --image_width 512 \
     --image_height 512 \
