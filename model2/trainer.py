@@ -140,7 +140,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
 
     print('Start Train')
     pbar = tqdm(total=epoch_step,
-                desc=f'Epoch {epoch + 1}/{Epoch} Training', postfix=dict, mininterval=10, ncols=10)
+                desc=f'Epoch {epoch + 1}/{Epoch} Training', postfix=dict, mininterval=1, ncols=50)
     train_model.train()
 
     for iteration, batch in enumerate(train_loader):
@@ -201,7 +201,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     print('Finish Train')
     print('Start Validate')
     pbar = tqdm(total=epoch_step_val,
-                desc=f'Epoch {epoch + 1}/{Epoch} Validating', postfix=dict, mininterval=10, ncols=10)
+                desc=f'Epoch {epoch + 1}/{Epoch} Validating', postfix=dict, mininterval=1, ncols=50)
 
     train_model.eval()
     for iteration, batch in enumerate(val_loader):
