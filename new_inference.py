@@ -11,8 +11,8 @@ from model2.utils.utils_metrics import compute_mIoU
 from tqdm import tqdm
 
 
-def calc_miou(dataset_path, miou_out_path, image_ids, num_classes):
-                                                                                                                
+def calc_miou(dataset_path, miou_out_path, image_ids, num_classes, mask_png_path):
+                                                                                                                            
     net    = ji.init("/project/train/models/best_epoch_weights.pth")
     gt_dir      = os.path.join(dataset_path, "SegmentationClass/")
     pred_dir    = os.path.join(miou_out_path, 'detection-results')
@@ -27,6 +27,7 @@ def calc_miou(dataset_path, miou_out_path, image_ids, num_classes):
         #-------------------------------#
         image_path  = os.path.join(dataset_path, "JPEGImages/"+image_id+".jpg")
         image       = Image.open(image_path)
+        image = np.array(image)
         #------------------------------#
         #   获得预测txt
         #------------------------------#
@@ -48,4 +49,4 @@ if __name__ == "__main__":
     image_ids = open("/home/data/1945/ImageSets/Segmentation/trainval.txt", "r").readlines()
     image_ids = [ x.strip() for x in image_ids ]
     
-    calc_miou("/home/data/1945", ".", image_ids, num_classes=6)                                           
+    calc_miou("/home/data/1945", "/project/train/log", image_ids, num_classes=6, mask_png_path="/project/ev_sdk/mask.png")                                           
