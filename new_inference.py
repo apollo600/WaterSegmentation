@@ -1,7 +1,8 @@
 import os
 import sys
-sys.path.append("/project/ev_sdk/src")
-import ji
+# sys.path.append("/project/ev_sdk/src")
+# import ji
+import _deprecated_ji as ji
 import numpy as np
 import torch
 import cv2
