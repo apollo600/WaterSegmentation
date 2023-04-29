@@ -71,6 +71,7 @@ def get_parser():
     parser.add_argument("--focal_loss", action="store_true", default=False, help="防止正负样本不平衡，需要给每个类型样本设置权重")
     parser.add_argument("--class_weights",type=int, nargs='+', help="每个类别的权重，长度和 num_classes 相同")
     parser.add_argument("--resume", action="store_true", default=False, help="是否继续训练，如果继续训练则不加载预训练模型，而是加载 last_epoch_weights.pth")
+    parser.add_argument("--save_period", type=int, default=5, help="多少个 epoch 保存一次模型，便于进行继续训练")
 
     
     args = parser.parse_args()

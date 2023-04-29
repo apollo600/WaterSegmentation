@@ -274,14 +274,19 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
         #             torch.save(train_model, os.path.join(save_dir, 'ep%03d-loss%.3f-val_loss%.3f.pth' %
     #                (epoch + 1, total_loss / epoch_step, val_loss / epoch_step_val)))
 
+    if (epoch + 1) % args.save_period == 0 or epoch + 1 == Epoch:
+        torch.save(train_model, os.path.join(save_dir, 'ep%03d-loss%.3f-val_loss%.3f.pth' %
+                   (epoch + 1, total_loss / epoch_step, val_loss / epoch_step_val)))
+
     if len(loss_history.val_loss) <= 1 or (val_loss / epoch_step_val) <= min(loss_history.val_loss):
         print('Save best model to best_epoch_weights.pth')
         torch.save(train_model, os.path.join(
             save_dir, "best_epoch_weights.pth"))
-        os.system(f"ls -alh {save_dir}")
 
     torch.save(train_model, os.path.join(
         save_dir, "last_epoch_weights.pth"))
+
+    os.system(f"ls -alh {save_dir}")
 
 
 def get_lr_scheduler(lr_decay_type, lr, min_lr, total_iters, warmup_iters_ratio=0.1, warmup_lr_ratio=0.1, no_aug_iter_ratio=0.3, step_num=10):
