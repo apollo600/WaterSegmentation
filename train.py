@@ -70,9 +70,12 @@ def get_parser():
     parser.add_argument("--dice_loss", action="store_true", default=False, help="种类少(几类)时, 设置为True")
     parser.add_argument("--focal_loss", action="store_true", default=False, help="防止正负样本不平衡，需要给每个类型样本设置权重")
     parser.add_argument("--class_weights",type=int, nargs='+', help="每个类别的权重，长度和 num_classes 相同")
+<<<<<<< HEAD
     parser.add_argument("--resume", action="store_true", default=False, help="是否继续训练，如果继续训练则不加载预训练模型，而是加载 last_epoch_weights.pth")
     parser.add_argument("--save_period", type=int, default=5, help="多少个 epoch 保存一次模型，便于进行继续训练")
     parser.add_argument("--enable_tqdm", action="store_true", default=False, help="是否开启 tqdm 进度条")
+=======
+>>>>>>> cdaf1a83f67d77a8fe6fbe39bc206303edfa9f04
 
     
     args = parser.parse_args()
@@ -142,11 +145,19 @@ if __name__ == "__main__":
 
     # 展示参数
     if args.model == "Deeplab":
+<<<<<<< HEAD
         show_config(num_classes=args.num_classes, backbone=args.backbone, resume=args.resume, pretrain_model_path=args.pretrain_model_path,
         input_shape=(args.image_width, args.image_height), init_epoch=args.init_epoch, freeze_epoch=args.freeze_epoch, 
         unfreeze_epoch=args.unfreeze_epoch, freeze_batch_size=args.freeze_batch_size, unfreeze_batch_size=args.unfreeze_batch_size,
         init_lr=args.lr, min_lr=args.min_lr, optimizer=args.optimizer, momentum=args.momentum, lr_decay_type=args.lr_decay_type, 
         focal_loss=args.focal_loss, dice_loss=args.dice_loss, class_weights=args.class_weights, enable_tqdm=args.enable_tqdm, 
+=======
+        show_config(num_classes=args.num_classes, backbone=args.backbone, pretrain_model_path=args.pretrain_model_path,
+        input_shape=(args.image_width, args.image_height), init_epoch=args.init_epoch, freeze_epoch=args.freeze_epoch, 
+        unfreeze_epoch=args.unfreeze_epoch, freeze_batch_size=args.freeze_batch_size, unfreeze_batch_size=args.unfreeze_batch_size,
+        init_lr=args.lr, min_lr=args.min_lr, optimizer=args.optimizer, momentum=args.momentum, lr_decay_type=args.lr_decay_type, 
+        focal_loss=args.focal_loss, dice_loss=args.dice_loss, class_weights=args.class_weights, 
+>>>>>>> cdaf1a83f67d77a8fe6fbe39bc206303edfa9f04
         )
 
     # Load the data from the folders
@@ -189,6 +200,7 @@ if __name__ == "__main__":
     if args.model == "Unet":
         model = UNet(3, args.num_classes)
     elif args.model == "Deeplab":
+<<<<<<< HEAD
         if not args.resume:
             model = DeepLab(num_classes=args.num_classes, backbone=args.backbone, downsample_factor=args.downsample_factor, pretrained=False)
             # 初始化大模型中的参数
@@ -215,6 +227,30 @@ if __name__ == "__main__":
             print("Load last epoch model to device")
             model = torch.load(args.pretrain_model_path)
         
+=======
+        model = DeepLab(num_classes=args.num_classes, backbone=args.backbone, downsample_factor=args.downsample_factor, pretrained=False)
+        # 初始化大模型中的参数
+        weights_init(model, init_type="normal")
+        # 加载预训练模型
+        model_dict = model.state_dict()
+        # 使用 map_location 直接加载到显存
+        print("Load pretrained model to device")
+        pretrained_dict = torch.load(args.pretrain_model_path, map_location=device)
+        load_key, no_load_key, temp_dict = [], [], {}
+        for k, v in pretrained_dict.items():
+            if k in model_dict.keys() and np.shape(model_dict[k]) == np.shape(v):
+                temp_dict[k] = v
+                load_key.append(k)
+            else:
+                no_load_key.append(k)
+        model_dict.update(temp_dict)
+        model.load_state_dict(model_dict)
+        # 输出加载预训练结果
+        print("\nSuccessful Load Key:", str(load_key)[:500], "……\nSuccessful Load Key Num:", len(load_key))
+        print("\nFail To Load Key:", str(no_load_key)[:500], "……\nFail To Load Key num:", len(no_load_key))
+        # print("\n\033[1;33;44m温馨提示，head部分没有载入是正常现象，Backbone部分没有载入是错误的。\033[0m")
+    
+>>>>>>> cdaf1a83f67d77a8fe6fbe39bc206303edfa9f04
     print("Loading model to device")
     train_model = model.train()
     train_model.cuda()
