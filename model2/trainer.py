@@ -284,7 +284,12 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     #         save_dir, "best_epoch_weights.pth"))
 
     if update_best_model_flag and new_miou is not None:
-            print(f"Update best model {}")
+        print(f"Update best model {old_miou} ==> {new_miou}")
+        print('Save best model to best_epoch_weights.pth')
+        torch.save(train_model, os.path.join(
+            save_dir, "best_epoch_weights.pth"))
+    else:
+        print(f"Best model stays at {old_miou}")
 
     torch.save(train_model, os.path.join(
         save_dir, "last_epoch_weights.pth"))
