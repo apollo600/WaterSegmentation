@@ -1,5 +1,6 @@
 import csv
 import os
+import sys
 from os.path import join
 
 import matplotlib.pyplot as plt
@@ -55,7 +56,7 @@ def per_Accuracy(hist):
     return np.sum(np.diag(hist)) / np.maximum(np.sum(hist), 1) 
 
 def compute_mIoU(gt_dir, pred_dir, png_name_list, num_classes, name_classes=None):  
-    sys.stdout.write('Num classes\n', num_classes)  
+    sys.stdout.write(f'Num classes {num_classes}\n')
     #-----------------------------------------#
     #   创建一个全是0的矩阵，是一个混淆矩阵
     #-----------------------------------------#
