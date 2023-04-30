@@ -9,7 +9,7 @@ python /project/train/src_repo/train.py \
     --save_dir "models/my" \
     --log_root "/project/train" \
     --log_dir "tensorboard" \
-    --lr "5e-4" \
+    --lr "5e-5" \
     --image_width 512 \
     --image_height 512 \
     --optimizer "Adam" \
