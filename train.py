@@ -5,6 +5,7 @@ import torch.utils.data as data
 from torch.utils.data.dataloader import DataLoader
 
 import os
+import sys
 import time
 import numpy as np
 from tqdm import tqdm
@@ -117,9 +118,9 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
         if train_size // args.unfreeze_batch_size == 0:
             raise ValueError('数据集过小，无法进行训练，请扩充数据集。')
         wanted_epoch = wanted_step // (train_size // args.unfreeze_batch_size) + 1
-        print("\n\033[1;33;44m[Warning] 使用%s优化器时，建议将训练总步长设置到%d以上。\033[0m"%(args.optimizer, wanted_step))
-        print("\033[1;33;44m[Warning] 本次运行的总训练数据量为%d，Unfreeze_batch_size为%d，共训练%d个Epoch，计算出总训练步长为%d。\033[0m"%(train_size, args.unfreeze_batch_size, args.unfreeze_epoch, total_step))
-        print("\033[1;33;44m[Warning] 由于总训练步长为%d，小于建议总步长%d，建议设置总世代为%d。\033[0m"%(total_step, wanted_step, wanted_epoch))
+        sys.stdout.write("\n\033[1;33;44m[Warning] 使用%s优化器时，建议将训练总步长设置到%d以上。\033[0m\n"%(args.optimizer, wanted_step))
+        sys.stdout.write("\033[1;33;44m[Warning] 本次运行的总训练数据量为%d，Unfreeze_batch_size为%d，共训练%d个Epoch，计算出总训练步长为%d。\033[0m\n"%(train_size, args.unfreeze_batch_size, args.unfreeze_epoch, total_step))
+        sys.stdout.write("\033[1;33;44m[Warning] 由于总训练步长为%d，小于建议总步长%d，建议设置总世代为%d。\033[0m\n"%(total_step, wanted_step, wanted_epoch))
 
     if args.model == "Deeplab":
         Deeplab_trainer(train_loader, val_loader, train_model, args, optimizer, train_size, val_size, val_filelist, data_root)
