@@ -14,6 +14,7 @@ from model2.utils.utils import get_lr
 import datetime
 from functools import partial
 import math
+import time
 
 
 def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Module, args, optimizer, train_size, val_size, val_filelist, data_root):
@@ -123,9 +124,14 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
 
         set_optimizer_lr(optimizer, lr_scheduler_func, epoch)
 
+        time_start = time.time()
+
         fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch,
                       epoch_step, epoch_step_val, train_loader, val_loader, UnFreeze_Epoch, UnFreeze_flag, 
                       args.class_weights, args.num_classes, save_period=1, save_dir=os.path.join(args.save_root, args.save_dir), args=args)
+
+        time_end = time.time()
+        sys.stdout.write(f"Epoch {epoch} / {UnFreeze_Epoch} cost {} seconds\n")
 
     loss_history.writer.close()
 
