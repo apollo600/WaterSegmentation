@@ -185,19 +185,10 @@ data_semantics/
 models/
 1945/
 logs/
-<<<<<<< HEAD
-=======
 log/
 tensorboard/
->>>>>>> a3341f6edd1daf967d7d62effaee0c0a0a8bf8b3
 test/
 VOC2012test_tar.tar
 VOCtrainval_11-May-2012.tar
 VOCdevkit/
-<<<<<<< HEAD
-d5e87afd0c2b7d74c8625e17b5b4e20c19889e
-deeplab_mobilenetv2.pth
 MyDataset/
-=======
-MyDataset/
->>>>>>> a3341f6edd1daf967d7d62effaee0c0a0a8bf8b3
