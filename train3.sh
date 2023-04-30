@@ -30,7 +30,7 @@ python /project/train/src_repo/train.py \
     --lr_decay_type cos \
     --focal_loss \
     --dice_loss \
-    --class_weights 1 1/0.422 1/0.00127 1/0.00159 5/0.0185 1/0.557
+    --class_weights 1 2.3697 787.4016 628.9308 270.2703 1.7953
     # --loss "" \
     # --batch_size \
     # --epoch \
