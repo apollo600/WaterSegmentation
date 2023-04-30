@@ -77,13 +77,16 @@ class LossHistory():
 
         plt.savefig(os.path.join(self.log_dir, "epoch_loss.png"))
 
-        loss_img = Image.open(os.path.join(self.log_dir, "epoch_loss.png"))
-        loss_img = np.array(loss_img).transpose([2, 0, 1])
-        self.writer.add_image("epoch_loss", loss_img, dataformats="CHW")
+        # loss_img = Image.open(os.path.join(self.log_dir, "epoch_loss.png"))
+        # loss_img = np.array(loss_img).transpose([2, 0, 1])
+        # self.writer.add_image("epoch_loss", loss_img, dataformats="CHW")
 
         plt.cla()
         plt.close("all")
-
+    
+    def write_miou(self, epoch, miou):
+        self.writer.add_scalar('miou', miou, epoch)
+    
 class EvalCallback():
     def __init__(self, net, input_shape, num_classes, image_ids, dataset_path, log_dir, cuda, \
             miou_out_path=".temp_miou_out", eval_flag=True, period=1):
@@ -203,7 +206,7 @@ class EvalCallback():
             with open(os.path.join(self.log_dir, "epoch_miou.txt"), 'a') as f:
                 f.write(str(temp_miou))
                 f.write("\n")
-            
+
             plt.figure()
             plt.plot(self.epoches, self.mious, 'red', linewidth = 2, label='train miou')
 
