@@ -1,5 +1,7 @@
 import numpy as np
 from PIL import Image
+import sys
+
 
 def visualize(label_img, output_path):
     color_map = {
@@ -19,10 +21,10 @@ def visualize(label_img, output_path):
 
 
 def show_config(**kwargs):
-    print('Configurations:')
-    print('-' * 100)
-    print('|%25s | %70s|' % ('keys', 'values'))
-    print('-' * 100)
+    sys.stdout.write('Configurations:\n')
+    sys.stdout.write('-' * 100 + '\n')
+    sys.stdout.write('|%25s | %70s|' % ('keys', 'values') + '\n')
+    sys.stdout.write('-' * 100 + '\n')
     for key, value in kwargs.items():
-        print('|%25s | %70s|' % (str(key), str(value)))
-    print('-' * 100)
+        sys.stdout.write('|%25s | %70s|' % (str(key), str(value)) + '\n')
+    sys.stdout.write('-' * 100 + '\n')
