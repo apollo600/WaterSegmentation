@@ -134,7 +134,7 @@ if __name__ == "__main__":
     if args.class_weights is None:
         args.class_weights = np.ones([args.num_classes], dtype=np.float32)
     else:
-        args.class_weights = np.array(args.class_weights, dtype=np.float32) / np
+        args.class_weights = np.array(args.class_weights, dtype=np.float32) / np.max(args.class_weights)
 
     # Get device
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
