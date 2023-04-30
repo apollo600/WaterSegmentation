@@ -16,9 +16,10 @@ python /project/train/src_repo/train.py \
     --log_visual \
     --model Deeplab \
     --backbone Mobilenet \
-    --pretrain_model_path "/project/train/src_repo/deeplab_mobilenetv2.pth" \
+    --resume \
+    --pretrain_model_path "/project/train/models/best_epoch_weights.pth" \
     --downsample_factor 16 \
-    --init_epoch 0 \
+    --init_epoch 35 \
     --freeze_epoch 25 \
     --freeze_batch_size 8 \
     --unfreeze_epoch 50 \
@@ -28,7 +29,7 @@ python /project/train/src_repo/train.py \
     --weight_decay 0 \
     --lr_decay_type cos \
     --focal_loss \
-    --class_weights 1 1 4 4 8 1
+    --class_weights 1 1 2 2 4 1
     # --loss "" \
     # --batch_size \
     # --epoch \
