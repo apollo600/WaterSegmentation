@@ -19,7 +19,7 @@ python /project/train/src_repo/train.py \
     --resume \
     --pretrain_model_path "/project/train/models/my/best_epoch_weights.pth" \
     --downsample_factor 16 \
-    --init_epoch 0 \
+    --init_epoch 20 \
     --freeze_epoch 40 \
     --freeze_batch_size 32 \
     --unfreeze_epoch 40 \
