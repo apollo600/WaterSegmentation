@@ -206,6 +206,8 @@ if __name__ == "__main__":
         raise TypeError(f"args.model {args.model} is not vaild")
 
     sys.stdout.write("Loading model to device\n")
+    sys.stdout.flush()
+    
     train_model = model.train()
     train_model.cuda()
 

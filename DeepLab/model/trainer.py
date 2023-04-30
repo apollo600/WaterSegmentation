@@ -211,6 +211,8 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
         pbar.close()
     sys.stdout.write('- Finish Train\n')
     sys.stdout.write('+ Start Validate\n')
+    sys.stdout.flush()
+
     if args.enable_tqdm:
         pbar = tqdm(total=epoch_step_val,
                     desc=f'{state} Epoch {epoch + 1}/{Epoch} Validating', postfix=dict, mininterval=1)
@@ -269,6 +271,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     # sys.stdout.write(f'{state} Epoch:' + str(epoch + 1) + '/' + str(Epoch) + '\n')
     sys.stdout.write(f"===> In {state} Epoch: {epoch + 1} / {Epoch}\n")
     sys.stdout.write('===> Total Loss: %.3f || Val Loss: %.3f\n' % (total_loss / epoch_step, val_loss / epoch_step_val))
+    sys.stdout.flush()
 
     # -----------------------------------------------#
     #   保存权值
@@ -310,6 +313,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     torch.save(train_model, os.path.join(
         save_dir, "last_epoch_weights.pth"))
 
+    sys.stdout.flush()
     os.system(f"ls -alh {save_dir}")
 
 
