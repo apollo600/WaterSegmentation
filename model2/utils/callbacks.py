@@ -206,7 +206,7 @@ class EvalCallback():
             with open(os.path.join(self.log_dir, "epoch_miou.txt"), 'a') as f:
                 f.write(str(temp_miou))
                 f.write("\n")
-
+            
             plt.figure()
             plt.plot(self.epoches, self.mious, 'red', linewidth = 2, label='train miou')
 

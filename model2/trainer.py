@@ -271,6 +271,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
 
     loss_history.append_loss(epoch + 1, total_loss / epoch_step, val_loss / epoch_step_val)
     update_best_model_flag, old_miou, new_miou = eval_callback.on_epoch_end(epoch + 1, train_model, args)
+    loss_history.write_miou(epoch + 1, new_miou if update_best_model_flag else old_miou)
     # print(f'{state} Epoch:' + str(epoch + 1) + '/' + str(Epoch))
     sys.stdout.write(f"===> In {state} Epoch: {epoch + 1} / {Epoch}\n")
     sys.stdout.write('===> Total Loss: %.3f || Val Loss: %.3f \n' %
