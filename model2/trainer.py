@@ -149,7 +149,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
 
     state = 'Unfrozen' if unfreeze_flag else 'Frozen'
 
-    sys.stdout.write(f"===> Epoch {epoch + 1} / {Epoch} starts")
+    sys.stdout.write(f"===> Epoch {epoch + 1} / {Epoch} starts\n")
     loss_history.write_text(epoch+1, "Process", f"===> Epoch {epoch + 1} / {Epoch} starts")
 
     sys.stdout.write("+ Start Train\n")
