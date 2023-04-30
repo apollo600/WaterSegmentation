@@ -29,37 +29,6 @@ bash /project/train/src_repo/DeepLab/inference.sh
 
 ### Linux
 
-<<<<<<< HEAD
-```shell
-chmod 775 train.sh inference.sh
-./train.sh [dataset-name]
-./inference.sh
-```
-
-### Competition Upload
-
-[This url again](https://www.cvmart.net/topList/10488) if you need to refer.
-
-```shell
-cd /project/train/
-rm -rf src_repo
-git clone $THIS_REPO
-mv $THIS_REPO_NAME src_repo
-...  # test or train the repo as you want
-<Train it>  # command: bash /project/train/src_repo/train.sh
-...  # wait till your training is done...
-cp ji.py /project/ev_sdk/  # copy the interface
-vim ji.py  # to specify the model path in the file
-<Test it>
-DONE~
-```
-
-### PS
-
-- Note 1: The `[dataset-name]` below should be `Kitti` or `My`, default is `My`.
-- Note 2: Root paths in Windows and Linux are different. Change `*.bat` or `*.sh` file if you need.
-- Note 3: `inference` requires you to specify the model path in the `inference.bat` or `inference.sh` file.
-=======
 #### UNet
 
 ```shell
@@ -135,20 +104,11 @@ mv $THIS_REPO_DIR_NAME src_repo
   make sure the model path in ji.py is the same as it here
 - click `提交`
 - wait till your testing is done
->>>>>>> a3341f6edd1daf967d7d62effaee0c0a0a8bf8b3
 
 ## Architecture
 
 ```plaintext
 WaterSegmentation
-<<<<<<< HEAD
-├─ model/        <-- model and loss classes
-├─ utils/        <-- dataset reader, visualization, ...
-├─ train.py      <-- train function
-├─ inference.py  <-- inference function
-├─ ji.py         <-- inference interface
-└─ *.sh / *.bat  <-- quick access
-=======
 UNet
     ├─ docs/         <-- some documents
     ├─ model/        <-- model and loss classes
@@ -165,7 +125,6 @@ DeepLab
     ├─ inference.py  <-- inference function
     ├─ ji.py         <-- inference interface
     └─ *.sh / *.bat  <-- quick access
->>>>>>> a3341f6edd1daf967d7d62effaee0c0a0a8bf8b3
 ```
 
 ## Interface
