@@ -149,6 +149,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     state = 'Unfrozen' if unfreeze_flag else 'Frozen'
 
     sys.stdout.write("+ Start Train\n")
+    loss_history.write_text(epoch+1, "Process", "+ Start Train")
 
     if args.enable_tqdm:
         pbar = tqdm(total=epoch_step,
@@ -215,7 +216,9 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     if pbar is not None:
         pbar.close()
     sys.stdout.write('- Finish Train\n')
+    loss_history.write_text(epoch+1, "Process", "+ Finish Train")
     sys.stdout.write('+ Start Validate\n')
+    loss_history.write_text(epoch+1, "Process", "+ Start Validate")
     if args.enable_tqdm:
         pbar = tqdm(total=epoch_step_val,
                     desc=f'{state} Epoch {epoch + 1}/{Epoch} Validating', postfix=dict, mininterval=1)
@@ -274,7 +277,10 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     loss_history.write_miou(epoch + 1, new_miou if update_best_model_flag else old_miou)
     # print(f'{state} Epoch:' + str(epoch + 1) + '/' + str(Epoch))
     sys.stdout.write(f"===> In {state} Epoch: {epoch + 1} / {Epoch}\n")
+    loss_history.write_text(epoch+1, "Process", f"===> In {state} Epoch: {epoch + 1} / {Epoch}")
     sys.stdout.write('===> Total Loss: %.3f || Val Loss: %.3f \n' %
+          (total_loss / epoch_step, val_loss / epoch_step_val))
+    loss_history.write_text(epoch+1, "Process", '===> Total Loss: %.3f || Val Loss: %.3f ' %
           (total_loss / epoch_step, val_loss / epoch_step_val))
 
     # -----------------------------------------------#

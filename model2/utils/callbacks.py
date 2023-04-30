@@ -86,6 +86,9 @@ class LossHistory():
     
     def write_miou(self, epoch, miou):
         self.writer.add_scalar('miou', miou, epoch)
+
+    def write_text(self, epoch, label, text):
+        self.writer.add_text(label, text, epoch)
     
 class EvalCallback():
     def __init__(self, net, input_shape, num_classes, image_ids, dataset_path, log_dir, cuda, \
