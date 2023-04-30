@@ -75,4 +75,4 @@ if __name__ == "__main__":
 
     image_ids = open("/home/data/1945/ImageSets/Segmentation/val.txt", "r").readlines()
     image_ids = [ x.strip() for x in image_ids ]
-    calc_miou("/home/data/1945", "/project/train/models/my/best_epoch_weights.pth", "/project/train/log/infer/my", image_ids, num_classes=6, mask_png_path="/project/ev_sdk/mask.png", enable_visualize=True)                             
+    calc_miou("/home/data/1945", "/project/train/models/best_epoch_weights.pth", "/project/train/log/infer/my", image_ids, num_classes=6, mask_png_path="/project/ev_sdk/mask.png", enable_visualize=True)                             
