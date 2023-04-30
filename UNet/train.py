@@ -5,6 +5,7 @@ import torch.utils.data as data
 from torch.utils.data.dataloader import DataLoader
 
 import os
+import sys
 import time
 import numpy as np
 from tqdm import tqdm
@@ -91,7 +92,7 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
         if args.use_tqdm:
             pbar = tqdm(total=batches, desc=f"Epoch {epoch+1}/{init_epoch}: ", maxinterval=0.3, ascii=True)
         else:
-            print(f"Epoch {epoch+1}/{init_epoch}")
+            sys.stdout.write(f"Epoch {epoch+1}/{init_epoch}\n")
 
         for iteration, (data, label) in enumerate(train_loader):
 
@@ -135,9 +136,9 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
         if args.use_tqdm:
             pbar.close()
         else:
-            print(f"ave loss: {loss:.4f}, ave train_acc: {acc:.4f}")
+            sys.stdout.write(f"ave loss: {loss:.4f}, ave train_acc: {acc:.4f}\n")
 
-        print("validating")
+        sys.stdout.write("validating\n")
         with torch.no_grad():
             batches = len(val_loader)
             total_acc = 0
@@ -187,12 +188,12 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
                 model_path = os.path.join(log_dir, f"{time_stamp}_epoch-{args.epoch}_lr-{args.lr}_loss-{args.loss}_optim-{args.optimizer}_acc-{total_acc:.4f}.pt")
                 torch.save(train_model, model_path)
             if total_acc > best_acc: 
-                print(f"Update acc {best_acc:.4f} => {total_acc:.4f}")
+                sys.stdout.write(f"Update acc {best_acc:.4f} => {total_acc:.4f}\n")
                 best_acc = total_acc
                 model_path = os.path.join(log_dir, "best.pt")
                 torch.save(train_model, model_path)
             else:
-                print(f"acc: {total_acc:.4f}")
+                sys.stdout.write(f"acc: {total_acc:.4f}\n")
 
 
 if __name__ == "__main__":
@@ -201,7 +202,7 @@ if __name__ == "__main__":
     # Get device
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print("Using device", device, os.environ['CUDA_VISIBLE_DEVICES'])
+    sys.stdout.write("Using device {} {}\n".format(device, os.environ['CUDA_VISIBLE_DEVICES']))
 
     # Load the data from the folders
     one_hot = False if args.loss == "CrossEntropy" else True
@@ -220,18 +221,18 @@ if __name__ == "__main__":
     train_dataset, val_dataset = data.random_split(dataset, (train_size, val_size))
 
     r, s = dataset[0]
-    print("image shape and label shape:", r.shape, s.shape)
+    sys.stdout.write("image shape and label shape: {} {}\n".format(r.shape, s.shape))
 
     # Create the loaders
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=0)
     val_loader = DataLoader(val_dataset, batch_size=1, shuffle=False)
 
     # Create the model
-    print("Loading model to device")
+    sys.stdout.write("Loading model to device\n")
     model = UNet(3, args.num_classes)
     train_model = model.train()
     train_model.cuda()
 
     # Train
-    print("Start Train")
+    sys.stdout.write("Start Train\n")
     train(train_loader, val_loader, train_model, args)

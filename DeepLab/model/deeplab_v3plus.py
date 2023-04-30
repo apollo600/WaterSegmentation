@@ -1,3 +1,4 @@
+import sys
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -214,5 +215,5 @@ def weights_init(net, init_type='normal', init_gain=0.02):
             torch.nn.init.normal_(m.weight.data, 1.0, 0.02)
             torch.nn.init.constant_(m.bias.data, 0.0)
     
-    print('Initialize model weights: [%s] type' % init_type)
+    sys.stdout.write(f'Initialize model weights: {init_type} type\n')
     net.apply(init_func)

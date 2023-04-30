@@ -1,5 +1,6 @@
 import os
 import ji
+import sys
 import argparse
 import numpy as np
 from PIL import Image
@@ -52,4 +53,4 @@ for i in tqdm(range(len(dataset)), desc="Inferencing", ascii=True):
 
     total_acc += (pred_label == label).sum() / np.prod(pred_label.shape)
 
-print("Test acc:", total_acc / len(dataset))
+sys.stdout.write(f"Test acc: {total_acc / len(dataset)}\n")

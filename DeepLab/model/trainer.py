@@ -1,4 +1,5 @@
 import os
+import sys
 import math
 import torch
 import datetime
@@ -142,7 +143,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
 
     state = 'Unfrozen' if unfreeze_flag else 'Frozen'
 
-    print("+ Start Train")
+    sys.stdout.write("+ Start Train\n")
 
     if args.enable_tqdm:
         pbar = tqdm(total=epoch_step,
@@ -208,8 +209,8 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
 
     if pbar is not None:
         pbar.close()
-    print('- Finish Train')
-    print('+ Start Validate')
+    sys.stdout.write('- Finish Train\n')
+    sys.stdout.write('+ Start Validate\n')
     if args.enable_tqdm:
         pbar = tqdm(total=epoch_step_val,
                     desc=f'{state} Epoch {epoch + 1}/{Epoch} Validating', postfix=dict, mininterval=1)
@@ -265,10 +266,9 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
 
     loss_history.append_loss(epoch + 1, total_loss / epoch_step, val_loss / epoch_step_val)
     update_best_model_flag, old_miou, new_miou = eval_callback.on_epoch_end(epoch + 1, train_model, args)
-    # print(f'{state} Epoch:' + str(epoch + 1) + '/' + str(Epoch))
-    print(f"===> In {state} Epoch: {epoch + 1} / {Epoch}")
-    print('===> Total Loss: %.3f || Val Loss: %.3f ' %
-          (total_loss / epoch_step, val_loss / epoch_step_val))
+    # sys.stdout.write(f'{state} Epoch:' + str(epoch + 1) + '/' + str(Epoch) + '\n')
+    sys.stdout.write(f"===> In {state} Epoch: {epoch + 1} / {Epoch}\n")
+    sys.stdout.write('===> Total Loss: %.3f || Val Loss: %.3f\n' % (total_loss / epoch_step, val_loss / epoch_step_val))
 
     # -----------------------------------------------#
     #   保存权值
@@ -278,7 +278,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     #                (epoch + 1, total_loss / epoch_step, val_loss / epoch_step_val)))
 
     # if len(loss_history.val_loss) <= 1 or (val_loss / epoch_step_val) <= min(loss_history.val_loss):
-    #     print('Save best model to best_epoch_weights.pth')
+    #     sys.stdout.write('Save best model to best_epoch_weights.pth\n')
     #     torch.save(train_model.state_dict(), os.path.join(
     #         save_dir, "best_epoch_weights.pth"))
 
@@ -293,19 +293,19 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
                    (epoch + 1, total_loss / epoch_step, val_loss / epoch_step_val, new_miou)))
 
     # if len(loss_history.val_loss) <= 1 or (val_loss / epoch_step_val) <= min(loss_history.val_loss):
-    #     print('Save best model to best_epoch_weights.pth')
+    #     sys.stdout.write('Save best model to best_epoch_weights.pth\n')
     #     torch.save(train_model, os.path.join(
     #         save_dir, "best_epoch_weights.pth"))
 
     os.makedirs(save_dir, exist_ok=True)
     
     if update_best_model_flag and new_miou is not None:
-        print(f"+ Update best model {old_miou:.4f} ==> {new_miou:.4f}")
-        print('+ Save best model to best_epoch_weights.pth')
+        sys.stdout.write(f"+ Update best model {old_miou:.4f} ==> {new_miou:.4f}\n")
+        sys.stdout.write('+ Save best model to best_epoch_weights.pth\n')
         torch.save(train_model, os.path.join(
             save_dir, "best_epoch_weights.pth"))
     else:
-        print(f"- Best model stays at {old_miou:.4f}")
+        sys.stdout.write(f"- Best model stays at {old_miou:.4f}\n")
 
     torch.save(train_model, os.path.join(
         save_dir, "last_epoch_weights.pth"))

@@ -1,5 +1,6 @@
 import cv2
 import os
+import sys
 import numpy as np
 from PIL import Image
 from typing import Tuple, Union
@@ -172,7 +173,7 @@ class PascalData(Dataset):
 
 #         self.image_paths = [ os.path.join(root, "JPEGImages", x.strip() + ".jpg") for x in file_list ]
 #         self.label_paths = [ os.path.join(root, "SegmentationClass", x.strip() + ".png") for x in file_list ]
-#         print(f"Found {len(file_list)} images")
+#         sys.stdout.write(f"Found {len(file_list)} images\n")
 
 #     def __getitem__(self, index) -> Tuple[Union[np.ndarray, torch.Tensor], Union[np.ndarray, torch.Tensor]]:
 #         """

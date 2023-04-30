@@ -1,5 +1,5 @@
 import os
-
+import sys
 import matplotlib
 import torch
 import torchvision
@@ -166,7 +166,7 @@ class EvalCallback():
                 os.makedirs(self.miou_out_path)
             if not os.path.exists(pred_dir):
                 os.makedirs(pred_dir)
-            print("+ Get miou")
+            sys.stdout.write("+ Get miou\n")
             if args.enable_tqdm:
                 for image_id in tqdm(self.image_ids, desc="Read val_images and Calculate miou", mininterval=1):
                     #-------------------------------#
@@ -180,7 +180,7 @@ class EvalCallback():
                     image       = self.get_miou_png(image)
                     image.save(os.path.join(pred_dir, image_id + ".png"))
             else:
-                print("+ Read val_images and Calculate miou")
+                sys.stdout.write("+ Read val_images and Calculate miou\n")
                 for image_id in self.image_ids:
                     #-------------------------------#
                     #   从文件中读取图像
@@ -193,7 +193,7 @@ class EvalCallback():
                     image       = self.get_miou_png(image)
                     image.save(os.path.join(pred_dir, image_id + ".png"))
                             
-            print("+ Calculate miou")
+            sys.stdout.write("+ Calculate miou\n")
             _, IoUs, _, _ = compute_mIoU(gt_dir, pred_dir, self.image_ids, self.num_classes, None)  # 执行计算mIoU的函数
             temp_miou = np.nanmean(IoUs) * 100
 
@@ -217,7 +217,7 @@ class EvalCallback():
             plt.cla()
             plt.close("all")
 
-            print("- Get miou done")
+            sys.stdout.write("- Get miou done\n")
             shutil.rmtree(self.miou_out_path)
 
             if temp_miou > self.best_miou:

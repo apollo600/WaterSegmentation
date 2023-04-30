@@ -1,4 +1,5 @@
 import os
+import sys
 import numpy as np
 from tqdm import tqdm
 from PIL import Image
@@ -34,7 +35,7 @@ class KittiData(Dataset):
             label_paths = os.listdir(os.path.join(path, "testing", "semantic"))
             label_paths.sort()
             self.label_paths = [os.path.join(path, "testing", "semantic", x) for x in label_paths]
-        print(f"Found {len(self.image_paths)} images")
+        sys.stdout.write(f"Found {len(self.image_paths)} images\n")
 
     def __getitem__(self, index) -> Tuple[Union[np.ndarray, torch.Tensor], Union[np.ndarray, torch.Tensor]]:
         """

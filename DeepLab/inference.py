@@ -22,7 +22,7 @@ def calc_miou(dataset_path, model_path, miou_out_path, image_ids, num_classes, m
     pred_dir    = os.path.join(miou_out_path, 'detection-results')
     os.makedirs(miou_out_path, exist_ok=True)
     os.makedirs(pred_dir, exist_ok=True)
-    print("Get miou.")
+    sys.stdout.write("Get miou.\n")
 
     time_costs = []
 
@@ -57,13 +57,13 @@ def calc_miou(dataset_path, model_path, miou_out_path, image_ids, num_classes, m
             visualize(label, os.path.join(miou_out_path, image_id+"_gt.jpg"))
             visualize(image, os.path.join(miou_out_path, image_id+"_pred.jpg"))
                 
-    print("Calculate miou.")
+    sys.stdout.write("Calculate miou.\n")
     _, IoUs, _, _ = compute_mIoU(gt_dir, pred_dir, image_ids, num_classes, None)  # 执行计算mIoU的函数
     temp_miou = np.nanmean(IoUs) * 100
 
-    print(f"===> Average time: {np.mean(time_costs)} ms")
+    sys.stdout.write(f"===> Average time: {np.mean(time_costs)} ms\n")
 
-    print("Get miou done.")
+    sys.stdout.write("Get miou done.\n")
     # shutil.rmtree(self.miou_out_path)
 
 

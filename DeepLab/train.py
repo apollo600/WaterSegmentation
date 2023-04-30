@@ -5,6 +5,7 @@ import torch.utils.data as data
 from torch.utils.data.dataloader import DataLoader
 
 import os
+import sys
 import time
 import numpy as np
 from tqdm import tqdm
@@ -109,9 +110,9 @@ def train(train_loader: DataLoader, val_loader: DataLoader, train_model: nn.Modu
         if train_size // args.unfreeze_batch_size == 0:
             raise ValueError('数据集过小，无法进行训练，请扩充数据集。')
         wanted_epoch = wanted_step // (train_size // args.unfreeze_batch_size) + 1
-        print("\n\033[1;33;44m[Warning] 使用%s优化器时，建议将训练总步长设置到%d以上。\033[0m"%(args.optimizer, wanted_step))
-        print("\033[1;33;44m[Warning] 本次运行的总训练数据量为%d，Unfreeze_batch_size为%d，共训练%d个Epoch，计算出总训练步长为%d。\033[0m"%(train_size, args.unfreeze_batch_size, args.unfreeze_epoch, total_step))
-        print("\033[1;33;44m[Warning] 由于总训练步长为%d，小于建议总步长%d，建议设置总世代为%d。\033[0m"%(total_step, wanted_step, wanted_epoch))
+        print("\n\033[1;33;44m[Warning] 使用%s优化器时，建议将训练总步长设置到%d以上。\033[0m" % (args.optimizer, wanted_step))
+        print("\033[1;33;44m[Warning] 本次运行的总训练数据量为%d，Unfreeze_batch_size为%d，共训练%d个Epoch，计算出总训练步长为%d。\033[0m" % (train_size, args.unfreeze_batch_size, args.unfreeze_epoch, total_step))
+        print("\033[1;33;44m[Warning] 由于总训练步长为%d，小于建议总步长%d，建议设置总世代为%d。\033[0m" % (total_step, wanted_step, wanted_epoch))
 
     if args.model == "Deeplab":
         Deeplab_trainer(train_loader, val_loader, train_model, args, optimizer, train_size, val_size, val_filelist, data_root)
@@ -130,7 +131,7 @@ if __name__ == "__main__":
     # Get device
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print("Using device", device, os.environ['CUDA_VISIBLE_DEVICES'])
+    sys.stdout.write("Using device {} {}\n".format(device, os.environ['CUDA_VISIBLE_DEVICES']))
 
     # 展示参数
     if args.model == "Deeplab":
@@ -168,7 +169,7 @@ if __name__ == "__main__":
     
 
     r, s, label_onehot = train_dataset[0]
-    print("image shape and label shape:", r.shape, s.shape)
+    sys.stdout.write("image shape and label shape: {} {}\n".format(r.shape, s.shape))
 
     # Create the loaders
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=0)
@@ -183,7 +184,7 @@ if __name__ == "__main__":
             # 加载预训练模型
             model_dict = model.state_dict()
             # 使用 map_location 直接加载到显存
-            print("Load pretrained model to device")
+            sys.stdout.write("Load pretrained model to device\n")
             pretrained_dict = torch.load(args.pretrain_model_path, map_location=device)
             load_key, no_load_key, temp_dict = [], [], {}
             for k, v in pretrained_dict.items():
@@ -195,19 +196,19 @@ if __name__ == "__main__":
             model_dict.update(temp_dict)
             model.load_state_dict(model_dict)
             # 输出加载预训练结果
-            print("\nSuccessful Load Key:", str(load_key)[:500], "……\nSuccessful Load Key Num:", len(load_key))
-            print("\nFail To Load Key:", str(no_load_key)[:500], "……\nFail To Load Key num:", len(no_load_key))
+            sys.stdout.write("\nSuccessful Load Key: {}...\nSuccessful Load Key Num: {}\n".format(str(load_key)[:500], len(load_key)))
+            sys.stdout.write("\nFail Load Key: {}...\nFail Load Key Num: {}\n".format(str(no_load_key)[:500], len(no_load_key)))
             # print("\n\033[1;33;44m温馨提示，head部分没有载入是正常现象，Backbone部分没有载入是错误的。\033[0m")
         else:
-            print("Load last epoch model to device")
+            sys.stdout.write("Load last epoch model to device\n")
             model = torch.load(args.pretrain_model_path)
     else:
         raise TypeError(f"args.model {args.model} is not vaild")
 
-    print("Loading model to device")
+    sys.stdout.write("Loading model to device\n")
     train_model = model.train()
     train_model.cuda()
 
     # Train
-    # print("Start Train")
+    # sys.stdout.write("Start Train\n")
     train(train_loader, val_loader, train_model, args)

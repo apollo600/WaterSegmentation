@@ -1,3 +1,4 @@
+import sys
 import json
 import torch
 import numpy as np
@@ -8,9 +9,9 @@ import torch.nn.functional as F
 
 def checkGPU():
     gpu_count = torch.cuda.device_count()
-    print(">>> GPU List <<<")
+    sys.stdout.write(">>> GPU List <<<\n")
     for i in range(gpu_count):
-        print(f"{i+1}. {torch.cuda.get_device_name(i)}")
+        sys.stdout.write(f"{i+1}. {torch.cuda.get_device_name(i)}\n")
 
 
 def init(model_path: str = None) -> nn.Module:
@@ -21,7 +22,7 @@ def init(model_path: str = None) -> nn.Module:
 
     checkGPU()
 
-    print("Load Model")
+    sys.stdout.write("Load Model\n")
     if model_path is None:
         # /project/train/models/xxx.pt
         model_path = "真实环境所用pt"
