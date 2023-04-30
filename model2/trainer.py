@@ -132,6 +132,7 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
 
         time_end = time.time()
         sys.stdout.write(f"===> Epoch {epoch} / {UnFreeze_Epoch} cost {time_end - time_start:.2f} seconds\n")
+        sys.stdout.flush()
 
     loss_history.writer.close()
 
