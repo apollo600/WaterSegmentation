@@ -20,9 +20,9 @@ python /project/train/src_repo/train.py \
     --pretrain_model_path "/project/train/src_repo/deeplab_mobilenetv2.pth" \
     --downsample_factor 16 \
     --init_epoch 0 \
-    --freeze_epoch 25 \
+    --freeze_epoch 40 \
     --freeze_batch_size 32 \
-    --unfreeze_epoch 50 \
+    --unfreeze_epoch 40 \
     --unfreeze_batch_size 16 \
     --min_lr 5e-6 \
     --momentum 0.9 \
