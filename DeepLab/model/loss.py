@@ -47,8 +47,10 @@ def Dice_loss(inputs, target, beta=1, smooth = 1e-5):
     temp_target = target.view(n, -1, ct)
 
     #--------------------------------------------#
-    #   计算dice loss
+    #   计算 dice loss
     #--------------------------------------------#
+    temp_target = temp_target.float()
+    temp_inputs = temp_inputs.float()
     tp = torch.sum(temp_target[...,:-1] * temp_inputs, axis=[0,1])
     fp = torch.sum(temp_inputs                       , axis=[0,1]) - tp
     fn = torch.sum(temp_target[...,:-1]              , axis=[0,1]) - tp
