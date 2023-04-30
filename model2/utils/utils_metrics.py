@@ -55,7 +55,7 @@ def per_Accuracy(hist):
     return np.sum(np.diag(hist)) / np.maximum(np.sum(hist), 1) 
 
 def compute_mIoU(gt_dir, pred_dir, png_name_list, num_classes, name_classes=None):  
-    print('Num classes', num_classes)  
+    sys.stdout.write('Num classes\n', num_classes)  
     #-----------------------------------------#
     #   创建一个全是0的矩阵，是一个混淆矩阵
     #-----------------------------------------#
@@ -83,8 +83,8 @@ def compute_mIoU(gt_dir, pred_dir, png_name_list, num_classes, name_classes=None
 
         # 如果图像分割结果与标签的大小不一样，这张图片就不计算
         if len(label.flatten()) != len(pred.flatten()):  
-            print(
-                'Skipping: len(gt) = {:d}, len(pred) = {:d}, {:s}, {:s}'.format(
+            sys.stdout.write(
+                'Skipping: len(gt) = {:d}, len(pred) = {:d}, {:s}, {:s}\n'.format(
                     len(label.flatten()), len(pred.flatten()), gt_imgs[ind],
                     pred_imgs[ind]))
             continue
@@ -95,7 +95,7 @@ def compute_mIoU(gt_dir, pred_dir, png_name_list, num_classes, name_classes=None
         hist += fast_hist(label.flatten(), pred.flatten(), num_classes)  
         # 每计算10张就输出一下目前已计算的图片中所有类别平均的mIoU值
         if name_classes is not None and ind > 0 and ind % 10 == 0: 
-            print('{:d} / {:d}: mIou-{:0.2f}%; mPA-{:0.2f}%; Accuracy-{:0.2f}%'.format(
+            sys.stdout.write('{:d} / {:d}: mIou-{:0.2f}%; mPA-{:0.2f}%; Accuracy-{:0.2f}%\n'.format(
                     ind, 
                     len(gt_imgs),
                     100 * np.nanmean(per_class_iu(hist)),
@@ -114,13 +114,13 @@ def compute_mIoU(gt_dir, pred_dir, png_name_list, num_classes, name_classes=None
     #------------------------------------------------#
     if name_classes is not None:
         for ind_class in range(num_classes):
-            print('===>' + name_classes[ind_class] + ':\tIou-' + str(round(IoUs[ind_class] * 100, 2)) \
-                + '; Recall (equal to the PA)-' + str(round(PA_Recall[ind_class] * 100, 2))+ '; Precision-' + str(round(Precision[ind_class] * 100, 2)))
+            sys.stdout.write('===>' + name_classes[ind_class] + ':\tIou-' + str(round(IoUs[ind_class] * 100, 2)) \
+                + '; Recall (equal to the PA)-' + str(round(PA_Recall[ind_class] * 100, 2))+ '; Precision-' + str(round(Precision[ind_class] * 100, 2)) + '\n')
 
     #-----------------------------------------------------------------#
     #   在所有验证集图像上求所有类别平均的mIoU值，计算时忽略NaN值
     #-----------------------------------------------------------------#
-    print('===> mIoU: ' + str(round(np.nanmean(IoUs) * 100, 2)) + '; mPA: ' + str(round(np.nanmean(PA_Recall) * 100, 2)) + '; Accuracy: ' + str(round(per_Accuracy(hist) * 100, 2)))  
+    sys.stdout.write('===> mIoU: ' + str(round(np.nanmean(IoUs) * 100, 2)) + '; mPA: ' + str(round(np.nanmean(PA_Recall) * 100, 2)) + '; Accuracy: ' + str(round(per_Accuracy(hist) * 100, 2)) + '\n')  
     return np.array(hist, np.int), IoUs, PA_Recall, Precision
 
 def adjust_axes(r, t, fig, axes):
