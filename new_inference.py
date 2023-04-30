@@ -16,7 +16,8 @@ import time
 
 def calc_miou(dataset_path, model_path, miou_out_path, image_ids, num_classes, mask_png_path, enable_visualize):
                                                                                                                                                         
-    net    = ji.init(model_path)
+    # net    = ji.init(model_path)
+    net = ji.init()
     gt_dir      = os.path.join(dataset_path, "SegmentationClass/")
     pred_dir    = os.path.join(miou_out_path, 'detection-results')
     if not os.path.exists(miou_out_path):

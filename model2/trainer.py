@@ -286,6 +286,8 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
             #             torch.save(train_model, os.path.join(save_dir, 'ep%03d-loss%.3f-val_loss%.3f.pth' %
     #                (epoch + 1, total_loss / epoch_step, val_loss / epoch_step_val)))
 
+    os.makedirs(save_dir, exist_ok=True)
+
     if (epoch + 1) % args.save_period == 0 or epoch + 1 == Epoch:
         torch.save(train_model, os.path.join(save_dir, 'ep%03d-loss%.3f-val_loss%.3f.pth' %
                    (epoch + 1, total_loss / epoch_step, val_loss / epoch_step_val)))
