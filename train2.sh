@@ -21,9 +21,9 @@ python /project/train/src_repo/train.py \
     --downsample_factor 16 \
     --init_epoch 0 \
     --freeze_epoch 25 \
-    --freeze_batch_size 8 \
+    --freeze_batch_size 32 \
     --unfreeze_epoch 50 \
-    --unfreeze_batch_size 8 \
+    --unfreeze_batch_size 16 \
     --min_lr 5e-6 \
     --momentum 0.9 \
     --weight_decay 0 \
