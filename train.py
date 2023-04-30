@@ -139,7 +139,7 @@ if __name__ == "__main__":
     # Get device
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print("Using device", device, os.environ['CUDA_VISIBLE_DEVICES'])
+    sys.stdout.write(f"Using device {device} {os.environ['CUDA_VISIBLE_DEVICES']}\n")
 
     # 展示参数
     if args.model == "Deeplab":
@@ -180,7 +180,7 @@ if __name__ == "__main__":
     
 
     r, s, label_onehot = train_dataset[0]
-    print("image shape and label shape:", r.shape, s.shape)
+    sys.stdout.write(f"image shape and label shape: {r.shape} {s.shape}\n")
 
     # Create the loaders
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=0)
@@ -197,7 +197,7 @@ if __name__ == "__main__":
             # 加载预训练模型
             model_dict = model.state_dict()
             # 使用 map_location 直接加载到显存
-            print("Load pretrained model to device")
+            sys.stdout.write("Load pretrained model to device\n")
             pretrained_dict = torch.load(args.pretrain_model_path, map_location=device)
             load_key, no_load_key, temp_dict = [], [], {}
             for k, v in pretrained_dict.items():
@@ -209,14 +209,14 @@ if __name__ == "__main__":
             model_dict.update(temp_dict)
             model.load_state_dict(model_dict)
             # 输出加载预训练结果
-            print("\nSuccessful Load Key:", str(load_key)[:500], "……\nSuccessful Load Key Num:", len(load_key))
-            print("\nFail To Load Key:", str(no_load_key)[:500], "……\nFail To Load Key num:", len(no_load_key))
+            sys.stdout.write(f"\nSuccessful Load Key: {str(load_key)[:500]} ……\nSuccessful Load Key Num: {len(load_key)}\n")
+            sys.stdout.write(f"\nFail To Load Key: {str(no_load_key)[:500]} ……\nFail To Load Key num: {len(no_load_key)}\n")
             # print("\n\033[1;33;44m温馨提示，head部分没有载入是正常现象，Backbone部分没有载入是错误的。\033[0m")
         else:
-            print("Load last epoch model to device")
+            sys.stdout.write("Load last epoch model to device\n")
             model = torch.load(args.pretrain_model_path)
         
-    print("Loading model to device")
+    sys.stdout.write("Loading model to device\n")
     train_model = model.train()
     train_model.cuda()
 
