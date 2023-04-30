@@ -49,11 +49,11 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
     #   判断当前batch_size，自适应调整学习率
     # -------------------------------------------------------------------#
     nbs = 16
-    lr_limit_max = 5e-4 if args.optimizer == 'adam' else 1e-1
-    lr_limit_min = 3e-4 if args.optimizer == 'adam' else 5e-4
+    lr_limit_max = 5e-4 if args.optimizer == 'Adam' else 1e-1
+    lr_limit_min = 3e-4 if args.optimizer == 'Adam' else 5e-4
     if args.backbone == "Xception":
-        lr_limit_max = 1e-4 if args.optimizer == 'adam' else 1e-1
-        lr_limit_min = 1e-4 if args.optimizer == 'adam' else 5e-4
+        lr_limit_max = 1e-4 if args.optimizer == 'Adam' else 1e-1
+        lr_limit_min = 1e-4 if args.optimizer == 'Adam' else 5e-4
     Init_lr_fit = min(max(batch_size / nbs * Init_lr,
                       lr_limit_min), lr_limit_max)
     Min_lr_fit = min(max(batch_size / nbs * Min_lr,
@@ -279,7 +279,7 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     loss_history.append_loss(epoch + 1, total_loss / epoch_step, val_loss / epoch_step_val)
     update_best_model_flag, old_miou, new_miou = eval_callback.on_epoch_end(epoch + 1, train_model, args)
     loss_history.write_miou(epoch + 1, new_miou if update_best_model_flag else old_miou)
-    
+
     sys.stdout.write(f"===> In {state} Epoch: {epoch + 1} / {Epoch}\n")
     loss_history.write_text(epoch+1, "Process", f"===> In {state} Epoch: {epoch + 1} / {Epoch}")
     sys.stdout.write('===> Total Loss: %.3f || Val Loss: %.3f \n' %
