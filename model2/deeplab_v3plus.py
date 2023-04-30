@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from model2.xception import xception
 from model2.mobilenetv2 import mobilenetv2
+import sys
 
 
 class DeepLab(nn.Module):
