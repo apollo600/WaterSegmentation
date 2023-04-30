@@ -131,7 +131,8 @@ def Deeplab_trainer(train_loader: DataLoader, val_loader: DataLoader, train_mode
                       args.class_weights, args.num_classes, save_period=1, save_dir=os.path.join(args.save_root, args.save_dir), args=args)
 
         time_end = time.time()
-        sys.stdout.write(f"===> Epoch {epoch} / {UnFreeze_Epoch} cost {time_end - time_start:.2f} seconds\n")
+        sys.stdout.write(f"===> Epoch {epoch + 1} / {UnFreeze_Epoch} cost {time_end - time_start:.2f} seconds\n")
+        loss_history.write_text(epoch+1, "Process", f"===> Epoch {epoch + 1} / {UnFreeze_Epoch} cost {time_end - time_start:.2f} seconds")
         sys.stdout.flush()
 
     loss_history.writer.close()
@@ -147,6 +148,9 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
     val_f_score = 0
 
     state = 'Unfrozen' if unfreeze_flag else 'Frozen'
+
+    sys.stdout.write(f"===> Epoch {epoch + 1} / {Epoch} starts")
+    loss_history.write_text(epoch+1, "Process", f"===> Epoch {epoch + 1} / {Epoch} starts")
 
     sys.stdout.write("+ Start Train\n")
     loss_history.write_text(epoch+1, "Process", "+ Start Train")
@@ -314,11 +318,14 @@ def fit_one_epoch(train_model, loss_history, eval_callback, optimizer, epoch, ep
 
     if update_best_model_flag and new_miou is not None:
         sys.stdout.write(f"+ Update best model {old_miou:.4f} ==> {new_miou:.4f}\n")
+        loss_history.write_text(epoch+1, "Process", f"+ Update best model {old_miou:.4f} ==> {new_miou:.4f}")
         sys.stdout.write('+ Save best model to best_epoch_weights.pth\n')
+        loss_history.write_text(epoch+1, "Process", '+ Save best model to best_epoch_weights.pth\n')
         torch.save(train_model, os.path.join(
             save_dir, "best_epoch_weights.pth"))
     else:
         sys.stdout.write(f"- Best model stays at {old_miou:.4f}\n")
+        loss_history.write_text(epoch+1, "Process", f"- Best model stays at {old_miou:.4f}")
 
     torch.save(train_model, os.path.join(
         save_dir, "last_epoch_weights.pth"))
