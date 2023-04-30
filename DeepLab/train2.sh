@@ -16,9 +16,10 @@ python /project/train/src_repo/DeepLab/train.py \
     --log_visual \
     --model Deeplab \
     --backbone Mobilenet \
-    --pretrain_model_path "/project/train/src_repo/pre_models/deeplab_mobilenetv2.pth" \
+    --resume \
+    --pretrain_model_path "/project/train/models/best_epoch_weights.pth" \
     --downsample_factor 16 \
-    --init_epoch 0 \
+    --init_epoch 35 \
     --freeze_epoch 25 \
     --freeze_batch_size 8 \
     --unfreeze_epoch 50 \
