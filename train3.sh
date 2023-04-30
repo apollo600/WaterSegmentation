@@ -9,7 +9,7 @@ python /project/train/src_repo/train.py \
     --save_dir "models/my" \
     --log_root "/project/train" \
     --log_dir "tensorboard" \
-    --lr "5e-4" \
+    --lr "5e-5" \
     --image_width 512 \
     --image_height 512 \
     --optimizer "Adam" \
@@ -17,14 +17,14 @@ python /project/train/src_repo/train.py \
     --model Deeplab \
     --backbone Mobilenet \
     --resume \
-    --pretrain_model_path "/project/train/models/best_epoch_weights.pth" \
+    --pretrain_model_path "/project/train/models/my/best_epoch_weights.pth" \
     --downsample_factor 16 \
-    --init_epoch 35 \
-    --freeze_epoch 25 \
-    --freeze_batch_size 8 \
-    --unfreeze_epoch 50 \
-    --unfreeze_batch_size 8 \
-    --min_lr 5e-6 \
+    --init_epoch 0 \
+    --freeze_epoch 40 \
+    --freeze_batch_size 32 \
+    --unfreeze_epoch 40 \
+    --unfreeze_batch_size 16 \
+    --min_lr 5e-7 \
     --momentum 0.9 \
     --weight_decay 0 \
     --lr_decay_type cos \
