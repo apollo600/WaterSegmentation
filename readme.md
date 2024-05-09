@@ -2,6 +2,9 @@
 
 The repo is for [this competition](https://www.cvmart.net/topList/10488).
 
+Docs:
+- [水务分割识别汇报 slides](./docs/机器学习第二次作业展示.pdf)
+
 ## Usage
 
 Environment (UNet): pytorch, numpy, tqdm.  
